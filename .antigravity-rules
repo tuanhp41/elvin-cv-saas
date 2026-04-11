@@ -1,4 +1,7 @@
 <system_constraints>
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- CORE RULES (bất biến)                          -->
+  <!-- ═══════════════════════════════════════════════ -->
   <rule>Before modifying or creating files, ALWAYS read
         ARCHITECTURE.md to strictly follow folder structures
         and data flow.</rule>
@@ -22,4 +25,69 @@
   <rule>Stack is FROZEN: Next.js 14, Supabase, Gemma 4,
         PayOS, Vercel, Tailwind, shadcn/ui.
         Do not suggest alternatives.</rule>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- PMP CODING PROMPTS                             -->
+  <!-- Áp dụng khi: viết code, review PR, debug       -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <pmp_coding>
+    <prompt name="before_coding">
+      Trước khi code, xác nhận:
+      1. Scope: Feature này có trong SPEC.md Phase 1 không?
+      2. Risk: Có blocker nào trong CURRENT_STATE.md không?
+      3. Architecture: ARCHITECTURE.md cho phép tạo file này ở đâu?
+      4. Decision: Nếu phải chọn giữa 2 cách → ghi vào DECISIONS.md trước.
+      Nếu bất kỳ câu nào không rõ → hỏi trước, không tự quyết định.
+    </prompt>
+    <prompt name="after_coding">
+      Sau khi code xong 1 feature:
+      1. Self-review: Code có vi phạm ARCHITECTURE.md không?
+      2. Risk check: Feature này tạo ra risk mới nào? → Ghi RISK_LOG.md nếu có.
+      3. Learning: Học được gì từ implement này? → Append LEARNINGS.md.
+      4. Update CURRENT_STATE.md với task vừa hoàn thành.
+      5. Git commit message format: "type(scope): mô tả ngắn"
+         type = feat | fix | docs | chore | refactor | test
+    </prompt>
+    <prompt name="debug_session">
+      Khi debug lỗi:
+      1. Hypothesis first: Đưa ra 1 giả thuyết nguyên nhân trước khi fix.
+      2. Minimal change: Sửa ít nhất có thể để isolate vấn đề.
+      3. Document: Nếu lỗi mất >30 phút → ghi vào TROUBLESHOOTING.md.
+      4. Experiment: Nếu thử nhiều cách → ghi vào EXPERIMENTS.md.
+      Format EXPERIMENTS.md: Hypothesis → Setup → Metric → Kết quả → Kết luận.
+    </prompt>
+  </pmp_coding>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- PMP REPORTING PROMPTS                          -->
+  <!-- Áp dụng khi: báo cáo tiến độ, end-of-session  -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <pmp_reporting>
+    <prompt name="end_of_session_report">
+      Khi kết thúc session, báo cáo theo format:
+      ✅ COMPLETED: [danh sách việc đã xong]
+      🔄 IN PROGRESS: [việc đang dở — % completion]
+      ❌ BLOCKED: [blocker — nguyên nhân — giải pháp đề xuất]
+      📊 PHASE PROGRESS: [X% — dựa trên Phase Gate checklist]
+      ⚠️ NEW RISKS: [risk mới phát sinh — ID — severity]
+      📝 DECISIONS MADE: [quyết định quan trọng — ID DXXX]
+      🎯 NEXT SESSION: [1 task cụ thể nhất để bắt đầu]
+    </prompt>
+    <prompt name="risk_assessment">
+      Khi phát hiện risk mới:
+      1. Đánh giá: Probability (Low/Medium/High) × Impact (Low/Medium/High)
+      2. Score: High×High=Critical | High×Medium=High | Medium×Medium=Medium
+      3. Mitigation: Đề xuất ít nhất 1 biện pháp cụ thể
+      4. Ghi vào RISK_LOG.md với ID R-NEW-XXX
+      5. Nếu Critical → báo ngay, không tiếp tục task hiện tại
+    </prompt>
+    <prompt name="phase_gate_check">
+      Trước khi tuyên bố Phase X hoàn thành:
+      1. Chạy qua toàn bộ Phase Gate checklist trong ROADMAP.md
+      2. Mỗi item phải là ✅ thực sự đã test — không phải "chắc OK"
+      3. Nếu có item đỏ → Phase chưa done, không chuyển phase
+      4. Khi tất cả xanh → git tag vX.Y.Z-phaseX-complete
+      5. Ghi LEARNINGS.md: summary của toàn phase
+    </prompt>
+  </pmp_reporting>
 </system_constraints>

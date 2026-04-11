@@ -2,24 +2,35 @@
 # ⚠️ OVERWRITE ONLY — không append — chỉ có 1 snapshot mới nhất
 
 ## Snapshot
-- **Timestamp:** 2026-04-11 15:10 +07:00
-- **Phase:** 0 | **Session:** #2 (end of day)
+- **Timestamp:** 2026-04-11 18:50 +07:00
+- **Phase:** 0 | **Session:** #3
 - **Branch:** main
+- **Phase 0 Progress:** ~75%
 
 ## Đang làm dở
-- File: automation/n8n/dashchat-bot.json + daily-kickoff.json
-- Việc: Import 2 n8n workflows vào n8n UI + setup Telegram credentials
-- Trạng thái: JSON sẵn sàng, chưa import vào n8n UI (~15 phút tonight)
+- File: Windows remote client setup
+- Việc: Cài Node.js + Task Scheduler auto-mount L:\ + setup env
+- Trạng thái: 60% — Node.js đang cài, Tailscale đã restart, L:\ chờ remount
 
 ## Lỗi chưa xử lý
-- [ ] n8n workflows chưa import (JSON có ở automation/n8n/) — tối nay làm
-- [ ] FortiVPN + Tailscale chưa test (R-NEW-001 CRITICAL — trước khi sang Shanghai)
+- [ ] Tailscale không auto-start sau reboot (R005) — đang fix bằng Task Scheduler
+- [ ] L:\ drive không mount sau restart — fix cùng với Tailscale issue
+- [ ] DashChat /status /done /risk chưa test live — cần test trên n8n
 
 ## Quyết định pending
-- [ ] Test FortiVPN compatibility — URGENT nếu sang Shanghai sắp tới
+- [ ] Migrate L:\ từ rclone/SFTP → Samba/SMB (tốt hơn qua Tailscale)
+- [ ] Husky pre-commit hook chưa active
 
 ## Task đầu tiên session tới
-→ Mở http://100.67.85.6:5678 → Settings → Credentials → Add Telegram API (token: 8367516949:AAHDDZ5gD7rYxu5L7LMp02aZTydlCeABdWg) → Import 2 workflow JSONs từ automation/n8n/
+→ Test DashChat live: gõ /status trên Telegram → n8n phải response đúng
 
 ## Context cho AI
-Phase 0 đạt ~75% sau session 2. GPU đã fix (NVIDIA driver mismatch → nvidia-utils-580). Ollama inference: 11s trên GPU (Phase Gate G.3 PASSED). Governance files 10/10 done. LLM Wiki compiled (22KB). DECISIONS.md có 7 entries. Chỉ còn: import n8n workflows vào UI + test FortiVPN + test SSH 4G mobile.
+Phase 0 infrastructure 75% done. GPU fix hoàn thành (RTX3060 100% GPU). Windows client cần Node.js + Task Scheduler. Governance files đầy đủ 10/10. LLM Wiki compiled (22KB). DECISIONS D001-D007 documented. Stack FROZEN: Next.js 14, Supabase, Gemma 4, PayOS, Vercel, Tailwind, shadcn/ui.
+
+## Windows Remote Client Status
+- Git: ✅ v2.48.1
+- SSH: ✅ OpenSSH_9.5p2
+- Node.js: 🔄 đang cài (winget — LTS)
+- Tailscale: ✅ restarted manually (cần Task Scheduler)
+- L:\ mount: 🔄 đang remount
+- rclone config: ✅ ~/.config/rclone/rclone.conf
