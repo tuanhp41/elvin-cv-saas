@@ -83,4 +83,50 @@ qua L:\ trên Windows. Server Ubuntu chỉ chạy services (Docker, Ollama, n8n)
 - DECISIONS.md → D003: Chọn xrdp + TigerVNC
 
 ---
+
+## [TRB-003] NVIDIA Driver Version Mismatch — Ollama chạy CPU-only
+**Date:** 2026-04-11
+**Status:** ✅ RESOLVED
+**Severity:** Critical — Ollama inference 30s thay vì <10s, GPU không được dùng
+
+### Triệu chứng
+- `nvidia-smi` báo: `Failed to initialize NVML: Driver/library version mismatch`
+- `NVML library version: 535.288`
+- Ollama `ps` command: PROCESSOR = CPU (không phải GPU)
+- Inference time: 30+ giây cho prompt ngắn
+- GPU memory usage: chỉ 32MiB (GUI only, không có ML workload)
+
+### Nguyên nhân gốc
+Ubuntu kernel upgrade tự động build lại NVIDIA kernel module qua DKMS,
+nhưng upgrade lên version mới hơn (580.x) trong khi userspace packages (nvidia-utils, NVML library) vẫn ở 535.x.
+
+```
+Kernel module (DKMS):  nvidia 580.126.09  ← mới hơn
+Userspace NVML lib:    535.288.01         ← cũ hơn
+nvidia-smi:            535.288.01         ← cũ hơn
+→ MISMATCH → nvidia-smi crash → Ollama không detect GPU
+```
+
+### Fix
+```bash
+sudo apt install nvidia-utils-580
+```
+Cài userspace utilities version 580 để match kernel module.
+
+### Verify sau fix
+```
+nvidia-smi: Driver Version 580.126.09 ✅
+RTX 3060 12288MiB visible ✅
+Ollama ps: 100% GPU ✅
+Benchmark gemma3:12b: 11s ✅ (Phase Gate G.3 PASSED)
+```
+
+### Prevention sau này
+Sau mỗi kernel upgrade (`uname -r` thay đổi): chạy `nvidia-smi` để xác nhận.
+Nếu fail → `sudo apt install nvidia-utils-$(nvidia-driver version)`.
+
+### Tham chiếu
+- DECISIONS.md → D007: Fix NVIDIA driver mismatch
+
+---
 *Thêm entries mới bên dưới với format [TRB-XXX]*
