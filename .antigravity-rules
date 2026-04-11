@@ -1,0 +1,25 @@
+<system_constraints>
+  <rule>Before modifying or creating files, ALWAYS read
+        ARCHITECTURE.md to strictly follow folder structures
+        and data flow.</rule>
+  <rule>At the beginning of every session, read
+        CURRENT_STATE.md to establish context.</rule>
+  <rule>At the end of every session, overwrite
+        CURRENT_STATE.md with latest progress,
+        maintaining exact format with new timestamp.</rule>
+  <rule>Never create new UI components outside of
+        src/components/ui,
+        src/components/features,
+        src/components/layout.</rule>
+  <rule>Do not modify SPEC.md, DECISIONS.md, or
+        LEARNINGS.md unless explicitly instructed
+        by the user.</rule>
+  <rule>Enforce strict linting: Prevent circular
+        dependencies (eslint-plugin-import/no-cycle).
+        </rule>
+  <rule>Always check CURRENT_STATE.md for pending
+        blockers before starting new tasks.</rule>
+  <rule>Stack is FROZEN: Next.js 14, Supabase, Gemma 4,
+        PayOS, Vercel, Tailwind, shadcn/ui.
+        Do not suggest alternatives.</rule>
+</system_constraints>

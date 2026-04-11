@@ -1,0 +1,289 @@
+{
+  "name": "Dashchat — Telegram Bot Commands",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": ["message"],
+        "additionalFields": {}
+      },
+      "id": "telegram-trigger",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.1,
+      "position": [240, 300],
+      "webhookId": "dashchat-webhook",
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram-elvin-bot",
+          "name": "Elvin_nyzbot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": { "caseSensitive": false, "leftValue": "", "typeValidation": "strict" },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/status",
+                    "operator": { "type": "string", "operation": "startsWith" }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "status"
+            },
+            {
+              "conditions": {
+                "options": { "caseSensitive": false, "leftValue": "", "typeValidation": "strict" },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/done",
+                    "operator": { "type": "string", "operation": "startsWith" }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "done"
+            },
+            {
+              "conditions": {
+                "options": { "caseSensitive": false, "leftValue": "", "typeValidation": "strict" },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/risk",
+                    "operator": { "type": "string", "operation": "startsWith" }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "risk"
+            },
+            {
+              "conditions": {
+                "options": { "caseSensitive": false, "leftValue": "", "typeValidation": "strict" },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/help",
+                    "operator": { "type": "string", "operation": "startsWith" }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "help"
+            }
+          ]
+        },
+        "options": { "fallbackOutput": "extra-output-0" }
+      },
+      "id": "switch-command",
+      "name": "Switch Command",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.1,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "command": "cat /home/elvin/projects/cv-saas/CURRENT_STATE.md"
+      },
+      "id": "read-current-state",
+      "name": "Read CURRENT_STATE",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [680, 160]
+    },
+    {
+      "parameters": {
+        "command": "cd /home/elvin/projects/cv-saas && git log --oneline -10 && echo '---' && git diff HEAD~1 --stat 2>/dev/null || echo 'No previous commit'"
+      },
+      "id": "git-done",
+      "name": "Git Log (done)",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [680, 280]
+    },
+    {
+      "parameters": {
+        "command": "grep -A5 'CRITICAL\\|🔴\\|Triggered' /home/elvin/projects/cv-saas/RISK_LOG.md | head -30"
+      },
+      "id": "read-risks",
+      "name": "Read High Risks",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [680, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "const text = $input.first().json.message?.text || '';\nconst chatId = $input.first().json.message?.chat?.id;\n\nreturn [{\n  json: {\n    chat_id: chatId,\n    text: `🤖 *Elvin_nyzbot — CV SaaS Admin*\n\n📋 *Commands:*\n/status → Xem CURRENT_STATE.md\n/done   → Xem git log + diff gần nhất\n/risk   → Xem risks đang CRITICAL/Triggered\n/help   → Hiển thị menu này\n\n💡 _Nhắn bất kỳ để chat với AI (Phase 2)_`,\n    parse_mode: 'Markdown'\n  }\n}];"
+      },
+      "id": "build-help",
+      "name": "Build Help Message",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 520]
+    },
+    {
+      "parameters": {
+        "jsCode": "const output = $input.first().json.stdout || 'Không đọc được file';\nconst chatId = $('Telegram Trigger').first().json.message?.chat?.id;\n\nreturn [{\n  json: {\n    chat_id: chatId,\n    text: `📍 *CURRENT STATE*\n\\`\\`\\`\n${output.slice(0, 3500)}\n\\`\\`\\``,\n    parse_mode: 'Markdown'\n  }\n}];"
+      },
+      "id": "format-status",
+      "name": "Format Status",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 160]
+    },
+    {
+      "parameters": {
+        "jsCode": "const output = $input.first().json.stdout || 'Không có git info';\nconst chatId = $('Telegram Trigger').first().json.message?.chat?.id;\n\nreturn [{\n  json: {\n    chat_id: chatId,\n    text: `✅ *DONE — Git Activity*\n\\`\\`\\`\n${output.slice(0, 3500)}\n\\`\\`\\`\n\n_Cập nhật LEARNINGS.md nếu có learning mới_`,\n    parse_mode: 'Markdown'\n  }\n}];"
+      },
+      "id": "format-done",
+      "name": "Format Done",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 280]
+    },
+    {
+      "parameters": {
+        "jsCode": "const output = $input.first().json.stdout || 'Không tìm thấy risks cao';\nconst chatId = $('Telegram Trigger').first().json.message?.chat?.id;\n\nreturn [{\n  json: {\n    chat_id: chatId,\n    text: `⚠️ *RISK REPORT — High/Critical*\n\\`\\`\\`\n${output.slice(0, 3500)}\n\\`\\`\\``,\n    parse_mode: 'Markdown'\n  }\n}];"
+      },
+      "id": "format-risk",
+      "name": "Format Risk",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 400]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.chat_id }}",
+        "text": "={{ $json.text }}",
+        "additionalFields": {
+          "parse_mode": "={{ $json.parse_mode }}"
+        }
+      },
+      "id": "send-status",
+      "name": "Send Status",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [1120, 160],
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram-elvin-bot",
+          "name": "Elvin_nyzbot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.chat_id }}",
+        "text": "={{ $json.text }}",
+        "additionalFields": {
+          "parse_mode": "={{ $json.parse_mode }}"
+        }
+      },
+      "id": "send-done",
+      "name": "Send Done",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [1120, 280],
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram-elvin-bot",
+          "name": "Elvin_nyzbot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.chat_id }}",
+        "text": "={{ $json.text }}",
+        "additionalFields": {
+          "parse_mode": "={{ $json.parse_mode }}"
+        }
+      },
+      "id": "send-risk",
+      "name": "Send Risk",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [1120, 400],
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram-elvin-bot",
+          "name": "Elvin_nyzbot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.chat_id }}",
+        "text": "={{ $json.text }}",
+        "additionalFields": {
+          "parse_mode": "={{ $json.parse_mode }}"
+        }
+      },
+      "id": "send-help",
+      "name": "Send Help",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [1120, 520],
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram-elvin-bot",
+          "name": "Elvin_nyzbot"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [[{ "node": "Switch Command", "type": "main", "index": 0 }]]
+    },
+    "Switch Command": {
+      "status": [[{ "node": "Read CURRENT_STATE", "type": "main", "index": 0 }]],
+      "done": [[{ "node": "Git Log (done)", "type": "main", "index": 0 }]],
+      "risk": [[{ "node": "Read High Risks", "type": "main", "index": 0 }]],
+      "help": [[{ "node": "Build Help Message", "type": "main", "index": 0 }]],
+      "extra-output-0": [[{ "node": "Build Help Message", "type": "main", "index": 0 }]]
+    },
+    "Read CURRENT_STATE": {
+      "main": [[{ "node": "Format Status", "type": "main", "index": 0 }]]
+    },
+    "Git Log (done)": {
+      "main": [[{ "node": "Format Done", "type": "main", "index": 0 }]]
+    },
+    "Read High Risks": {
+      "main": [[{ "node": "Format Risk", "type": "main", "index": 0 }]]
+    },
+    "Build Help Message": {
+      "main": [[{ "node": "Send Help", "type": "main", "index": 0 }]]
+    },
+    "Format Status": {
+      "main": [[{ "node": "Send Status", "type": "main", "index": 0 }]]
+    },
+    "Format Done": {
+      "main": [[{ "node": "Send Done", "type": "main", "index": 0 }]]
+    },
+    "Format Risk": {
+      "main": [[{ "node": "Send Risk", "type": "main", "index": 0 }]]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "meta": {
+    "templateCredsSetupCompleted": false
+  }
+}

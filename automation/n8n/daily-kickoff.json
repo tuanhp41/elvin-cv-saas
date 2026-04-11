@@ -1,0 +1,97 @@
+{
+  "name": "Daily 19:00 Kick-off",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 19 * * *"
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger",
+      "name": "Schedule 19:00",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "command": "cat /home/elvin/projects/cv-saas/CURRENT_STATE.md"
+      },
+      "id": "read-state",
+      "name": "Read Current State",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [460, 220]
+    },
+    {
+      "parameters": {
+        "command": "grep -c '\\[✅\\]' /home/elvin/projects/cv-saas/PHASE0_STATUS_REPORT_v2.md 2>/dev/null && grep -c '\\[⏸\\]\\|\\[🔄\\]' /home/elvin/projects/cv-saas/PHASE0_STATUS_REPORT_v2.md 2>/dev/null || echo '0\n0'"
+      },
+      "id": "read-progress",
+      "name": "Read Phase Progress",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [460, 380]
+    },
+    {
+      "parameters": {
+        "jsCode": "const stateOutput = $('Read Current State').first().json.stdout || 'Không đọc được CURRENT_STATE.md';\nconst progressOutput = $('Read Phase Progress').first().json.stdout || '0\\n0';\n\nconst lines = progressOutput.trim().split('\\n');\nconst done = parseInt(lines[0]) || 0;\nconst remaining = parseInt(lines[1]) || 0;\n\n// Extract task đầu tiên từ CURRENT_STATE\nconst taskMatch = stateOutput.match(/Task đầu tiên[\\s\\S]*?→\\s*(.+?)\\n/);\nconst nextTask = taskMatch ? taskMatch[1].trim() : 'Xem CURRENT_STATE.md';\n\n// Extract blockers\nconst blockerMatch = stateOutput.match(/Lỗi chưa xử lý[\\s\\S]*?\\[ \\]\\s*(.+?)\\n/);\nconst blocker = blockerMatch ? blockerMatch[1].trim() : 'Không có blocker';\n\nconst now = new Date();\nconst dateStr = now.toLocaleDateString('vi-VN', { \n  day: '2-digit', month: '2-digit', year: 'numeric',\n  timeZone: 'Asia/Ho_Chi_Minh'\n});\n\nconst message = `🟢 KICK-OFF ${dateStr} | Phase 0\n━━━━━━━━━━━━━━━━━━━━━━\n\n🎯 TASK TỐI NAY:\n→ ${nextTask}\n\n🐛 BLOCKER:\n• ${blocker}\n\n📍 PHASE 0 PROGRESS:\n✅ Done: ${done} items\n⏸ Còn lại: ${remaining} items\n\n💬 Gõ /status để xem chi tiết\nGõ /done khi xong tối nay\nGõ /risk để xem risks cần xử lý`;\n\nreturn [{ json: { \n  chat_id: '8498124621',\n  text: message\n} }];"
+      },
+      "id": "build-kickoff",
+      "name": "Build Kick-off Message",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.chat_id }}",
+        "text": "={{ $json.text }}",
+        "additionalFields": {}
+      },
+      "id": "send-kickoff",
+      "name": "Send Kick-off",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [900, 300],
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram-elvin-bot",
+          "name": "Elvin_nyzbot"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Schedule 19:00": {
+      "main": [
+        [
+          { "node": "Read Current State", "type": "main", "index": 0 },
+          { "node": "Read Phase Progress", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Read Current State": {
+      "main": [[{ "node": "Build Kick-off Message", "type": "main", "index": 0 }]]
+    },
+    "Read Phase Progress": {
+      "main": [[{ "node": "Build Kick-off Message", "type": "main", "index": 0 }]]
+    },
+    "Build Kick-off Message": {
+      "main": [[{ "node": "Send Kick-off", "type": "main", "index": 0 }]]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true
+  },
+  "meta": {
+    "templateCredsSetupCompleted": false
+  }
+}
