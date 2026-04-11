@@ -5,11 +5,51 @@
   <rule>Before modifying or creating files, ALWAYS read
         ARCHITECTURE.md to strictly follow folder structures
         and data flow.</rule>
-  <rule>At the beginning of every session, read
-        CURRENT_STATE.md to establish context.</rule>
-  <rule>At the end of every session, overwrite
-        CURRENT_STATE.md with latest progress,
-        maintaining exact format with new timestamp.</rule>
+  <!-- SESSION STARTUP — đọc theo thứ tự này, không bỏ qua -->
+  <session_startup>
+    <step order="1" file="CURRENT_STATE.md" required="true">
+      Đọc CURRENT_STATE.md TRƯỚC TIÊN.
+      Xác nhận: Phase, Session#, Timestamp, Blocker, Task đầu tiên.
+      Nếu có Blocker đỏ → báo ngay trước khi làm bất cứ điều gì.
+    </step>
+    <step order="2" file="RISK_LOG.md" required="true">
+      Đọc RISK_LOG.md — lọc các risk có status OPEN và severity HIGH/CRITICAL.
+      Nếu có risk Critical chưa có mitigation → đề xuất xử lý trước khi code.
+    </step>
+    <step order="3" file="ROADMAP.md" required="true">
+      Đọc ROADMAP.md — kiểm tra Phase Gate checklist còn bao nhiêu item chưa tick.
+      Báo: "Phase X: Y/Z items done — cần Z-Y items nữa để clear phase gate."
+    </step>
+    <step order="4" file="SPEC.md" condition="khi không chắc scope">
+      Chỉ đọc khi cần xác nhận feature có trong scope không.
+    </step>
+    <step order="5" file="DECISIONS.md" condition="khi sắp ra quyết định">
+      Chỉ đọc khi cần kiểm tra quyết định tương tự đã có chưa.
+    </step>
+    <step order="6" file="ARCHITECTURE.md" condition="trước khi tạo/sửa file code">
+      Bắt buộc đọc trước khi tạo file hoặc folder mới.
+    </step>
+    <on_complete>
+      Sau khi đọc xong, confirm với user theo format:
+      📍 Phase: [X] | Session: [#N] | Progress: [X%]
+      ⚠️ Blockers: [số lượng] | 🔴 Open Risks: [số lượng HIGH+]
+      🎯 Task hôm nay: [từ CURRENT_STATE — Task đầu tiên]
+      → Sẵn sàng. Chờ lệnh.
+    </on_complete>
+  </session_startup>
+
+  <!-- SESSION CLOSE — bắt buộc cuối mỗi session -->
+  <session_close>
+    <step order="1">Overwrite CURRENT_STATE.md với snapshot mới nhất.
+      Giữ đúng format: Timestamp, Phase, Session#, Branch,
+      Đang làm dở, Lỗi chưa xử lý, Quyết định pending,
+      Task đầu tiên session tới, Context cho AI.</step>
+    <step order="2">Báo cáo end-of-session theo PMP format:
+      ✅ COMPLETED | 🔄 IN PROGRESS | ❌ BLOCKED
+      📊 PHASE PROGRESS | ⚠️ NEW RISKS | 📝 DECISIONS | 🎯 NEXT SESSION</step>
+    <step order="3">git add -A && git commit -m "chore: update state session #N"
+      git push origin main</step>
+  </session_close>
   <rule>Never create new UI components outside of
         src/components/ui,
         src/components/features,
