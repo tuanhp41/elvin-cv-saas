@@ -1,0 +1,41 @@
+{
+  "name": "cv-saas",
+  "version": "1.0.0",
+  "description": "CV SaaS — Tạo CV đa ngôn ngữ với AI",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint . --ext .js,.jsx --ignore-path .gitignore",
+    "lint:fix": "eslint . --ext .js,.jsx --fix --ignore-path .gitignore",
+    "prepare": "husky"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tuanhp41/elvin-cv-saas.git"
+  },
+  "keywords": [
+    "cv",
+    "saas",
+    "ai",
+    "vietnam"
+  ],
+  "author": "Nguyen Van Tuan",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/tuanhp41/elvin-cv-saas/issues"
+  },
+  "homepage": "https://github.com/tuanhp41/elvin-cv-saas#readme",
+  "devDependencies": {
+    "eslint": "^9.39.4",
+    "eslint-plugin-import": "^2.32.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0"
+  },
+  "lint-staged": {
+    "*.{js,jsx}": [
+      "eslint --fix",
+      "git add"
+    ]
+  }
+}
