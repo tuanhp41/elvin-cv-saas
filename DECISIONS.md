@@ -115,3 +115,66 @@
 **Impact:** CODING_STANDARDS.md (mới), .env.example (mới). Mọi code từ giờ phải tuân thủ.
 **Revisit khi:** Migrate sang TypeScript (Phase 2+) hoặc thêm state management library.
 
+---
+
+### D011 — Core UX Flow: AI Conversational Split-Screen Builder
+**Ngày:** 2026-04-12 | **Phase:** 1 (Stage 2) | **By:** Opus + User
+**Context:** Ban đầu plan là CV form truyền thống (fill-in fields). User đề xuất split-screen: trái = AI chat phỏng vấn, phải = CV preview sống. Đã research đối thủ VN: JobsGO có AI viết CV nhưng flow thụ động (user tự mô tả); Cake có AI chấm điểm nhưng không tạo mới; TopCV vẫn form cũ. Không ai kết hợp đủ 4 yếu tố bên dưới.
+
+**Quyết định:** Core UX flow thay đổi hoàn toàn:
+
+```
+LUỒNG A — Tạo mới từ Zero (Primary)
+┌──────────────────┬────────────────────────┐
+│  AI CHAT (Left)  │  CV PREVIEW (Right)    │
+│                  │                        │
+│  AI: Tên bạn?   │  [Tên] ← auto fill    │
+│  AI: Kinh        │  [Experience] ← fill  │
+│    nghiệm?      │                        │
+│  ...8-10 câu     │  Real-time A4 render  │
+└──────────────────┴────────────────────────┘
+
+LUỒNG B — Nâng cấp CV có sẵn (Secondary)  
+┌──────────────────┬────────────────────────┐
+│  UPLOAD CV       │  CV PREVIEW (parsed)   │
+│  (PDF/DOCX)      │                        │
+│  ───────────     │  AI đánh giá: 6/10    │
+│  AI: Phần KN của │  Gợi ý cải thiện:     │
+│  bạn hơi mờ,    │  [Rewrite suggestions] │
+│  bạn muốn sửa?  │  ← user confirm → apply│
+└──────────────────┴────────────────────────┘
+```
+
+**Tính năng AI cụ thể:**
+1. **AI Interview (Luồng A):** AI chủ động hỏi 8-10 câu → extract structured JSON → fill CV template
+2. **AI Rewrite:** Trau chuốt từ ngữ — biến câu thô thành câu chuyên nghiệp. LLM excels at this vì CV language = formal, structured, fixed patterns
+3. **AI Scorer (Luồng B):** Upload CV → parse → chấm điểm 1-10 → gợi ý cụ thể → user approve → AI apply
+4. **AI Translate:** Cùng data → render Vi/En/Zh
+
+**USP chính:** Chưa ai ở VN kết hợp đủ 4 điều:
+- ✅ AI chủ động phỏng vấn (not user-initiated)
+- ✅ Split-screen live preview
+- ✅ 3 ngôn ngữ đồng thời
+- ✅ Upload CV cũ → AI polish + score
+
+**Competitive landscape (2026-04):**
+- JobsGO: Chat AI nhưng thụ động, không split-screen preview, chất lượng trung bình
+- Cake: AI Score + ATS checker, không tạo mới, Đài Loan gốc
+- TopCV: Form truyền thống, dominant market share nhưng không đổi mới AI
+- Canva: Design tool, không AI, template Tây
+
+**Rationale:** 
+- Chat flow barrier-to-entry thấp hơn form (quen Zalo/Messenger)
+- AI rewrite language = cực kỳ mạnh của LLM vì CV text ngắn, formal, pattern-based
+- Upload flow = data collection cho AI learning + user retention hook
+- Scoring = reason to upgrade trả phí ("Unlock ATS detailed report")
+
+**Implementation plan:**
+- Phase 1 Stage 2: Luồng A (MVP) — script cố định 8-10 câu, split-screen layout
+- Phase 1 Stage 3: Luồng B (Upload + Score) — PDF parse + LLM evaluate
+- Phase 2+: Smart follow-up questions, ATS matching vs JD
+
+**Trade-off:** Phức tạp hơn form truyền thống ~3x. Nhưng competitive moat rất mạnh, đối thủ VN khó copy nhanh vì cần AI pipeline.
+
+**Impact:** SPEC.md, ROADMAP_PHASE1.md (core UX change), CV form components, API routes `/api/ai/interview`, `/api/ai/rewrite`, `/api/ai/score`
+**Revisit khi:** User testing Phase 4 cho thấy chat flow conversion thấp hơn form → cần A/B test

@@ -3,9 +3,10 @@
 
 > **Trạng thái:** ACTIVE
 > **Tốc độ thực tế:** Phase 0 dự kiến 2 tuần → xong trong 2 ngày. Timing đã điều chỉnh.
-> **Mục tiêu:** App chạy end-to-end + multi-model AI + bắt đầu xây AI development pipeline
+> **Mục tiêu:** AI Conversational Split-Screen CV Builder + multi-model AI + AI dev pipeline
+> **Core UX (D011):** AI chat phỏng vấn → CV preview sống (thay đổi từ form truyền thống)
 > **KHÔNG có:** Revenue. Không thu tiền. Không launch công khai.
-> **Phase Gate:** App on Vercel (protected) + ≥2 models + CV score ≥6/10 + AI pipeline prototype
+> **Phase Gate:** Split-screen flow E2E + Upload+Score MVP + ≥2 models + CV score ≥6/10
 
 ---
 
@@ -14,24 +15,23 @@
 *(Xây dần bộ máy AI — không dựa 100% vào Antigravity)*
 
 ```
-STAGE 1 (Day 1–3): BOOTSTRAPPING
+STAGE 1 (Day 1–3): BOOTSTRAPPING ✅ COMPLETED
   Opus thiết kế architecture + standards
-  Gemini Pro build skeleton theo hướng dẫn Opus
-  Output: App skeleton chạy được + CODING_STANDARDS.md + compiled wiki
+  Gemini Pro build skeleton + Landing Page Apple-style
+  Output: App on Vercel + CODING_STANDARDS.md + Landing redesign
 
-STAGE 2 (Day 4–7): PARALLEL BUILD
-  Gemini Pro: code phần lớn features (có standards guide sẵn)
-  Sonnet: code phần phức tạp (AI router, evaluator)
+STAGE 2 (Day 4–10): PARALLEL BUILD ← ACTIVE (D011 thay đổi scope)
+  Gemini Pro: Split-screen layout, Chat UI, CV templates, Supabase
+  Sonnet: AI router, interview API, rewrite prompts, scorer
   Opus: review architecture decisions
-  BẮT ĐẦU: Test free AI APIs (Gemma/Qwen) viết code
-  Output: App functional end-to-end + EXP-005 (free AI code quality)
+  Output: Luồng A (chat→CV) E2E + Luồng B (upload+score) MVP
 
-STAGE 3 (Day 8–12): PIPELINE BUILD
+STAGE 3 (Day 11–14): PIPELINE BUILD + GATE
   Free AIs (Gemma/Qwen API): code tasks theo standards
-  Gemini Pro: review + fix code từ free AIs
+  Gemini Pro: review + fix + polish
   n8n: orchestrate pipeline tự động
-  Opus: tuần tra tổng + approve
-  Output: AI development pipeline chạy được + Phase Gate pass
+  Opus: tuần tra tổng + Phase Gate approve
+  Output: AI development pipeline + Phase Gate pass
 ```
 
 ---
@@ -166,324 +166,172 @@ Task nhận vào → Phân loại:
 
 ---
 
-## 📅 STAGE 1: BOOTSTRAPPING (Day 1–3)
+## 📅 STAGE 1: BOOTSTRAPPING (Day 1–3) ✅ COMPLETED
 
-### Day 1 — Architecture Lock + Skeleton ✅ (mostly done)
-
-**🤖 Opus:** Thiết kế + Review
-**🤖 Gemini Pro:** Execute scaffold
+> **Hoàn thành:** 2026-04-12 | **Kết quả:** Vượt mong đợi
 
 ```
-[x] Scaffold src/ folder structure (Session #9 — Gemini Pro)
-[x] pages/_app.jsx, _document.jsx (Gemini Pro)
-[x] tailwind.config.js, postcss.config.js (Gemini Pro)
-[x] globals.css + shadcn design tokens (Gemini Pro)
-[x] lib/utils.js, lib/supabase.js, lib/gemma.js, lib/payos.js (Gemini Pro)
-[x] components/layout/Header.jsx (Gemini Pro)
-[x] components/features/CVForm.jsx skeleton (Gemini Pro)
-[x] pages/index.jsx Landing page (Gemini Pro)
-[x] package.json updated with deps (Gemini Pro)
-[ ] npm install trên server → verify build
-[ ] npm run dev → confirm app runs
+[x] Scaffold src/ structure, Next.js pages, Tailwind, shadcn tokens
+[x] lib/supabase.js, lib/utils.js + Supabase env vars
+[x] 10 UI components (Button, Input, Card, Badge, Tabs, Dialog, etc.)
+[x] Auth: login + register + useAuth hook + Dashboard skeleton
+[x] CODING_STANDARDS.md v1.0 + jsconfig.json (@/ alias)
+[x] Deploy to Vercel (elvin-cv-saas.vercel.app) + CI/CD
+[x] Landing Page v2 — Apple-style redesign:
+    - HeroSection: typing animation, gradient CTA, real CV iframe
+    - ShowcaseSection: 3D card flip before/after, language carousel Vi/En/Zh
+    - FeaturesSection: Bento Box clean cards
+    - CTASection + Footer + Be Vietnam Pro font
 ```
 
-### Day 2 — Standards + Knowledge Base + Supabase
-
-**🤖 Opus:** Tạo CODING_STANDARDS.md (quyết định pattern)
-**🤖 Gemini Pro:** Build Supabase schema + compile wiki
-
-```
-MỤC TIÊU: Mọi AI (kể cả free API) đều có thể đọc standards và code đúng
-
-[ ] [Opus] Tạo CODING_STANDARDS.md:
-    - Component naming conventions (PascalCase, file structure)
-    - API route patterns (input validation, error format, response shape)
-    - State management patterns (React hooks, no Redux)
-    - Supabase query patterns (helper functions, error handling)
-    - CSS patterns (cn() helper, design tokens, when to use what)
-    - Import order rules
-    - Code examples cho TỪNG pattern (AI copy theo)
-    
-[ ] [Gemini Pro] Update wiki/compiled/knowledge.md:
-    - Architecture summary
-    - File tree hiện tại
-    - Coding standards summary
-    - API endpoints planned
-    → Đây là "bộ não chung" feed vào prompt khi gọi free AI APIs
-
-[ ] [Gemini Pro] Supabase setup:
-    - Tạo project trên Supabase dashboard
-    - Schema: users, cvs (data_json, language), payments
-    - RLS policies: user isolation
-    - Update lib/supabase.js với real credentials
-    - Test connection
-
-[ ] [Gemini Pro] Auth implementation:
-    - pages/auth/login.jsx + register.jsx
-    - Supabase Auth (email/password)
-    - Protected route middleware
-    - Test: register → login → access protected page
-
-[ ] Ghi DECISIONS.md: D009 — Supabase Schema, D010 — Coding Standards rationale
-```
-
-### Day 3 — Component Library + Deploy
-
-**🤖 Gemini Pro:** Toàn bộ (theo CODING_STANDARDS pattern)
-
-```
-[ ] UI Components (theo shadcn pattern trong standards):
-    - Button, Input, Textarea, Select
-    - Card, Badge, Tabs
-    - Dialog/Modal, Toast/Alert
-    - Spinner/Loading skeleton
-    
-[ ] Vercel deploy:
-    - Connect GitHub repo → Vercel
-    - Env vars (Supabase keys)  
-    - Verify deployment
-    - Password protect nếu cần
-
-[ ] git tag v0.2.0-phase1-stage1
-```
-
-**✅ STAGE 1 CHECKPOINT:**
-- [ ] App chạy trên localhost + Vercel
-- [ ] Auth works (register/login)
-- [ ] Supabase connected + RLS tested
-- [ ] CODING_STANDARDS.md exists (mọi AI đọc được)
-- [ ] compiled wiki updated (knowledge base cho free AIs)
-- [ ] ≥ 10 UI components ready
+**✅ Stage 1 Checkpoint: ALL PASS**
 
 ---
 
-## 📅 STAGE 2: PARALLEL BUILD (Day 4–7)
+## 📅 STAGE 2: PARALLEL BUILD (Day 4–10) ← ACTIVE
 
-### Day 4 — CV Form Full + Templates
+> ⚠️ **D011 CHANGE:** Core UX từ "CV Form" → "AI Conversational Split-Screen"
+> Tham khảo: DECISIONS.md → D011
 
-**🤖 Gemini Pro:** CV Form + 2 templates
-**🤖 Sonnet:** 1 template phức tạp (nếu cần)
+### Day 4 — Supabase Schema + CV Data Model
 
-```
-[ ] [Gemini Pro] Nâng cấp CVForm.jsx → full form:
-    - Dynamic entries (thêm/xóa kinh nghiệm, học vấn)
-    - Tab Vi/En/Zh switching
-    - Form validation
-    - Auto-save to Supabase
-    
-[ ] [Gemini Pro] Template 1: "Professional" (clean, ATS-friendly)
-[ ] [Gemini Pro] Template 2: "Modern" (sidebar, accent colors)
-[ ] [Sonnet nếu cần] Template 3: "Executive" (complex layout)
-
-[ ] [Gemini Pro] Template Picker component
-[ ] [Gemini Pro] Preview page với watermark overlay
-```
-
-### Day 5 — Multi-Model AI Integration
-
-**🤖 Sonnet:** Router logic (complex)
-**🤖 Gemini Pro:** API clients (follow pattern)
+**🤖 Gemini Pro:** DB schema + CRUD helpers
 
 ```
-[ ] [Gemini Pro] Research: Qwen 3 API docs, Groq API docs
-    → Gemini Pro TỐT cho tra cứu docs — tận dụng
+[ ] Supabase schema:
+    - cvs: id, user_id, data_json, template_id, language, score, timestamps
+    - chat_sessions: id, user_id, cv_id, messages_json, status, timestamps
+    - RLS policies: user_id = auth.uid()
 
-[ ] [Gemini Pro] lib/ai/gemma-client.js — Google AI Studio
-[ ] [Gemini Pro] lib/ai/qwen-client.js — Alibaba Dashscope
-[ ] [Gemini Pro] lib/ai/groq-client.js — Groq API
-[ ] [Gemini Pro] lib/ai/prompts.js — CV rewrite prompt templates
+[ ] lib/db/cv.js — CRUD helpers (createCV, updateCV, getCV, listCVs)
+[ ] lib/db/chat.js — Chat session helpers
+```
 
-[ ] [Sonnet] lib/ai/router.js — Intelligent Model Router:
-    - language routing (zh→Qwen, vi/en→Gemma, fast→Groq)
-    - quota checking
-    - fallback chain
-    - unified interface: rewriteCV(section, lang, context)
-    
-[ ] [Sonnet] lib/ai/evaluator.js — CV Quality Scorer:
-    - Dùng 1 model chấm điểm output của model khác
-    - Rubric 10 điểm
-    - Return: { score, breakdown, suggestions }
+### Day 5 — Split-Screen Layout + AI Chat Shell
 
+**🤖 Gemini Pro:** Layout + Chat UI
+**🤖 Sonnet:** AI prompt engineering
+
+```
+[ ] pages/create.jsx — Split-Screen:
+    Left (40%): AI Chat Panel | Right (60%): CV Live Preview
+    Mobile: stack vertically with toggle
+
+[ ] components/features/ChatPanel.jsx:
+    - Message bubbles (AI/User), typing indicator
+    - Quick actions ("Bỏ qua", "Sửa lại")
+
+[ ] components/features/CVPreview.jsx:
+    - A4 container, template renderer, language tabs (Vi/En/Zh)
+
+[ ] lib/ai/interview-script.js:
+    - 8-10 câu hỏi cố định (tên, KN, học vấn, kỹ năng...)
+    - field_mapping + validation per question
+```
+
+### Day 6 — CV Templates + Preview Renderer
+
+**🤖 Gemini Pro:** 3 templates
+
+```
+[ ] cv-templates/ProfessionalTemplate.jsx (2 cột navy sidebar — user's CV style)
+[ ] cv-templates/ModernTemplate.jsx (1 cột, accent header)
+[ ] cv-templates/MinimalTemplate.jsx (1 cột, ATS-optimized)
+[ ] Template Picker component
+[ ] AI-generated avatars for demos
+```
+
+### Day 7 — AI API Integration (Luồng A — Tạo mới)
+
+**🤖 Sonnet:** Router + rewrite (complex)
+**🤖 Gemini Pro:** API clients
+
+```
+[ ] lib/ai/gemma-client.js, qwen-client.js, groq-client.js
+[ ] pages/api/ai/interview.js — extract structured data from chat
+[ ] pages/api/ai/rewrite.js — professional CV language rewrite
+[ ] lib/ai/router.js — language routing + fallback chain
+[ ] lib/ai/prompts.js — CV-specific prompt templates
+```
+
+### Day 8 — End-to-End Flow A (Chat → CV)
+
+**🤖 Gemini Pro:** Wire everything
+
+```
+[ ] ChatPanel ↔ Interview API ↔ CVPreview connected
+[ ] "✨ AI Viết lại" per section with Accept/Reject
+[ ] Auto-save to Supabase after each answer
+[ ] Full test: Register → Chat → CV fills → Template → Preview
+```
+
+### Day 9 — Luồng B MVP (Upload CV + Score)
+
+**🤖 Sonnet:** Scoring logic
+**🤖 Gemini Pro:** Upload UI
+
+```
+[ ] Upload PDF → parse → fill structured data → preview
+[ ] pages/api/ai/score.js — evaluate completeness, language, ATS
+[ ] Score display: gauge + per-section breakdown + "Cải thiện" buttons
 [ ] EXPERIMENTS.md: EXP-001 to EXP-003 (model comparison)
 ```
 
-### Day 6 — End-to-End Integration
+### Day 10 — Polish + EXP-005
 
-**🤖 Gemini Pro:** Wiring everything together
-
-```
-[ ] [Gemini Pro] Connect AI to CV Form:
-    - "AI Rewrite" button per section
-    - Loading state, error handling
-    - Accept/Reject/Edit flow
-    - Rate limit display
-
-[ ] [Gemini Pro] User Dashboard:
-    - pages/dashboard.jsx
-    - List CVs, status, quick actions
-    
-[ ] [Gemini Pro] Payment stub (PayOS sandbox):
-    - Create payment link API
-    - Webhook handler
-    - Unlock watermark on pay
-    - ⚠️ SANDBOX ONLY
-
-[ ] Full flow test: Register → Create CV → AI Rewrite → Template → Preview → Stub Pay
-```
-
-### Day 7 — EXPERIMENT: Free AI Code Generation
-
-**🤖 Gemini Pro:** Setup experiment
-**🤖 Free AIs:** Write test code
-**🤖 Opus:** Evaluate results
+**🤖 Gemini Pro + Opus**
 
 ```
-MỤC TIÊU: Test xem Gemma/Qwen API có thể viết code đủ tốt
-          theo CODING_STANDARDS.md không?
-
-[ ] [Gemini Pro] Tạo script: tools/ai-coder.js
-    - Đọc CODING_STANDARDS.md + compiled wiki
-    - Nhận task description
-    - Gọi Gemma API → generate code
-    - Save output to file
-
-[ ] [Test] Giao 3 tasks cho Gemma API:
-    - Task A: Tạo 1 UI component mới (VD: Footer)
-    - Task B: Tạo 1 API route mới (VD: /api/cv/list)
-    - Task C: Tạo 1 utility function (VD: date formatter)
-
-[ ] [Test] Giao cùng 3 tasks cho Qwen API
-
-[ ] [Opus] Review 6 outputs:
-    - Đúng coding standards?
-    - Code chạy được?
-    - Quality so với Gemini Pro viết?
-    - Kết luận: Free AI có thể giao tasks gì?
-
-[ ] EXPERIMENTS.md: EXP-005 — Free AI Code Generation Quality
-[ ] DECISIONS.md: D011 — Free AI Delegation Policy
-
+[ ] Mobile responsive, loading states, error boundaries
+[ ] EXP-005: Free AI Code Generation Test (Gemma vs Qwen)
 [ ] git tag v0.3.0-phase1-stage2
 ```
 
 **✅ STAGE 2 CHECKPOINT:**
-- [ ] App functional end-to-end
-- [ ] ≥ 2 AI models hoạt động (Gemma + Qwen hoặc Groq)
-- [ ] Router chọn model đúng
-- [ ] Evaluator cho ra score hợp lý
-- [ ] EXP-005 completed: biết free AI code quality level
-- [ ] Payment sandbox flow works
+- [ ] Split-screen chat → CV flow working E2E (Luồng A)
+- [ ] Upload + Score MVP (Luồng B)
+- [ ] ≥ 2 AI models integrated
+- [ ] ≥ 3 CV templates
+- [ ] Real-time preview from chat
+- [ ] Auto-save to Supabase
+- [ ] EXP-005 completed
 
 ---
 
-## 📅 STAGE 3: PIPELINE BUILD (Day 8–12)
+## 📅 STAGE 3: PIPELINE BUILD + GATE (Day 11–14)
 
-### Day 8–9 — Build AI Development Pipeline
-
-**🤖 Sonnet:** Pipeline architecture
-**🤖 Gemini Pro:** n8n workflows + scripts
+### Day 11–12 — AI Development Pipeline
 
 ```
-DỰA TRÊN KẾT QUẢ EXP-005 để phân công pipeline
-
-[ ] [Sonnet] Design pipeline architecture:
-    Task Queue → AI Worker → AI Reviewer → Auto-test → Human Approve
-    
-[ ] [Gemini Pro] Tạo tools/task-queue.json:
-    - Danh sách tasks còn lại Phase 1
-    - Mỗi task: description, complexity, assigned_ai, status
-    
-[ ] [Gemini Pro] n8n workflow: "AI Code Worker"
-    1. Read next task from queue
-    2. Read CODING_STANDARDS.md + wiki
-    3. Call Gemma/Qwen API → generate code
-    4. Save to scratch file
-    5. Call another model → review code
-    6. If review OK → create git branch + commit
-    7. If review FAIL → retry with feedback
-    8. Notify Telegram: "Task X done, needs human review"
-
-[ ] [Gemini Pro] n8n workflow: "AI Code Reporter"
-    - Daily scan: new files, changes, quality metrics
-    - Generate report → Telegram
-    - Flag issues for human review
-
-[ ] [Sonnet] Human-in-the-loop interface:
-    - pages/admin/review.jsx (hoặc Telegram-based)
-    - Xem code diff từ AI
-    - Approve / Request changes / Reject
-    - Approved → merge to main
+[ ] Pipeline: Task Queue → AI Worker → AI Reviewer → Human Approve
+[ ] n8n workflow "AI Code Worker"
+[ ] Test: 5 real tasks through pipeline
+[ ] EXP-006: AI Pipeline Productivity
 ```
 
-### Day 10 — Pipeline Test Run
-
-**🤖 Pipeline tự chạy**
-**🤖 Gemini Pro:** Monitor + fix
+### Day 13 — Quality Tuần Tra
 
 ```
-[ ] Giao pipeline 5 tasks thực tế:
-    - Tạo Footer component
-    - Tạo /api/cv/delete route  
-    - Tạo CV export to HTML function
-    - Tạo error boundary component
-    - Tạo SEO meta component
-
-[ ] Monitor: pipeline có tự hoàn thành?
-[ ] Review output quality
-[ ] Fix pipeline bugs
-[ ] Tune prompts nếu output kém
-
-[ ] EXPERIMENTS.md: EXP-006 — AI Pipeline Productivity
+[ ] [Opus] Full codebase review (architecture, security, consistency)
+[ ] [Gemini] Execute all fixes
+[ ] Lighthouse audit
 ```
 
-### Day 11 — Polish + Quality
-
-**🤖 Opus:** Tuần tra tổng (code review toàn bộ codebase)
-**🤖 Gemini Pro:** Fix theo feedback Opus
+### Day 14 — Phase Gate
 
 ```
-[ ] [Opus] Full codebase review:
-    - Architecture alignment
-    - Security issues
-    - Code consistency
-    - Performance concerns
-    - Danh sách fixes cần làm
-
-[ ] [Gemini Pro] Execute fixes from Opus review
-
-[ ] [Gemini Pro] UX polish:
-    - Responsive check
-    - Loading states
-    - Error messages
-    - Micro-animations (nếu kịp)
-
-[ ] Lighthouse audit → fix critical issues
-```
-
-### Day 12 — Phase Gate + Close
-
-**🤖 Opus:** Phase Gate review & approval
-
-```
-[ ] CV Quality Evaluation:
-    - Tạo 10 CV mẫu, 3 ngôn ngữ
-    - Chạy AI rewrite → evaluate
-    - Target: ≥ 6/10 trung bình
-
+[ ] 10 CV mẫu qua chat flow, 3 ngôn ngữ → target ≥ 6/10
 [ ] Phase Gate Checklist:
-    - [ ] App end-to-end on Vercel?
+    - [ ] Split-screen chat → CV flow works E2E?
+    - [ ] Upload + Score flow works?
     - [ ] ≥ 2 AI models working?
-    - [ ] Supabase RLS tested?
+    - [ ] ≥ 3 CV templates?
+    - [ ] Supabase CRUD + RLS tested?
     - [ ] DECISIONS.md ≥ 15?
-    - [ ] EXPERIMENTS.md ≥ 3?
+    - [ ] EXPERIMENTS.md ≥ 5?
     - [ ] CV score ≥ 6/10?
     - [ ] AI pipeline prototype working?
     - [ ] 0 critical security issues?
-
-[ ] Governance update:
-    - CURRENT_STATE.md
-    - LEARNINGS.md compile
-    - ROADMAP_PHASE2.md (draft)
 
 [ ] git tag v1.0.0-phase1-complete
 [ ] 🎉 Phase 1 Complete
@@ -491,46 +339,22 @@ DỰA TRÊN KẾT QUẢ EXP-005 để phân công pipeline
 
 ---
 
-## 📊 PHASE 1 KPIs (Adjusted)
+## 📊 PHASE 1 KPIs (Updated per D011)
 
 | KPI | Target | Đo bằng |
 |---|---|---|
-| Duration | ≤ 14 ngày (thay vì 6 tuần) | Calendar |
-| DECISIONS.md entries mới | ≥ 8 | Document count |
-| EXPERIMENTS.md completed | ≥ 5 | Experiment count |
-| Models integrated | ≥ 3 | Working API calls |
-| CV quality score avg | ≥ 6/10 | evaluator.js |
-| AI pipeline tasks completed | ≥ 5 | Pipeline output count |
-| Antigravity Opus usage | ≤ 15% total work | Estimate |
-| Gemini Pro usage | ≥ 60% total work | Estimate |
-| Free AI contribution | ≥ 5 merged tasks | Git log |
+| Duration | ≤ 14 ngày | Calendar |
+| Core UX (chat → CV) | Working E2E | Manual test |
+| Upload + Score | Working MVP | Manual test |
+| CV templates | ≥ 3 | Template count |
+| Models integrated | ≥ 2 | Working API calls |
+| CV quality score avg | ≥ 6/10 | AI scorer |
+| DECISIONS.md entries | ≥ 15 | Count |
+| EXPERIMENTS.md | ≥ 5 | Count |
 
 ---
 
-## 🧠 NGUYÊN TẮC PHÂN TASK
-
-```
-TRƯỚC KHI DÙNG OPUS, HỎI:
-  "Gemini Pro có thể làm việc này với hướng dẫn rõ ràng không?"
-  Nếu CÓ → dùng Gemini Pro + viết hướng dẫn chi tiết
-  Nếu KHÔNG → dùng Sonnet
-  Chỉ dùng Opus khi: architecture, review tổng, Phase Gate decision
-
-TRƯỚC KHI DÙNG ANTIGRAVITY, HỎI:
-  "Free AI API có thể làm việc này với CODING_STANDARDS.md không?"
-  Nếu CÓ → giao pipeline (Stage 3)
-  Nếu KHÔNG → dùng Antigravity
-  
-GEMINI PRO VÀ CLAUDE KHÁC NHAU Ở ĐÂU:
-  Gemini Pro tốt hơn: tra cứu docs, web search, generate code dài, 
-                       follow patterns, broad knowledge
-  Claude tốt hơn: reasoning phức tạp, architecture design, 
-                   nuanced review, catch subtle bugs
-  → Dùng đúng sở trường = tiết kiệm token + chất lượng cao
-```
-
----
-
-*Phase 1 Roadmap v2.0 — Adjusted for real pace + AI workforce model*
-*Timing calibrated: Phase 0 done in 2 days, not 2 weeks*
+*Phase 1 Roadmap v3.0 — Updated per D011 (AI Conversational Split-Screen)*
+*Core UX: form-based → AI chat interview + live preview*
 *Previous version: see git history*
+
