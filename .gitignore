@@ -28,3 +28,7 @@ npm-debug.log*
 
 # Misc
 *.pem
+
+# Obsidian — sync settings nhưng không sync session state cá nhân
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json

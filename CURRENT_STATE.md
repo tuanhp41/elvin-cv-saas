@@ -7,6 +7,7 @@
 - **Branch:** main — up to date với origin
 - **Master Plan:** v4.1 (D011 update)
 - **Session:** #15 (Sonnet — Day 4-5-6 HOÀN THÀNH)
+- **Links:** [[ROADMAP_PHASE1]] | [[DECISIONS]] | [[ENVIRONMENT]] | [[CODING_STANDARDS]] | [[EXPERIMENTS]]
 
 ## Trạng thái Stage 2
   - [x] Supabase schema (cvs, chat_sessions + RLS) — `docs/supabase/migrations/001_cv_chat_schema.sql`
