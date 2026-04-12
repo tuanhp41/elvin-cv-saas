@@ -12,11 +12,11 @@
 [LAPTOP-PERSONAL]  ──── Tailscale ────┐
   Windows 11, full admin               ├──→ [SERVER-PC]
   L:\ = rclone mount                   │     Ubuntu 22.04
-                                        │     Tailscale IP: 100.67.85.6
-[LAPTOP-COMPANY]   ──── [TODO] ────────┘     RTX3060
-  Windows ??, limited rights                  n8n :5678
+                                       │     Tailscale: 100.67.85.6
+[LAPTOP-COMPANY]   ──── [TODO] ────────┘     Server User: elvin
+  Windows 11, hạn chế                         n8n :5678
   FortiVPN thường xuyên                       Ollama :11434
-  SSH method: [TODO]
+  SSH method: plink/ssh
 ```
 
 ---
@@ -44,18 +44,15 @@
 
 ### SSH vào Server từ LAPTOP-PERSONAL
 ```powershell
-# Cách 1 — SSH alias (preferred, Claude/Gemini sessions)
-ssh tuanpc          # user: tuan, path: /home/tuan/projects/cv-saas/
-
-# Cách 2 — SSH alias (Antigravity sessions)
+# Cách 1 — SSH alias (chính thức, đã cấu hình trong .ssh/config)
 ssh ubuntu-server   # user: elvin, path: /home/elvin/projects/cv-saas/
 
-# Cách 3 — Direct Tailscale IP
-ssh tuan@100.67.85.6
+# Cách 2 — Direct Tailscale IP
 ssh elvin@100.67.85.6
 
-# ⚠️ QUAN TRỌNG: 2 user khác nhau trên cùng server
-# tuanpc/tuan    = alias cũ (Claude Code sessions)
+# ⚠️ QUAN TRỌNG: User trên server là elvin, project nằm trong /home/elvin/projects/cv-saas
+# Git remote: github.com/tuanhp41/elvin-cv-saas
+
 # ubuntu-server/elvin = alias Antigravity dùng
 # Git remote là CÙNG repo: github.com/tuanhp41/elvin-cv-saas
 # SSH config tại: C:\Users\tuanh\.ssh\config
@@ -152,8 +149,8 @@ Nếu không có L:\ → workflow thay thế:
 |---|---|
 | OS | Ubuntu 22.04 LTS Server |
 | Tailscale IP | `100.67.85.6` |
-| SSH User | `tuan` |
-| Project Path | `/home/tuan/projects/cv-saas/` |
+| SSH User | `elvin` |
+| Project Path | `/home/elvin/projects/cv-saas/` |
 | GPU | RTX3060 12GB |
 
 ### Services
@@ -174,9 +171,9 @@ environment:
 ### Server-side Commands thường dùng
 ```bash
 # SSH vào server (chạy từ laptop)
-ssh tuanpc
+ssh ubuntu-server
 # hoặc
-ssh tuan@100.67.85.6
+ssh elvin@100.67.85.6
 
 # Kiểm tra services
 docker ps
@@ -185,11 +182,12 @@ systemctl status ollama
 # GPU check
 nvidia-smi
 
-# Commit từ server (tránh Husky Windows issue)
-cd /home/tuan/projects/cv-saas
-git add -A
-git commit -m "type(scope): message"
-git push origin main
+# Commit & Push từ server (Cách an toàn nhất, tránh Husky Windows issue & SSH key issue)
+ssh ubuntu-server "cd /home/elvin/projects/cv-saas && git add -A && git commit -m 'type(scope): message' && git push origin main"
+
+# NẾU COMMIT TRÊN WINDOWS:
+# Git trên Windows có thể bị fail push do thiếu SSH key Github, hãy dùng lệnh sau để push nhờ server:
+ssh ubuntu-server "cd /home/elvin/projects/cv-saas && git push origin main"
 
 # Husky issue: sau npm install trên server
 chmod +x node_modules/.bin/*

@@ -72,3 +72,20 @@
 **Benchmark trước fix:** gemma3:12b = 30s (CPU-only)
 **Benchmark sau fix:** gemma3:12b = 11s (100% GPU) ✅ Phase Gate G.3: PASSED
 **Revisit khi:** Sau kernel upgrade tiếp theo — kiểm tra nvidia-smi ngay sau reboot
+
+## [2026-04-12] [D008] Restructure Roadmap v3 → v4: Quality-First Approach
+**Context:** Master Plan v3 yêu cầu "5 paying users" ngay Phase 1 — mâu thuẫn với mục tiêu cốt lõi "học trước, revenue sau". Ngoài ra, có nhiều LLM API miễn phí (Qwen, Groq) chưa được tận dụng.
+**Học được:**
+- PMP Scope Alignment: Phase Gate phải align với Project Charter mục tiêu. Charter nói "học" thì Gate phải đo "learned what", không đo "earned what".
+- PMP Quality Management (PMBOK Principle #8): Quality phải built-in từ quy trình, không phải inspect-in sau khi launch.
+- Multi-model strategy giảm vendor lock-in risk (R01, R09) và tận dụng free resources tối đa.
+**Quyết định:** Restructure Roadmap từ 4 phases sang 5 phases:
+- Phase 1: Core App + AI Foundation (KHÔNG launch, KHÔNG thu tiền)
+- Phase 2: Automation & Self-Learning  
+- Phase 3: Multi-Agent & Quality Assurance
+- Phase 4: Polish & Internal Beta (MỚI — 10 testers miễn phí)
+- Phase 5: Controlled Market Launch (MỚI — ≥20 paying users)
+**Rationale:** Launch khi chưa sẵn sàng = negative feedback loop. Dùng thời gian thêm để build evaluation system, multi-agent pipeline — learning value cao hơn nhiều so với "5 users trả 50k".
+**Trade-off chấp nhận:** Thêm ~2 tháng trước khi có revenue. Acceptable vì mục tiêu chính là learning, không phải revenue.
+**Impact:** CV_SAAS_MASTER_PLAN_v3.md → archived → v4.md. ROADMAP.md → ROADMAP_PHASE1.md. SPEC.md updated.
+**Revisit khi:** Nếu free API quotas bị cắt đột ngột → có thể cần accelerate launch để có revenue

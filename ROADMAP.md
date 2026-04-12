@@ -1,5 +1,13 @@
-# PHASE 0 — Infrastructure & Governance Roadmap
-# CV SaaS Project | Frozen: Tháng 4/2026
+# ⚠️ DEPRECATED — KHÔNG DÙNG FILE NÀY NỮA
+# File này là ROADMAP cũ cho Phase 0 (đã hoàn thành).
+# Master Plan mới: CV_SAAS_MASTER_PLAN_v4.md
+# Roadmap Phase 1 chi tiết: ROADMAP_PHASE1.md
+# Lý do thay đổi: DECISIONS.md → D008
+
+---
+
+# PHASE 0 — Infrastructure & Governance Roadmap (ARCHIVED)
+# CV SaaS Project | Frozen: Tháng 4/2026 | STATUS: ✅ COMPLETED
 
 > **Trạng thái:** FROZEN — Không thêm/bớt cho đến khi Phase 0 hoàn thành  
 > **Thời gian ước tính:** 2 tuần (1–2 tiếng/ngày)  

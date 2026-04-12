@@ -11,23 +11,29 @@ Học AI Engineering toàn diện. Revenue là thứ yếu.
 - Frontend: Next.js 14
 - Database + Auth: Supabase
 - AI Local: gemma4:latest (Ollama, RTX3060 12GB)
-- AI API: Gemma 4 (Google AI Studio — free tier)
-- Payment: PayOS
+- AI API Primary: Gemma 4 (Google AI Studio — free tier)
+- AI API Secondary: Qwen 3 (Alibaba — free tier, mạnh tiếng Trung)
+- AI API Fast: Groq (free tier, inference cực nhanh)
+- Payment: PayOS (sandbox until Phase 5)
 - Hosting: Vercel
 - UI: Tailwind CSS + shadcn/ui
 - Automation: n8n (self-hosted Docker)
 - Remote: Tailscale (IP: 100.67.85.6)
 
-## Phase hiện tại: Phase 1 — MVP
+## Master Plan: v4.0 (quality-first, 5 phases)
+## Phase hiện tại: Phase 1 — Core App + AI Foundation
+## Chi tiết Phase 1: xem ROADMAP_PHASE1.md
 
-## Tính năng Phase 1
+## Tính năng Phase 1 (KHÔNG launch công khai)
 - Landing page
 - CV form (Vi/En/Zh fields)
 - Template picker (3 mẫu HTML)
-- AI rewrite CV (Gemma 4 API)
+- AI rewrite CV — multi-model (Gemma + Qwen + Groq + local fallback)
+- Model Router — tự chọn model tốt nhất theo ngôn ngữ
+- CV Quality Evaluator — tự chấm điểm AI output
 - Preview với watermark
 - Auth (Supabase)
-- Payment (PayOS) → unlock watermark
+- Payment stub (PayOS sandbox — KHÔNG bật live)
 
 ## Out of Scope (KHÔNG làm)
 - PDF export
