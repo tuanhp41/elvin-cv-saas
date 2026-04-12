@@ -2,18 +2,20 @@
 # ⚠️ OVERWRITE ONLY — không append — chỉ có 1 snapshot mới nhất
 
 ## Snapshot
-- **Timestamp:** 2026-04-12 14:06 +07:00
-- **Phase:** 1 — Core App + AI Foundation | **Session:** #11 (Gemini Pro)
+- **Timestamp:** 2026-04-12 14:38 +07:00
+- **Phase:** 1 — Core App + AI Foundation | **Session:** #12 (Gemini Pro)
 - **Branch:** main
 - **Master Plan:** v4.0
 
 ## Đang làm dở
-- Việc: Phase 1 Stage 1 Bootstrapping
+- Việc: Phase 1 Stage 1 Bootstrapping (Hoàn tất) / Stage 2 Parallel Build (Bắt đầu)
 - Trạng thái: 
   - [x] npm install & build verified
   - [x] wiki compile updated with architecture view
   - [x] Supabase connection & Auth (Login, Register, Dashboard)
-  - [ ] Day 2: CODING_STANDARDS.md (CHỜ OPUS thực hiện)
+  - [x] Day 2: CODING_STANDARDS.md (Opus đã thiết lập v1.0)
+  - [x] Day 3: UI Component library (Button, Input, Textarea, Select, Card, Badge, Tabs, Dialog, Alert, Spinner)
+  - [ ] Day 3: Vercel Deploy (User thực hiện tay)
 
 ## Lỗi chưa xử lý
 - [ ] LAPTOP-COMPANY SSH method chưa confirm (non-blocking)
@@ -23,8 +25,8 @@
 - [ ] Đồng bộ 1 user duy nhất trên server (tuan vs elvin)
 
 ## Task đầu tiên session tới
-→ [Opus] Thực hiện viết `CODING_STANDARDS.md` để hoàn tất Stage 1
-→ [Gemini Pro] Sau đó bắt đầu Stage 2: UI Component library + CV Form Full
+→ [Human] Deploy dự án lên Vercel và config Supabase keys. Tag branch `v0.2.0-phase1-stage1`.
+→ [Gemini Pro] Bắt đầu Stage 2 (Day 4): CV Form Full Layout (hỗ trợ nhiều ngôn ngữ, entries, tabs, validations) + Auto-save vào Supabase.
 
 ## Context cho AI
 Phase 0 COMPLETE. Master Plan v4 approved: quality-first approach, 5 phases, multi-model (Gemma+Qwen+Groq). ROADMAP cũ archived tại docs/history/. Phase 1 roadmap chi tiết tại ROADMAP_PHASE1.md. Stack FROZEN: Next.js 14, Supabase, Gemma 4 + Qwen + Groq, PayOS (sandbox), Vercel, Tailwind, shadcn/ui. Scaffold đã có (pages, components, lib stubs). Cần npm install + verify build.
