@@ -2,57 +2,63 @@
 # ⚠️ OVERWRITE ONLY — không append — chỉ có 1 snapshot mới nhất
 
 ## Snapshot
-- **Timestamp:** 2026-04-12 19:15 +07:00
-- **Phase:** 1 — Core App + AI Foundation | **Stage:** 2 (bắt đầu)
+- **Timestamp:** 2026-04-12 22:26 +07:00
+- **Phase:** 1 — Core App + AI Foundation | **Stage:** 2 (đang chạy)
 - **Branch:** main
 - **Master Plan:** v4.1 (D011 update)
-- **Session:** #14 (Opus — Architecture + Roadmap update)
+- **Session:** #15 (Sonnet — Day 4-5-6 implementation)
 
 ## Đang làm dở
 - Việc: Stage 2 — AI Conversational Split-Screen Builder
 - Trạng thái:
-  **Stage 1 ✅ COMPLETED:**
-  - [x] Scaffold, build, deploy Vercel
-  - [x] Auth (login/register), Dashboard skeleton
-  - [x] 10 UI components, CODING_STANDARDS.md
-  - [x] Landing Page v2 — Apple-style (Hero, Showcase, Features, CTA, Footer)
-  - [x] ShowcaseSection: 3D card flip + language carousel Vi/En/Zh
-  
-  **Stage 2 — STARTING (Day 4):**
-  - [ ] Supabase schema (cvs, chat_sessions tables)
-  - [ ] Split-screen layout (pages/create.jsx)
-  - [ ] ChatPanel + CVPreview components
-  - [ ] AI interview script (8-10 questions)
-  - [ ] 3 CV templates
-  - [ ] AI API integration (Gemma/Qwen/Groq)
-  - [ ] Upload + Score flow (Luồng B)
+  **Stage 1 ✅ COMPLETED**
+
+  **Stage 2 — IN PROGRESS:**
+  - [x] Supabase schema (cvs, chat_sessions tables + RLS)
+  - [x] lib/db/cv.js — CRUD helpers
+  - [x] lib/db/chat.js — Chat session helpers
+  - [x] lib/ai/interview-script.js — 8 câu hỏi kịch bản phỏng vấn
+  - [x] Split-screen layout (pages/create.jsx)
+  - [x] ChatPanel.jsx — iOS iMessage style, mock AI flow
+  - [x] CVPreview.jsx — A4 canvas + language tabs + TemplatePicker
+  - [x] 3 CV templates: ProfessionalTemplate / ModernTemplate / MinimalTemplate
+  - [x] TemplatePicker.jsx — mini preview gallery
+  - [ ] AI API integration (Gemma/Qwen/Groq) — Day 7
+  - [ ] End-to-end flow A (Chat → CV auto-fill) — Day 8
+  - [ ] Upload + Score flow (Luồng B) — Day 9
 
 ## Quyết định mới
 - [x] D011 — Core UX: AI chat split-screen thay CV form truyền thống
-- [x] Landing Page FROZEN ❄️ — mọi ý tưởng UI mới → UI_IDEAS_BACKLOG.md
+- [x] D012 — Git remote SSH → HTTPS để push từ Windows
 - [ ] Qwen API endpoint (Dashscope vs Hugging Face) — quyết định khi code Day 7
 
 ## Lỗi chưa xử lý
 - [ ] ESLint warnings (unused imports) — non-blocking, cleanup later
+- [ ] Next.js SWC binary missing trên Windows → `next dev` không chạy được local, chỉ xem qua Vercel
 
 ## Task đầu tiên session tới
-→ [Gemini Pro] Day 4: Supabase schema + RLS + CRUD helpers (lib/db/cv.js, lib/db/chat.js)
-→ [Gemini Pro] Day 5: Split-screen layout (pages/create.jsx) + ChatPanel shell
+→ [Sonnet/Gemini Pro] Day 7: AI API integration — lib/ai/groq-client.js + lib/ai/gemma-client.js + pages/api/ai/interview.js + lib/ai/router.js
 
 ## Context cho AI
 **CRITICAL — ĐỌC TRƯỚC KHI CODE:**
-- D011 thay đổi core UX: KHÔNG dùng CV form truyền thống. Dùng AI chat phỏng vấn bên trái + CV preview sống bên phải.
-- 2 luồng: Luồng A (chat → CV mới) + Luồng B (upload CV cũ → AI score + rewrite)
-- Landing page FROZEN — không sửa nữa. Backlog tại docs/backlog/UI_IDEAS_BACKLOG.md
-- Competitive research: JobsGO (chat AI thụ động), Cake (AI scorer), TopCV (form cũ) — chưa ai kết hợp đủ 4 USP
-- Roadmap chi tiết: ROADMAP_PHASE1.md v3.0
-- Coding standards: CODING_STANDARDS.md v1.0
+- D011: AI chat phỏng vấn bên trái + CV preview sống bên phải
+- ChatPanel hiện dùng mock (setTimeout 1.5s), chưa có AI thật
+- CVPreview đã kết nối với 3 templates thật qua TemplatePicker
+- Data flow: ChatPanel.onExtractData(fieldTarget, value) → cvData state → CVPreview.previewData
+- Supabase keys đã có trong .env.local VÀ Vercel env vars
+- Admin test account: elvin@admin.com / Tuan1235@
 
-## Files đã thay đổi session #13-14
-- [NEW] src/components/landing/ShowcaseSection.jsx (3D flip + language carousel)
-- [UPDATED] src/components/landing/HeroSection.jsx (Apple-style redesign)
-- [UPDATED] src/components/landing/FeaturesSection.jsx (clean white cards)
-- [UPDATED] src/components/landing/CTASection.jsx (Apple-style CTA)
-- [UPDATED] DECISIONS.md (D011 — Core UX Architecture)
-- [UPDATED] ROADMAP_PHASE1.md (v3.0 — full rewrite for D011)
-- [NEW] docs/backlog/UI_IDEAS_BACKLOG.md
+## Files đã thay đổi session #15
+- [NEW] docs/supabase/migrations/001_cv_chat_schema.sql
+- [NEW] src/lib/db/cv.js
+- [NEW] src/lib/db/chat.js
+- [NEW] src/lib/ai/interview-script.js
+- [NEW] src/pages/create.jsx
+- [NEW] src/components/features/ChatPanel.jsx
+- [NEW] src/components/features/CVPreview.jsx (updated từ mock → templates thật)
+- [NEW] src/components/cv-templates/ProfessionalTemplate.jsx
+- [NEW] src/components/cv-templates/ModernTemplate.jsx
+- [NEW] src/components/cv-templates/MinimalTemplate.jsx
+- [NEW] src/components/features/TemplatePicker.jsx
+- [NEW] src/pages/api/admin/seed-user.js
+- [UPDATED] DECISIONS.md (D012 — git SSH→HTTPS fix)
