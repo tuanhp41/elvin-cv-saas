@@ -1,27 +1,26 @@
-import React from 'react';
 import Link from 'next/link';
-import { Button } from '@/components/ui/Button';
+import { ArrowRight } from 'lucide-react';
 
 export default function CTASection() {
   return (
-    <section className="py-24 relative overflow-hidden">
-      {/* Subtle Background Glow */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent to-primary/5 dark:to-primary/10"></div>
-      
-      <div className="container relative z-10 mx-auto px-4 text-center">
-        <div className="max-w-3xl mx-auto glass-card rounded-3xl p-10 md:p-16 border border-primary/20 shadow-2xl">
-          <h2 className="text-3xl md:text-5xl font-extrabold mb-6">
-            Bắt đầu tạo CV ngay hôm nay
-          </h2>
-          <p className="text-lg text-muted-foreground mb-10 max-w-xl mx-auto">
-            Không cần thẻ tín dụng. Hoàn toàn miễn phí để bắt đầu với hệ thống AI của chúng tôi.
-          </p>
-          <Link href="/create">
-            <Button size="lg" className="text-lg px-10 py-6 rounded-xl shadow-lg hover:shadow-primary/30 transition-all hover:scale-105">
-              Bắt đầu hành trình
-            </Button>
-          </Link>
-        </div>
+    <section className="py-24 bg-gray-50">
+      <div className="container mx-auto px-4 text-center">
+        <h2 className="text-4xl md:text-6xl font-extrabold text-gray-900 tracking-tight mb-6">
+          Bắt đầu ngay hôm nay.
+          <br />
+          <span className="text-gray-400 font-bold">Hoàn toàn miễn phí.</span>
+        </h2>
+        <p className="text-xl text-gray-500 mb-10 max-w-lg mx-auto">
+          Không đăng ký rườm rà. Không cần thẻ tín dụng. Chỉ cần email và bắt đầu.
+        </p>
+        <Link
+          href="/create"
+          className="group inline-flex items-center gap-2 px-8 py-4 rounded-2xl font-bold text-lg text-white transition-all duration-300 shadow-[0_4px_24px_rgba(37,99,235,0.35)] hover:shadow-[0_8px_32px_rgba(37,99,235,0.45)] hover:-translate-y-0.5"
+          style={{ background: 'linear-gradient(135deg, #2563EB 0%, #7c3aed 100%)' }}
+        >
+          Tạo CV của tôi
+          <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+        </Link>
       </div>
     </section>
   );
