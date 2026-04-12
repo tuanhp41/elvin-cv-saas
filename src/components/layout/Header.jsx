@@ -13,8 +13,8 @@ export default function Header() {
     <header className="fixed top-0 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-50">
       <div className="container flex h-14 items-center justify-between">
         <div className="flex items-center space-x-4">
-          <Link href="/" className="font-bold text-xl">
-            CV Builder
+          <Link href="/" className="font-bold text-xl flex items-center gap-1">
+            CV Builder <span className="text-blue-600">✨</span>
           </Link>
           <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
             <Link href="/" className="transition-colors hover:text-foreground/80 text-foreground">Trang chủ</Link>

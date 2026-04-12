@@ -1,10 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 60 20% 98%; /* #FAFAF9 Sáng ấm */
     --foreground: 222.2 84% 4.9%;
 
     --card: 0 0% 100%;
@@ -32,7 +34,7 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 221.2 83.2% 53.3%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem; /* Tăng bo góc cho hiện đại */
   }
 
   .dark {
@@ -73,4 +75,29 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+@layer utilities {
+  .glass-card {
+    @apply bg-white/70 dark:bg-black/50 backdrop-blur-md border border-white/20 dark:border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(255,255,255,0.02)];
+  }
+
+  .glow-border {
+    @apply relative before:absolute before:inset-0 before:-z-10 before:rounded-[inherit] before:p-[1px] before:bg-gradient-to-r before:from-blue-500 before:to-purple-500 before:opacity-0 hover:before:opacity-100 before:transition-opacity before:duration-500;
+  }
+
+  .gradient-blob {
+    @apply absolute rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[100px] opacity-70 animate-blob;
+    will-change: transform;
+  }
+  
+  .typing-cursor {
+    border-right: 3px solid hsl(var(--primary));
+    animation: blink 1s step-end infinite;
+  }
+}
+
+@keyframes blink {
+  from, to { border-color: transparent }
+  50% { border-color: hsl(var(--primary)); }
 }
