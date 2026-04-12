@@ -1,6 +1,7 @@
 # UI/UX Backlog — Ý tưởng chưa triển khai
 
 > Ghi lại để không mất ý tưởng. Review lại ở Phase 2 hoặc khi có bandwidth.
+> Links: [[CV_SAAS_MASTER_PLAN_v4]] | [[ROADMAP_PHASE1]] | [[DECISIONS]]
 
 ---
 

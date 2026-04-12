@@ -20,7 +20,7 @@ Học AI Engineering toàn diện. Revenue là thứ yếu.
 - Automation: n8n (self-hosted Docker)
 - Remote: Tailscale (IP: 100.67.85.6)
 
-## Master Plan: v4.0 (quality-first, 5 phases)
+## Master Plan: [[CV_SAAS_MASTER_PLAN_v4]] (quality-first, 5 phases)
 ## Phase hiện tại: Phase 1 — Core App + AI Foundation
 ## Chi tiết Phase 1: xem [[ROADMAP_PHASE1]]
 

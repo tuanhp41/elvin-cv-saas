@@ -7,7 +7,7 @@
 
 > **Phiên bản trước:** [v3.0 — Archived](docs/history/CV_SAAS_MASTER_PLAN_v3_ARCHIVED_2026-04-12.md)
 > **Ngày thay đổi:** 2026-04-12
-> **Quyết định liên quan:** DECISIONS.md → D008, D011
+> **Quyết định liên quan:** [[DECISIONS]] → D008, D011
 
 ### Tại sao thay đổi?
 
@@ -39,7 +39,7 @@ v4.1: D011 — Core UX thay đổi: form → AI chat split-screen
 2. **Không đề xuất thay đổi stack Tier 1** nếu chưa có lý do học tập rõ ràng
 3. **Luôn hỏi "học được gì?"** trước khi propose thêm tính năng
 4. **Bám vào constraint phần cứng** — i7-10, 16GB RAM, RTX3060 12GB là cố định
-5. **DECISIONS.md là nguồn sự thật** — đọc trước khi đề xuất thứ đã được quyết định
+5. **[[DECISIONS]] là nguồn sự thật** — đọc trước khi đề xuất thứ đã được quyết định
 6. **Đây là dự án solo, 1–2 tiếng/ngày** — đừng đề xuất giải pháp cần team hay full-time
 7. **Quality first** — KHÔNG khuyên launch khi AI output chưa đạt ≥ 8/10
 8. **Tận dụng nguồn lực miễn phí** — Nhiều LLM API đang free (Qwen, Groq, Gemma...), phải exploit trước khi mua
@@ -474,7 +474,7 @@ Cloud API error              → Next cloud → Local fallback
 ```
 ┌────────────────────────────────────────────────────────┐
 │  GOVERNANCE LAYER  (Quản trị dự án — PMP)              │
-│  SPEC.md · DECISIONS.md · LEARNINGS.md · EXPERIMENTS   │
+│  [[SPEC]] · [[DECISIONS]] · [[LEARNINGS]] · [[EXPERIMENTS]]   │
 │  Risk Register · WBS · Quality Plan · Comms Plan       │
 └──────────────────────────┬─────────────────────────────┘
                            │ governs (quản trị)
@@ -684,5 +684,6 @@ Cloud API error              → Next cloud → Local fallback
 *Owner: Nguyễn Văn Tuấn*
 *v4.0 → v4.1: D011 — Core UX changed to AI Conversational Split-Screen*
 *v3 → v4: Quality-first approach, multi-model, 5 phases*
-*Previous version: [docs/history/CV_SAAS_MASTER_PLAN_v3_ARCHIVED_2026-04-12.md](docs/history/CV_SAAS_MASTER_PLAN_v3_ARCHIVED_2026-04-12.md)*
+*Previous version: [[docs/history/CV_SAAS_MASTER_PLAN_v3_ARCHIVED_2026-04-12]]*
 *Reference: PMBOK Guide 7th Edition + Agile Practice Guide (PMI)*
+*Related: [[SPEC]] | [[ROADMAP_PHASE1]] | [[RISK_LOG]] | [[docs/backlog/UI_IDEAS_BACKLOG]]*

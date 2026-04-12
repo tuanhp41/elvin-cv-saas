@@ -40,7 +40,6 @@ EXPERIMENTS.md
 - 🟢 ACTIVE — đang code
 - ⚫ ARCHIVED — lưu lại, không cần đọc thường xuyên
 
-## Link nhanh
 | File | Role | Priority |
 |---|---|---|
 | [[CURRENT_STATE]] | Snapshot session | 🔴 |
@@ -50,4 +49,35 @@ EXPERIMENTS.md
 | [[CODING_STANDARDS]] | Luật code | 🟡 |
 | [[EXPERIMENTS]] | Kết quả test | 🟡 |
 | [[RISK_LOG]] | Rủi ro | 🟡 |
+| [[CV_SAAS_MASTER_PLAN_v4]] | Vision tổng 5 phases | 🟡 |
+| [[SPEC]] | Scope baseline | 🟡 |
+| [[ARCHITECTURE]] | Folder structure | 🟡 |
+| [[CLAUDE]] | Rules cho Claude | 🟡 |
+| [[GEMINI]] | Rules cho Antigravity | 🟡 |
+| [[SESSION_HANDOFF]] | Bàn giao session | 🟡 |
+| [[TROUBLESHOOTING]] | Lỗi đã fix | 🟡 |
+| [[LEARNINGS]] | Bài học hàng ngày | 🟡 |
 | [[wiki/compiled/knowledge]] | AI context dump | 🟢 |
+
+## Wiki Raw Sources (compile → knowledge.md)
+| File | Chủ đề |
+|---|---|
+| [[wiki/raw/nextjs]] | Next.js 14 patterns |
+| [[wiki/raw/supabase]] | Supabase Auth + RLS |
+| [[wiki/raw/gemma-api]] | Gemma 4 API usage |
+| [[wiki/raw/payos]] | PayOS payment |
+| [[wiki/raw/cv-patterns-vn]] | CV patterns VN |
+| [[wiki/raw/project_architecture]] | System architecture |
+| [[wiki/raw/split-screen-architecture]] | Split-screen data flow |
+
+## Docs Phụ Trợ
+| File | Chủ đề |
+|---|---|
+| [[docs/llm-wiki/husky-windows]] | Husky setup on Windows |
+| [[docs/llm-wiki/n8n-v2-docker]] | n8n Docker setup |
+| [[docs/llm-wiki/tailscale-funnel]] | Tailscale funnel config |
+| [[docs/backlog/UI_IDEAS_BACKLOG]] | Ý tưởng UI chưa triển khai |
+| [[PHASE0_STATUS_REPORT_v2]] | Phase 0 final report |
+| [[ROADMAP]] | Phase Gate checklist (legacy) |
+| [[CV_SAAS_MASTER_PLAN_v3]] | Archived → thay bởi v4 |
+

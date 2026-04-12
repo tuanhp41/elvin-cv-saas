@@ -1,5 +1,6 @@
 # PHASE 0 — STATUS REPORT v2.0
 # CV SaaS Project | Cập nhật: 10/04/2026 | Reviewer: Nguyễn Văn Tuấn
+# Links: [[ROADMAP]] | [[LEARNINGS]] | [[RISK_LOG]] | [[DECISIONS]] | [[ENVIRONMENT]]
 
 > **Mục đích:** Bảng đánh giá tiến độ Phase 0 kết hợp hướng dẫn học PMP và giải thích kỹ thuật cho AI coder
 > **Nguyên tắc đọc:** ✅ Done | 🔄 In Progress | ❌ Not Done | ⏸ Backlog | 🔴 Blocked

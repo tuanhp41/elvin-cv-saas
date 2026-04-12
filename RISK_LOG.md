@@ -134,4 +134,4 @@
 
 *RISK_LOG.md — Living Document*
 *Cập nhật khi: Risk mới phát sinh | Risk status thay đổi | Response thực hiện*
-*Reference: [[CV_SAAS_MASTER_PLAN_v3]] Phần F*
+*Reference: [[CV_SAAS_MASTER_PLAN_v4]] Phần F*
