@@ -1,4 +1,6 @@
-# CV SaaS — Master Plan v3.0
+> ⚠️ **ARCHIVED** — File này đã được thay thế bởi [[CV_SAAS_MASTER_PLAN_v4]]. KHÔNG dùng cho công việc hiện tại.
+
+# CV SaaS — Master Plan v3.0 (ARCHIVED)
 # Tài liệu khởi động dự án (Project Initiation Document)
 
 ---

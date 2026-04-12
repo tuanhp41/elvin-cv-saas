@@ -1,4 +1,4 @@
-# PHASE 0 — STATUS REPORT v2.0
+> ⚠️ **ARCHIVED** — Phase 0 đã hoàn thành. Xem [[CURRENT_STATE]] cho trạng thái hiện tại.
 # CV SaaS Project | Cập nhật: 10/04/2026 | Reviewer: Nguyễn Văn Tuấn
 # Links: [[ROADMAP]] | [[LEARNINGS]] | [[RISK_LOG]] | [[DECISIONS]] | [[ENVIRONMENT]]
 

@@ -6,7 +6,9 @@
 
 ---
 
-# PHASE 0 — Infrastructure & Governance Roadmap (ARCHIVED)
+> ⚠️ **ARCHIVED** — Đây là ROADMAP Phase 0 (đã hoàn thành). Xem [[ROADMAP_PHASE1]] cho công việc hiện tại.
+
+# Phase 0 — Infrastructure & Governance (ARCHIVED) Roadmap (ARCHIVED)
 # CV SaaS Project | Frozen: Tháng 4/2026 | STATUS: ✅ COMPLETED
 
 > **Trạng thái:** FROZEN — Không thêm/bớt cho đến khi Phase 0 hoàn thành  

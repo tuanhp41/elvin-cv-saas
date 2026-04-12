@@ -94,7 +94,7 @@ key_file = C:\Users\tuanh\.ssh\id_ed25519
 |---|---|---|
 | [[CURRENT_STATE]] | Snapshot session | ✅ Cuối mỗi session |
 | [[RISK_LOG]] | 13 risks tracked | ✅ Khi có risk mới |
-| [[ROADMAP]] | Phase Gate checklist | ❌ Frozen |
+| [[ROADMAP_PHASE1]] | Chi tiết Phase 1 | 🟡 Read-only |
 | [[SPEC]] | Source of truth | ❌ Frozen |
 | [[DECISIONS]] | D001-D007 logged | ✅ Append only |
 | [[LEARNINGS]] | 2 sessions logged | ✅ Append only |

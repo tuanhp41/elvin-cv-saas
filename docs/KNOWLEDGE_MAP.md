@@ -70,14 +70,20 @@ EXPERIMENTS.md
 | [[wiki/raw/project_architecture]] | System architecture |
 | [[wiki/raw/split-screen-architecture]] | Split-screen data flow |
 
-## Docs Phụ Trợ
+## Docs Phụ Trợ (Active)
 | File | Chủ đề |
 |---|---|
 | [[docs/llm-wiki/husky-windows]] | Husky setup on Windows |
 | [[docs/llm-wiki/n8n-v2-docker]] | n8n Docker setup |
 | [[docs/llm-wiki/tailscale-funnel]] | Tailscale funnel config |
 | [[docs/backlog/UI_IDEAS_BACKLOG]] | Ý tưởng UI chưa triển khai |
-| [[PHASE0_STATUS_REPORT_v2]] | Phase 0 final report |
-| [[ROADMAP]] | Phase Gate checklist (legacy) |
-| [[CV_SAAS_MASTER_PLAN_v3]] | Archived → thay bởi v4 |
+
+## ⚫ Archived (chỉ đọc khi cần lịch sử — KHÔNG dùng cho công việc hiện tại)
+| File | Lý do archive |
+|---|---|
+| docs/history/CV_SAAS_MASTER_PLAN_v3.md | Thay bởi v4 |
+| docs/history/ROADMAP_PHASE0.md | Phase 0 hoàn thành, thay bởi ROADMAP_PHASE1 |
+| docs/history/PHASE0_STATUS_REPORT_v2.md | Phase 0 report cuối cùng |
+| docs/history/CV_SAAS_MASTER_PLAN_v3_ARCHIVED_2026-04-12.md | Bản lưu trước khi v4 |
+| docs/history/linux-mount-setup.md | Hướng dẫn cũ, nội dung đã vào ENVIRONMENT |
 
