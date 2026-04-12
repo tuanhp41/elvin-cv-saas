@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import Header from '@/components/layout/Header';
 import HeroSection from '@/components/landing/HeroSection';
+import ShowcaseSection from '@/components/landing/ShowcaseSection';
 import FeaturesSection from '@/components/landing/FeaturesSection';
 import CTASection from '@/components/landing/CTASection';
 import Footer from '@/components/landing/Footer';
@@ -20,6 +21,7 @@ export default function Home() {
 
       <main className="flex flex-col min-h-screen">
         <HeroSection />
+        <ShowcaseSection />
         <FeaturesSection />
         <CTASection />
       </main>
