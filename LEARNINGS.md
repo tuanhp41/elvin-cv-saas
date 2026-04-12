@@ -53,3 +53,13 @@
 - FortiVPN có block Tailscale không? (R-NEW-001 — chưa test)
 - gemma4:latest benchmark với GPU sẽ nhanh hơn gemma3:12b bao nhiêu?
 - n8n ExecuteCommand node có cần config permission gì không?
+
+## [2026-04-12] — Session #9: DashChat Live Test + Phase 0 Complete
+**Học:** n8n Telegram bot integration, Phase Gate verification
+**Thực hành:**
+- Test /status → n8n đọc CURRENT_STATE.md → gửi Telegram ✅
+- Test /done → n8n chạy git log → format đẹp ✅
+- Test /risk → n8n đọc RISK_LOG.md → highlight HIGH/CRITICAL ✅
+**Kết quả:** DashChat hoạt động hoàn hảo. Response time <5 giây. Phase Gate CLEARED.
+**Áp dụng được:** n8n Execute Command node cần NODE_FUNCTION_ALLOW_BUILTIN=fs,child_process trong docker-compose
+**Câu hỏi mở:** /status đang trả CURRENT_STATE cũ (session #3) — cần update CURRENT_STATE cuối mỗi session đúng hơn
