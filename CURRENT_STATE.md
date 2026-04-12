@@ -2,35 +2,64 @@
 # ⚠️ OVERWRITE ONLY — không append — chỉ có 1 snapshot mới nhất
 
 ## Snapshot
-- **Timestamp:** 2026-04-11 18:50 +07:00
-- **Phase:** 0 | **Session:** #3
+- **Timestamp:** 2026-04-12 07:48 +07:00
+- **Phase:** 0 | **Session:** #7
 - **Branch:** main
-- **Phase 0 Progress:** ~75%
+- **Phase 0 Progress:** ~95%
 
 ## Đang làm dở
-- File: Windows remote client setup
-- Việc: Cài Node.js + Task Scheduler auto-mount L:\ + setup env
-- Trạng thái: 60% — Node.js đang cài, Tailscale đã restart, L:\ chờ remount
+- Task: Test Windows restart → verify L:\ auto-mount
+- Trạng thái: Startup shortcut đã tạo tại `%APPDATA%\...\Startup\Mount-L-Drive.lnk`
+- Chờ: User restart Windows, xác nhận L:\ mount tự động
 
 ## Lỗi chưa xử lý
-- [ ] Tailscale không auto-start sau reboot (R005) — đang fix bằng Task Scheduler
-- [ ] L:\ drive không mount sau restart — fix cùng với Tailscale issue
-- [ ] DashChat /status /done /risk chưa test live — cần test trên n8n
+- [ ] Husky lint-staged cần `chmod +x node_modules/.bin/*` sau mỗi `npm install` mới trên server — cân nhắc thêm vào post-install script
 
 ## Quyết định pending
-- [ ] Migrate L:\ từ rclone/SFTP → Samba/SMB (tốt hơn qua Tailscale)
-- [ ] Husky pre-commit hook chưa active
+- [ ] Tag `v0.1.0-phase0-complete` sau khi L:\ auto-mount test PASS
 
 ## Task đầu tiên session tới
-→ Test DashChat live: gõ /status trên Telegram → n8n phải response đúng
+→ Sau restart: confirm L:\ mount OK → chạy `git tag v0.1.0-phase0-complete && git push origin --tags` → Phase 1 bắt đầu
 
 ## Context cho AI
-Phase 0 infrastructure 75% done. GPU fix hoàn thành (RTX3060 100% GPU). Windows client cần Node.js + Task Scheduler. Governance files đầy đủ 10/10. LLM Wiki compiled (22KB). DECISIONS D001-D007 documented. Stack FROZEN: Next.js 14, Supabase, Gemma 4, PayOS, Vercel, Tailwind, shadcn/ui.
+Phase 0 gần xong (95%). Session #7 đã hoàn thành: DashChat bot 4 commands hoạt động, Husky+ESLint setup, LLM Wiki 3 entries, Windows startup mount script. Tailscale đã Automatic. Còn 1 item: verify L:\ auto-mount sau reboot. n8n docker-compose đúng với NODE_FUNCTION_ALLOW_BUILTIN=fs,child_process.
 
-## Windows Remote Client Status
+## Phase Gate Checklist — Current Status
+```
+INFRASTRUCTURE:
+[x] SSH từ Tailscale: OK
+[x] nvidia-smi: RTX3060 detected
+[x] Ollama inference Gemma: OK
+[x] n8n accessible: OK
+[x] Docker auto-start: OK (restart: always)
+
+GOVERNANCE:
+[x] .antigravity-rules: OK
+[x] ARCHITECTURE.md: OK
+[x] CURRENT_STATE.md: OK
+[x] ESLint import/no-cycle: configured
+[x] Husky pre-commit hook: active (Linux commits)
+[x] git commit + pushed: OK
+
+DASHCHAT:
+[x] /help /status /done /risk: OK (tested 2026-04-12)
+[ ] 19:00 kick-off: SKIPPED (user decision — không cần)
+[x] /done command: OK
+
+LEARNING:
+[x] LEARNINGS.md: exists
+[x] DECISIONS.md: D001-D007
+
+WINDOWS CLIENT:
+[x] Tailscale: Automatic startup
+[ ] L:\ auto-mount: PENDING restart test
+```
+
+## Windows Client Status
 - Git: ✅ v2.48.1
-- SSH: ✅ OpenSSH_9.5p2
-- Node.js: 🔄 đang cài (winget — LTS)
-- Tailscale: ✅ restarted manually (cần Task Scheduler)
-- L:\ mount: 🔄 đang remount
-- rclone config: ✅ ~/.config/rclone/rclone.conf
+- SSH: ✅ configured
+- Node.js: ✅ v24.14.1
+- Tailscale: ✅ Automatic (StartType)
+- L:\ mount script: ✅ `automation/scripts/mount-l-drive.ps1`
+- Startup shortcut: ✅ `%APPDATA%\...\Startup\Mount-L-Drive.lnk`
+- rclone remote: ✅ `ubuntu:`
