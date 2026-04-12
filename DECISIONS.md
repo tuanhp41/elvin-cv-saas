@@ -89,3 +89,29 @@
 **Trade-off chấp nhận:** Thêm ~2 tháng trước khi có revenue. Acceptable vì mục tiêu chính là learning, không phải revenue.
 **Impact:** CV_SAAS_MASTER_PLAN_v3.md → archived → v4.md. ROADMAP.md → ROADMAP_PHASE1.md. SPEC.md updated.
 **Revisit khi:** Nếu free API quotas bị cắt đột ngột → có thể cần accelerate launch để có revenue
+
+---
+
+### D009 — Token Pool Balancing Strategy
+**Ngày:** 2026-04-12 | **Phase:** 1 | **By:** Opus + User
+**Quyết định:** Antigravity có 2 token pools riêng biệt: Pool A (Claude Opus + Sonnet dùng chung) và Pool B (Gemini Pro riêng). Reset mỗi 5 giờ + weekly limit. Chiến lược: xen kẽ Pool A ↔ Pool B trong mỗi session, Gemini Pro là workhorse 60%, Opus tiết kiệm ≤10%.
+**Rationale:** Dùng Opus nhiều = drain Sonnet. Cần cân bằng 2 pools để tối đa throughput/ngày. 3 sessions/ngày canh reset 5h = 6h coding potential.
+**Impact:** ROADMAP_PHASE1.md (token strategy section), ENVIRONMENT.md (AI Resource Strategy).
+**Revisit khi:** Antigravity thay đổi token allocation hoặc pricing model.
+
+---
+
+### D010 — Coding Standards Document
+**Ngày:** 2026-04-12 | **Phase:** 1 | **By:** Opus
+**Quyết định:** Tạo CODING_STANDARDS.md v1.0 — 15 sections bao gồm: file structure, naming, import order, component patterns, API patterns, Supabase patterns, state management, styling, error handling, security, git conventions, AI-specific rules, anti-patterns, file size limits, env vars.
+**Rationale:** Đây là prerequisite để free AI APIs (Gemma, Qwen) có thể viết code đúng pattern. Mọi code phải đi qua checklist (Section 12.2) trước khi merge. Opus là người duy nhất có quyền sửa file này — đảm bảo consistency.
+**Design decisions trong document:**
+- React hooks only (no Redux) — simplicity cho Phase 1
+- `@/` alias bắt buộc — không relative paths
+- Response shape bắt buộc `{ success, data/error }` — consistency cho frontend
+- Component max 200 lines — tránh god components
+- API routes max 100 lines — tách logic vào lib/
+- JSDoc comments bắt buộc cho components — AI coder cần hiểu props
+**Impact:** CODING_STANDARDS.md (mới), .env.example (mới). Mọi code từ giờ phải tuân thủ.
+**Revisit khi:** Migrate sang TypeScript (Phase 2+) hoặc thêm state management library.
+
