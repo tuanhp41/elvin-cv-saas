@@ -7,7 +7,7 @@
 
 > **Phiên bản trước:** [v3.0 — Archived](docs/history/CV_SAAS_MASTER_PLAN_v3_ARCHIVED_2026-04-12.md)
 > **Ngày thay đổi:** 2026-04-12
-> **Quyết định liên quan:** DECISIONS.md → D008
+> **Quyết định liên quan:** DECISIONS.md → D008, D011
 
 ### Tại sao thay đổi?
 
@@ -25,7 +25,7 @@
 v3: Build → Launch → Improve → Expand
 v4: Build → Automate → Evaluate → Test → Launch
     "Build Deep, Launch When Ready"
-    (Xây vững chắc, ra thị trường khi sẵn sàng)
+v4.1: D011 — Core UX thay đổi: form → AI chat split-screen
 ```
 
 ---
@@ -68,7 +68,10 @@ v4: Build → Automate → Evaluate → Test → Launch
 
 **Trong scope (In Scope):**
 - Web app tạo CV hỗ trợ Vi/En/Zh
+- **AI Conversational Split-Screen:** Chat phỏng vấn + live CV preview (D011)
+- **Dual Flow:** Luồng A (chat tạo mới) + Luồng B (upload CV cũ → AI score + rewrite)
 - AI rewrite CV qua multi-model (Gemma 4 + Qwen + Groq + local fallback)
+- AI CV Scorer: chấm điểm 1-10, gợi ý cải thiện
 - Template HTML với watermark — unlock sau thanh toán
 - Self-evaluating AI system (hệ thống tự đánh giá chất lượng AI output)
 - Multi-agent pipeline (Writer → Critic → Rewrite)
@@ -181,14 +184,24 @@ CV SaaS Project
 │   └── 1.3 Remote Access (Tailscale) ✅
 │
 ├── 2.0 CORE APP + AI FOUNDATION (Phase 1) ← ĐANG LÀM
-│   ├── 2.1 Frontend (Landing, CV Form, Templates, Preview)
+│   ├── 2.1 Frontend — AI Conversational Split-Screen (D011)
+│   │   ├── 2.1.1 Split-screen layout (Chat Left + Preview Right)
+│   │   ├── 2.1.2 ChatPanel (AI interview bubbles, quick actions)
+│   │   ├── 2.1.3 CVPreview (A4 render, language tabs, template switch)
+│   │   └── 2.1.4 Landing Page ✅ FROZEN
 │   ├── 2.2 Backend (Supabase, Auth, API routes)
+│   │   ├── 2.2.1 Supabase schema (cvs, chat_sessions)
+│   │   └── 2.2.2 CRUD helpers + RLS
 │   ├── 2.3 AI Integration — MULTI-MODEL
 │   │   ├── 2.3.1 Model Router (Gemma/Qwen/Groq/Local)
-│   │   ├── 2.3.2 Prompt Engineering cho CV domain
-│   │   ├── 2.3.3 Output Quality Scoring (tự động)
-│   │   └── 2.3.4 Fallback chain: API → API2 → Local
-│   └── 2.4 Payment (Stub — KHÔNG bật live)
+│   │   ├── 2.3.2 AI Interview API (chat → structured JSON)
+│   │   ├── 2.3.3 AI Rewrite API (polish CV text)
+│   │   ├── 2.3.4 AI Scorer API (evaluate CV quality)
+│   │   ├── 2.3.5 Prompt Engineering cho CV domain
+│   │   └── 2.3.6 Fallback chain: API → API2 → Local
+│   ├── 2.4 CV Templates (3 designs minimum)
+│   ├── 2.5 Upload + Parse (PDF/DOCX → structured data) — Luồng B
+│   └── 2.6 Payment (Stub — KHÔNG bật live)
 │
 ├── 3.0 AUTOMATION & SELF-LEARNING (Phase 2)
 │   ├── 3.1 n8n Workflows (quality check, model tracker, health)
@@ -498,9 +511,11 @@ Cloud API error              → Next cloud → Local fallback
 
 **Gate 0 → Phase 1:** ✅ CLEARED (2026-04-12)
 
-**Gate 1 → Phase 2:**
-- [ ] App chạy end-to-end trên Vercel (password-protected, chưa public)
-- [ ] CV form → AI rewrite → Preview: hoạt động với ≥ 2 models
+**Gate 1 → Phase 2:** (Updated per D011)
+- [ ] Split-screen AI chat → CV flow works end-to-end (Luồng A)
+- [ ] Upload CV → AI score + rewrite suggestions (Luồng B MVP)
+- [ ] ≥ 3 CV templates rendering correctly
+- [ ] ≥ 2 AI models working (Gemma + Qwen or Groq)
 - [ ] Supabase RLS tested — user isolation confirmed
 - [ ] DECISIONS.md có ≥ 15 entries
 - [ ] EXPERIMENTS.md có ≥ 3 completed (model comparison)
@@ -665,8 +680,9 @@ Cloud API error              → Next cloud → Local fallback
 
 ---
 
-*Version: 4.0 | Created: Tháng 4/2026 | Updated: 2026-04-12*
+*Version: 4.1 | Created: Tháng 4/2026 | Updated: 2026-04-12*
 *Owner: Nguyễn Văn Tuấn*
-*Change from v3: Quality-first approach, multi-model, 5 phases*
+*v4.0 → v4.1: D011 — Core UX changed to AI Conversational Split-Screen*
+*v3 → v4: Quality-first approach, multi-model, 5 phases*
 *Previous version: [docs/history/CV_SAAS_MASTER_PLAN_v3_ARCHIVED_2026-04-12.md](docs/history/CV_SAAS_MASTER_PLAN_v3_ARCHIVED_2026-04-12.md)*
 *Reference: PMBOK Guide 7th Edition + Agile Practice Guide (PMI)*

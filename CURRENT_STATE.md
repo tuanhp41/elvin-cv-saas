@@ -2,39 +2,57 @@
 # ⚠️ OVERWRITE ONLY — không append — chỉ có 1 snapshot mới nhất
 
 ## Snapshot
-- **Timestamp:** 2026-04-12 14:38 +07:00
-- **Phase:** 1 — Core App + AI Foundation | **Session:** #12 (Gemini Pro)
+- **Timestamp:** 2026-04-12 19:15 +07:00
+- **Phase:** 1 — Core App + AI Foundation | **Stage:** 2 (bắt đầu)
 - **Branch:** main
-- **Master Plan:** v4.0
+- **Master Plan:** v4.1 (D011 update)
+- **Session:** #14 (Opus — Architecture + Roadmap update)
 
 ## Đang làm dở
-- Việc: Phase 1 Stage 1 Bootstrapping (Hoàn tất) / Stage 2 Parallel Build (Bắt đầu)
-- Trạng thái: 
-  - [x] npm install & build verified
-  - [x] wiki compile updated with architecture view
-  - [x] Supabase connection & Auth (Login, Register, Dashboard)
-  - [x] Day 2: CODING_STANDARDS.md (Opus đã thiết lập v1.0)
-  - [x] Day 3: UI Component library (Button, Input, Textarea, Select, Card, Badge, Tabs, Dialog, Alert, Spinner)
-  - [ ] Day 3: Vercel Deploy (User thực hiện tay)
+- Việc: Stage 2 — AI Conversational Split-Screen Builder
+- Trạng thái:
+  **Stage 1 ✅ COMPLETED:**
+  - [x] Scaffold, build, deploy Vercel
+  - [x] Auth (login/register), Dashboard skeleton
+  - [x] 10 UI components, CODING_STANDARDS.md
+  - [x] Landing Page v2 — Apple-style (Hero, Showcase, Features, CTA, Footer)
+  - [x] ShowcaseSection: 3D card flip + language carousel Vi/En/Zh
+  
+  **Stage 2 — STARTING (Day 4):**
+  - [ ] Supabase schema (cvs, chat_sessions tables)
+  - [ ] Split-screen layout (pages/create.jsx)
+  - [ ] ChatPanel + CVPreview components
+  - [ ] AI interview script (8-10 questions)
+  - [ ] 3 CV templates
+  - [ ] AI API integration (Gemma/Qwen/Groq)
+  - [ ] Upload + Score flow (Luồng B)
+
+## Quyết định mới
+- [x] D011 — Core UX: AI chat split-screen thay CV form truyền thống
+- [x] Landing Page FROZEN ❄️ — mọi ý tưởng UI mới → UI_IDEAS_BACKLOG.md
+- [ ] Qwen API endpoint (Dashscope vs Hugging Face) — quyết định khi code Day 7
 
 ## Lỗi chưa xử lý
-- [ ] LAPTOP-COMPANY SSH method chưa confirm (non-blocking)
-
-## Quyết định pending
-- [ ] Chọn Qwen API endpoint (Dashscope vs Hugging Face) — quyết định tuần 3
-- [ ] Đồng bộ 1 user duy nhất trên server (tuan vs elvin)
+- [ ] ESLint warnings (unused imports) — non-blocking, cleanup later
 
 ## Task đầu tiên session tới
-→ [Human] Deploy dự án lên Vercel và config Supabase keys. Tag branch `v0.2.0-phase1-stage1`.
-→ [Gemini Pro] Bắt đầu Stage 2 (Day 4): CV Form Full Layout (hỗ trợ nhiều ngôn ngữ, entries, tabs, validations) + Auto-save vào Supabase.
+→ [Gemini Pro] Day 4: Supabase schema + RLS + CRUD helpers (lib/db/cv.js, lib/db/chat.js)
+→ [Gemini Pro] Day 5: Split-screen layout (pages/create.jsx) + ChatPanel shell
 
 ## Context cho AI
-Phase 0 COMPLETE. Master Plan v4 approved: quality-first approach, 5 phases, multi-model (Gemma+Qwen+Groq). ROADMAP cũ archived tại docs/history/. Phase 1 roadmap chi tiết tại ROADMAP_PHASE1.md. Stack FROZEN: Next.js 14, Supabase, Gemma 4 + Qwen + Groq, PayOS (sandbox), Vercel, Tailwind, shadcn/ui. Scaffold đã có (pages, components, lib stubs). Cần npm install + verify build.
+**CRITICAL — ĐỌC TRƯỚC KHI CODE:**
+- D011 thay đổi core UX: KHÔNG dùng CV form truyền thống. Dùng AI chat phỏng vấn bên trái + CV preview sống bên phải.
+- 2 luồng: Luồng A (chat → CV mới) + Luồng B (upload CV cũ → AI score + rewrite)
+- Landing page FROZEN — không sửa nữa. Backlog tại docs/backlog/UI_IDEAS_BACKLOG.md
+- Competitive research: JobsGO (chat AI thụ động), Cake (AI scorer), TopCV (form cũ) — chưa ai kết hợp đủ 4 USP
+- Roadmap chi tiết: ROADMAP_PHASE1.md v3.0
+- Coding standards: CODING_STANDARDS.md v1.0
 
-## Files đã thay đổi session #10
-- [NEW] CV_SAAS_MASTER_PLAN_v4.md (thay thế v3)
-- [NEW] ROADMAP_PHASE1.md (chi tiết Phase 1)
-- [ARCHIVED] docs/history/CV_SAAS_MASTER_PLAN_v3_ARCHIVED_2026-04-12.md
-- [UPDATED] DECISIONS.md (thêm D008)
-- [UPDATED] SPEC.md
-- [UPDATED] ROADMAP.md (thêm deprecation notice)
+## Files đã thay đổi session #13-14
+- [NEW] src/components/landing/ShowcaseSection.jsx (3D flip + language carousel)
+- [UPDATED] src/components/landing/HeroSection.jsx (Apple-style redesign)
+- [UPDATED] src/components/landing/FeaturesSection.jsx (clean white cards)
+- [UPDATED] src/components/landing/CTASection.jsx (Apple-style CTA)
+- [UPDATED] DECISIONS.md (D011 — Core UX Architecture)
+- [UPDATED] ROADMAP_PHASE1.md (v3.0 — full rewrite for D011)
+- [NEW] docs/backlog/UI_IDEAS_BACKLOG.md
