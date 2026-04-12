@@ -29,6 +29,12 @@
     <step order="6" file="ARCHITECTURE.md" condition="trước khi tạo/sửa file code">
       Bắt buộc đọc trước khi tạo file hoặc folder mới.
     </step>
+    <step order="7" file="docs/llm-wiki/README.md" condition="trước khi làm infra/tool task">
+      Đọc docs/llm-wiki/README.md để xác định có wiki entry liên quan không.
+      Nếu có → đọc wiki entry đó TRƯỚC khi bắt đầu.
+      KHÔNG lặp lại sai lầm đã được ghi trong wiki.
+      Trigger bắt buộc: Docker, n8n, Tailscale, Husky, bất kỳ error message nào.
+    </step>
     <on_complete>
       Sau khi đọc xong, confirm với user theo format:
       📍 Phase: [X] | Session: [#N] | Progress: [X%]
