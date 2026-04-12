@@ -248,16 +248,17 @@ CV SaaS Project
 ### D.1 Phase Overview (v4 — Updated)
 
 ```
-Phase 0 — Infrastructure          Tuần 1–2       ✅ COMPLETED
-Phase 1 — Core App + AI           Tuần 3–8       (~6 tuần) ← ĐANG LÀM
-Phase 2 — Automation & Learning   Tháng 2–3      (~2 tháng)
-Phase 3 — Multi-Agent & Quality   Tháng 4–6      (~3 tháng)
-Phase 4 — Polish & Beta           Tháng 6–7      (~1 tháng)  ← MỚI v4
-Phase 5 — Market Launch           Tháng 7–8      (~1 tháng)  ← MỚI v4
+Phase 0 — Infrastructure          2 ngày         ✅ COMPLETED
+Phase 1 — Core App + AI           10–14 ngày     ← ĐANG LÀM
+Phase 2 — Automation & Learning   2–3 tuần
+Phase 3 — Multi-Agent & Quality   3–4 tuần
+Phase 4 — Polish & Beta           1–2 tuần       ← MỚI v4
+Phase 5 — Market Launch           1–2 tuần       ← MỚI v4
 ```
 
-**Tổng timeline dự kiến:** ~8 tháng (Phase 0–5)
-**So với v3:** Thêm ~2 tháng nhưng chất lượng khi launch cao hơn rất nhiều
+**Tổng timeline dự kiến:** ~3 tháng (Phase 0–5)
+**Calibration:** Phase 0 dự kiến 2 tuần → xong 2 ngày. Timing đã hiệu chỉnh theo tốc độ thực.
+**So với v3:** Cùng thời gian nhưng thêm 1 phase (Beta) + chất lượng cao hơn
 
 ### D.2 Schedule Reserve *(Dự trữ tiến độ)*
 
@@ -407,8 +408,9 @@ Tier 4 — RADAR (update hàng tuần):
 
 | Nguồn lực | Vai trò | Phase | Chi phí | Ghi chú |
 |---|---|---|---|---|
-| **Antigravity (Opus/Sonnet)** | Architecture, complex logic, review | 1–5 | Included | Dùng cho việc khó, tiết kiệm quota |
-| **Antigravity (Gemini Pro)** | Scaffolding, boilerplate, simple tasks | 1–5 | Included | Dùng cho việc đơn giản |
+| **Antigravity Opus** | Architecture, review tổng, Phase Gate decisions | 1–5 | Included | ~15% workload, dùng cho việc KHÓ |
+| **Antigravity Sonnet** | Complex logic, AI router, evaluator, debug | 1–5 | Included | ~25% workload, escalation từ Gemini |
+| **Antigravity Gemini Pro** | **Primary workhorse**: code features, API integration, tra cứu docs, documentation | 1–5 | Included | **~60% workload**, không chỉ boilerplate |
 | **Gemma 4 API (Google AI Studio)** | AI inference cho CV rewrite | 1–5 | Free | 1000 req/ngày |
 | **Qwen 3 API (Alibaba)** | AI inference — mạnh multilingual Zh | 1–5 | Free | Tốt cho CV tiếng Trung |
 | **Groq API** | AI inference — tốc độ cực nhanh | 1–5 | Free | Dùng khi cần response nhanh |

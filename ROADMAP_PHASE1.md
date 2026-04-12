@@ -1,432 +1,459 @@
 # PHASE 1 — Core App + AI Foundation
-# CV SaaS Project | Bắt đầu: 2026-04-12 | Dự kiến: 6 tuần
+# CV SaaS Project | Bắt đầu: 2026-04-12 | Dự kiến: 10–14 ngày
 
-> **Trạng thái:** ACTIVE — Đang thực hiện
-> **Thời gian ước tính:** 6 tuần (1–2 tiếng/ngày)
-> **Mục tiêu:** App chạy end-to-end + multi-model AI hoạt động
-> **Mục tiêu KHÔNG có:** Revenue. Không thu tiền. Không launch công khai.
-> **Phase Gate:** App on Vercel (password-protected) + ≥2 models + CV score ≥6/10
+> **Trạng thái:** ACTIVE
+> **Tốc độ thực tế:** Phase 0 dự kiến 2 tuần → xong trong 2 ngày. Timing đã điều chỉnh.
+> **Mục tiêu:** App chạy end-to-end + multi-model AI + bắt đầu xây AI development pipeline
+> **KHÔNG có:** Revenue. Không thu tiền. Không launch công khai.
+> **Phase Gate:** App on Vercel (protected) + ≥2 models + CV score ≥6/10 + AI pipeline prototype
 
 ---
 
-## 🔧 NGUỒN LỰC THAM GIA PHASE 1
+## 🏗️ CHIẾN LƯỢC: Progressive AI Workforce
 
-*(Tận dụng tối đa — không chỉ dựa vào Antigravity)*
+*(Xây dần bộ máy AI — không dựa 100% vào Antigravity)*
 
-### AI Coders / IDE
+```
+STAGE 1 (Day 1–3): BOOTSTRAPPING
+  Opus thiết kế architecture + standards
+  Gemini Pro build skeleton theo hướng dẫn Opus
+  Output: App skeleton chạy được + CODING_STANDARDS.md + compiled wiki
 
-| Nguồn lực | Vai trò trong Phase 1 | Khi nào dùng | Giới hạn |
+STAGE 2 (Day 4–7): PARALLEL BUILD
+  Gemini Pro: code phần lớn features (có standards guide sẵn)
+  Sonnet: code phần phức tạp (AI router, evaluator)
+  Opus: review architecture decisions
+  BẮT ĐẦU: Test free AI APIs (Gemma/Qwen) viết code
+  Output: App functional end-to-end + EXP-005 (free AI code quality)
+
+STAGE 3 (Day 8–12): PIPELINE BUILD
+  Free AIs (Gemma/Qwen API): code tasks theo standards
+  Gemini Pro: review + fix code từ free AIs
+  n8n: orchestrate pipeline tự động
+  Opus: tuần tra tổng + approve
+  Output: AI development pipeline chạy được + Phase Gate pass
+```
+
+---
+
+## 🤖 PHÂN CÔNG NGUỒN LỰC CHI TIẾT
+
+### Trong Antigravity (3 models — tận dụng hết)
+
+| Model | Strengths | Phân công Phase 1 | % Workload |
 |---|---|---|---|
-| **Antigravity Opus** | Architecture decisions, complex logic, code review | Khi cần thiết kế hệ thống, debug khó | Quota cao, dùng tiết kiệm |
-| **Antigravity Sonnet** | Code implementation chính, refactor | Phần lớn coding sessions | Quota vừa phải |
-| **Antigravity Gemini Pro** | Scaffolding, boilerplate, simple edits | Tasks đơn giản, tạo file template | Quota thấp, dùng cho việc nhẹ |
-| **Gemini CLI (local/API)** | Code generation phụ, quick scripts | Khi hết quota Antigravity hoặc cần nhanh | Free, nhưng context nhỏ hơn |
-| **Server Ollama (gemma4)** | Code review phụ, test prompt trên terminal | Test prompt cho CV rewrite trực tiếp | Free, chậm ~11s |
+| **Opus** | Kiến trúc, quyết định phức tạp, review sâu, debug khó | Architecture design, code review tổng, Phase Gate review, approval | ~15% |
+| **Sonnet** | Code logic phức tạp, refactor, debug | AI Router, Evaluator, complex integrations | ~25% |
+| **Gemini Pro** | Code nhanh, scaffold tốt, tra cứu/hướng dẫn giỏi, context lớn | Phần lớn feature code, component build, API integration, documentation, tra cứu docs | **~60%** |
 
-### AI Inference (cho sản phẩm CV SaaS)
+> ⚠️ **Gemini Pro là workhorse chính** — không chỉ làm boilerplate.
+> Với hướng dẫn rõ ràng (standards + examples), Gemini Pro code complex features rất tốt.
+> Chỉ escalate lên Sonnet/Opus khi: architecture decision, bug lạ, hoặc code cần reasoning nhiều bước.
 
-| Model | Provider | Endpoint | Vai trò | Free Quota | Strengths |
-|---|---|---|---|---|---|
-| **Gemma 4** | Google AI Studio | `generativelanguage.googleapis.com` | Primary CV rewrite Vi/En | 1000 req/ngày | Google ecosystem, tốt Vi |
-| **Qwen 3** | Alibaba Cloud / Hugging Face | Dashscope API | CV rewrite Zh (tiếng Trung) | Generous free | Tốt nhất Zh, multilingual |
-| **Groq (Llama/Gemma)** | Groq | `api.groq.com` | Fast inference, backup | 14,400 req/ngày | Cực nhanh (<1s) |
-| **gemma4:latest local** | Ollama RTX3060 | `http://100.67.85.6:11434` | Ultimate fallback | ♾️ Không giới hạn | Privacy, no quota |
+### Ngoài Antigravity (Free AI APIs — cho sản phẩm VÀ cho development)
 
-### Infrastructure
-
-| Resource | Vai trò Phase 1 | Access |
+| Resource | Dùng cho sản phẩm (inference) | Dùng cho development (code gen) |
 |---|---|---|
-| **Server PC** (Ubuntu) | Run Ollama, Docker, n8n, git push | `ssh ubuntu-server` |
-| **L:\\ drive** (rclone) | Edit files từ Windows | Auto-mount |
-| **Vercel** | Deploy preview builds | Auto-deploy từ GitHub |
-| **Supabase** | Database + Auth | Dashboard web |
-| **GitHub** | Version control, CI | `git push` qua server |
+| **Gemma 4 API** (Google AI Studio) | CV rewrite Vi/En | Test viết code components (Stage 2–3) |
+| **Qwen 3 API** (Alibaba) | CV rewrite Zh | Test viết code + review (Stage 2–3) |
+| **Groq API** (Llama/Gemma) | Fast inference backup | Quick code generation tasks |
+| **Local Ollama** (RTX3060) | Ultimate fallback | Prompt testing, offline dev |
+| **n8n** | — | Orchestrate AI pipeline (Stage 3) |
 
-### Người thực hiện
-
-| Vai trò | Ai | Effort |
-|---|---|---|
-| **PM + Dev** | Nguyễn Văn Tuấn | 1–2h/ngày |
-| **Architect** | Tuấn + Antigravity Opus | Đầu phase |
-| **Coder** | Tuấn + Antigravity Sonnet/Gemini | Daily |
-| **Reviewer** | Tuấn + AI code review | Mỗi PR |
-
----
-
-## 📅 WEEKLY BREAKDOWN
-
-### TUẦN 1 (Ngày 1–5): Foundation Setup
-
-**Mục tiêu tuần:** Next.js project chạy được + Supabase connected + deploy Vercel
+### Cách chuyển task giữa các AI
 
 ```
-Day 1 — Next.js Project Init
-[x] Scaffold src/ folder structure (đã làm Session #9)
-[x] Tạo pages/_app.jsx, _document.jsx (đã làm)
-[x] Tạo tailwind.config.js, postcss.config.js (đã làm)
-[x] Tạo globals.css với shadcn design tokens (đã làm)
-[x] Tạo lib/utils.js (cn helper) (đã làm)
-[ ] npm install trên server → verify build thành công
-[ ] npm run dev → app chạy tại localhost:3000
+Task nhận vào → Phân loại:
 
-Day 2 — Supabase Setup
-  🤖 Dùng: Antigravity Sonnet hoặc Gemini Pro
-[ ] Tạo Supabase project (dashboard web)
-[ ] Design schema:
-    - Table: users (id, email, created_at)
-    - Table: cvs (id, user_id, data_json, language, created_at, updated_at)
-    - Table: payments (id, user_id, cv_id, amount, status, payos_order_id)
-[ ] Setup RLS policies:
-    - users: chỉ read own profile
-    - cvs: CRUD chỉ own records
-    - payments: read chỉ own records
-[ ] Cập nhật lib/supabase.js với real credentials
-[ ] Test connection từ Next.js → Supabase
-[ ] Ghi DECISIONS.md: D009 — Supabase Schema Design
+[SIMPLE] Tạo component theo pattern có sẵn
+  → Gemini Pro (hoặc Free AI khi pipeline sẵn)
+  → Ví dụ: UI components, simple API routes, form fields
 
-Day 3 — Auth Implementation
-  🤖 Dùng: Antigravity Sonnet
-[ ] Tạo pages/auth/login.jsx
-[ ] Tạo pages/auth/register.jsx
-[ ] Implement Supabase Auth (email/password)
-[ ] Tạo middleware/auth check
-[ ] Protected route: /create chỉ accessible khi logged in
-[ ] Test: register → login → access /create → logout
+[MEDIUM] Logic business, API integration, data flow
+  → Gemini Pro với hướng dẫn chi tiết từ CODING_STANDARDS
+  → Ví dụ: Supabase CRUD, auth middleware, template rendering
+  
+[COMPLEX] Architecture decision, multi-system integration
+  → Sonnet hoặc Opus
+  → Ví dụ: Model Router design, Evaluator algorithm, pipeline orchestration
 
-Day 4 — Component Library Init
-  🤖 Dùng: Antigravity Gemini Pro (boilerplate)
-[ ] Tạo components/ui/Button.jsx (shadcn style)
-[ ] Tạo components/ui/Input.jsx
-[ ] Tạo components/ui/Textarea.jsx
-[ ] Tạo components/ui/Badge.jsx
-[ ] Tạo components/ui/Card.jsx
-[ ] Tạo components/ui/Tabs.jsx
-[ ] Tất cả dùng cn() helper + CSS variables
+[REVIEW] Code review, bug hunt, quality check
+  → Opus cho review tổng (cuối stage)
+  → Gemini Pro cho review từng PR/commit (nhanh, rẻ)
+  → Free AI để cross-check (khi pipeline sẵn)
 
-Day 5 — Vercel Deploy + Git Tag
-  🤖 Dùng: Manual + Antigravity Gemini Pro
-[ ] Connect GitHub repo → Vercel
-[ ] Cấu hình env vars trên Vercel (Supabase keys)
-[ ] Deploy preview → verify app chạy trên internet
-[ ] Password protect Vercel deployment (nếu cần)
-[ ] git tag v0.2.0-phase1-week1
-[ ] Ghi LEARNINGS.md: tuần 1 Phase 1
-```
-
-**Validate tuần 1:**
-- [ ] `npm run dev` → app hiển thị Landing page
-- [ ] Register/Login hoạt động
-- [ ] Vercel deployment accessible
-- [ ] Supabase RLS tested
-
----
-
-### TUẦN 2 (Ngày 6–10): CV Form + Templates
-
-**Mục tiêu tuần:** CV Form đa ngôn ngữ hoàn chỉnh + 3 templates pixel-perfect
-
-```
-Day 6 — CV Form Completion
-  🤖 Dùng: Antigravity Sonnet
-[ ] Nâng cấp CVForm.jsx (skeleton → full):
-    - Thông tin cá nhân (họ tên, email, phone, address)
-    - Kinh nghiệm làm việc (dynamic — thêm/xóa entries)
-    - Học vấn (dynamic entries)
-    - Kỹ năng (tag-based input)
-    - Mục tiêu nghề nghiệp
-    - Chứng chỉ / Awards
-[ ] Form validation (required fields, email format)
-[ ] Auto-save draft vào Supabase
-[ ] Tab switching Vi/En/Zh chuyển label + placeholder
-
-Day 7 — CV Data Model
-  🤖 Dùng: Antigravity Sonnet + Opus (nếu cần review schema)
-[ ] Tạo lib/cv-schema.js — JSON schema cho CV data
-[ ] Tạo lib/cv-storage.js — Save/Load CV từ Supabase
-[ ] CV versioning: mỗi lần save = 1 snapshot
-[ ] Test: tạo CV → save → reload page → data still there
-
-Day 8–9 — Template Design (3 templates)
-  🤖 Dùng: Antigravity Sonnet cho code, Opus cho design review
-[ ] Template 1: "Professional" — clean, minimal, ATS-friendly
-    → components/features/templates/TemplateProfessional.jsx
-[ ] Template 2: "Modern" — sidebar layout, accent colors
-    → components/features/templates/TemplateModern.jsx
-[ ] Template 3: "Executive" — formal, boardroom style
-    → components/features/templates/TemplateExecutive.jsx
-[ ] Tất cả templates nhận CV data JSON → render HTML
-[ ] Responsive preview (desktop + mobile view)
-[ ] Watermark overlay component (chữ "PREVIEW" mờ)
-
-Day 10 — Template Picker + Preview Page
-  🤖 Dùng: Antigravity Gemini Pro
-[ ] Tạo pages/create.jsx — flow: Form → Pick Template → Preview
-[ ] Tạo components/features/TemplatePicker.jsx
-[ ] Thumbnail preview cho mỗi template
-[ ] Tạo pages/preview/[id].jsx — full CV preview
-[ ] Print-ready styling (CSS @media print)
-[ ] git tag v0.3.0-phase1-week2
-```
-
-**Validate tuần 2:**
-- [ ] Tạo CV → chọn template → xem preview: hoạt động
-- [ ] Data persist qua page reload
-- [ ] 3 templates render đúng với sample data
-- [ ] Watermark hiển thị trên preview
-
----
-
-### TUẦN 3 (Ngày 11–15): Multi-Model AI Integration
-
-**Mục tiêu tuần:** ≥2 models hoạt động cho CV rewrite + comparison data
-
-```
-Day 11 — Gemma 4 API Integration
-  🤖 Dùng: Antigravity Sonnet
-[ ] Tạo lib/ai/gemma-client.js — Google AI Studio API
-[ ] Tạo lib/ai/prompts.js — Prompt templates cho CV rewrite
-    - System prompt: CV expert persona
-    - User prompt template: [section] + [language] + [context]
-[ ] Tạo pages/api/ai/rewrite.js — API route
-[ ] Test: gửi "Kinh nghiệm: Làm ở công ty A 3 năm" → nhận rewrite
-[ ] Ghi EXPERIMENTS.md: EXP-001 — Gemma 4 CV rewrite quality baseline
-
-Day 12 — Qwen API Integration
-  🤖 Dùng: Antigravity Sonnet
-[ ] Research: Qwen 3 API docs (Dashscope / Hugging Face endpoint)
-[ ] Tạo lib/ai/qwen-client.js
-[ ] Dùng cùng prompt template → so sánh output với Gemma
-[ ] Test đặc biệt: CV tiếng Trung — Qwen vs Gemma
-[ ] Ghi EXPERIMENTS.md: EXP-002 — Qwen vs Gemma for Chinese CV
-
-Day 13 — Groq API Integration
-  🤖 Dùng: Antigravity Gemini Pro (simple API call)
-[ ] Tạo lib/ai/groq-client.js
-[ ] Test: response time comparison (Groq vs Gemma vs Qwen)
-[ ] Groq dùng model Gemma hoặc Llama (free)
-[ ] Ghi EXPERIMENTS.md: EXP-003 — Groq speed vs quality tradeoff
-
-Day 14 — Model Router
-  🤖 Dùng: Antigravity Opus (architecture decision)
-[ ] Tạo lib/ai/router.js — Intelligent Model Selection
-    Logic:
-    - language === 'zh' → try Qwen first → Gemma fallback
-    - language === 'vi' || 'en' → try Gemma first → Groq fallback
-    - all APIs fail → local Ollama fallback
-    - quota check trước khi gọi
-[ ] Tạo lib/ai/index.js — unified interface
-    export async function rewriteCV(section, language, context)
-    // Caller không cần biết model nào đang xử lý
-[ ] Ghi DECISIONS.md: D010 — Model Router Design
-
-Day 15 — Quality Scoring (Basic)
-  🤖 Dùng: Antigravity Sonnet
-[ ] Tạo lib/ai/evaluator.js — đánh giá CV output
-    - Dùng 1 LLM (Gemma) để chấm điểm output của LLM khác
-    - Rubric 10 điểm (Completeness, Language, ATS, Format)
-    - Return: { score: 7, breakdown: {...}, suggestions: [...] }
-[ ] Tạo pages/api/ai/evaluate.js — API route
-[ ] Test: đưa 5 CV samples → evaluate → log scores
-[ ] So sánh: Gemma output vs Qwen output vs Groq output
-[ ] Ghi EXPERIMENTS.md: EXP-004 — Cross-model evaluation results
-[ ] git tag v0.4.0-phase1-week3
-```
-
-**Validate tuần 3:**
-- [ ] 3 models (Gemma, Qwen, Groq) đều callable
-- [ ] Router chọn model đúng theo language
-- [ ] Fallback chain hoạt động khi 1 model fail
-- [ ] Evaluator cho ra điểm số hợp lý
-- [ ] ≥ 3 EXPERIMENTS.md entries
-
----
-
-### TUẦN 4 (Ngày 16–20): End-to-End Integration
-
-**Mục tiêu tuần:** Toàn bộ flow liên thông từ đăng ký → tạo CV → AI rewrite → preview
-
-```
-Day 16 — Connect AI to CV Form
-  🤖 Dùng: Antigravity Sonnet
-[ ] Thêm nút "AI Rewrite" vào mỗi section của CV Form
-[ ] Click → gọi API /ai/rewrite → hiển thị suggestion
-[ ] User chọn: Accept / Reject / Edit
-[ ] Loading state + error handling
-[ ] Rate limit: hiển thị "X lượt còn lại hôm nay"
-
-Day 17 — Payment Stub (NO live money)
-  🤖 Dùng: Antigravity Gemini Pro
-[ ] Tạo lib/payos.js — PayOS SDK integration (SANDBOX MODE)
-[ ] Tạo pages/api/payment/create.js — tạo payment link
-[ ] Tạo pages/api/payment/webhook.js — nhận callback
-[ ] Business logic: payment confirmed → remove watermark
-[ ] Test toàn bộ flow trong sandbox
-[ ] ⚠️ KHÔNG chuyển sang production mode
-
-Day 18 — User Dashboard
-  🤖 Dùng: Antigravity Sonnet
-[ ] Tạo pages/dashboard.jsx — danh sách CV đã tạo
-[ ] Mỗi CV: status (draft/paid/preview), last updated
-[ ] Quick actions: Edit / Preview / Delete
-[ ] Stats: số CV tạo, ngôn ngữ nào phổ biến nhất
-
-Day 19 — Error Handling & Edge Cases
-  🤖 Dùng: Antigravity Sonnet
-[ ] API error responses (4xx, 5xx) → user-friendly messages
-[ ] Network offline → retry logic
-[ ] Empty form → validation messages
-[ ] AI timeout → fallback message
-[ ] Supabase connection lost → graceful degradation
-
-Day 20 — Integration Testing
-  🤖 Dùng: Manual + Antigravity (browser test)
-[ ] Full flow test: Register → Login → Create CV → AI Rewrite
-    → Pick Template → Preview → (Stub Payment) → Download
-[ ] Test trên 3 browsers (Chrome, Firefox, Edge)
-[ ] Test mobile responsive
-[ ] Fix bugs phát hiện
-[ ] git tag v0.5.0-phase1-week4
-```
-
-**Validate tuần 4:**
-- [ ] End-to-end flow hoạt động không lỗi
-- [ ] AI rewrite suggestions hiển thị đúng
-- [ ] Payment sandbox flow hoạt động
-- [ ] Mobile responsive OK
-
----
-
-### TUẦN 5 (Ngày 21–25): Polish + Optimize
-
-**Mục tiêu tuần:** UX cải thiện, performance optimize, code cleanup
-
-```
-Day 21 — UI/UX Polish
-  🤖 Dùng: Antigravity Opus (design review) + Sonnet (implement)
-[ ] Landing page: hero section + CTA rõ ràng
-[ ] Consistent color scheme (dark mode support optional)
-[ ] Loading skeletons cho AI response
-[ ] Micro-animations (hover, transition, page change)
-[ ] Typography: Google Fonts (Inter hoặc Noto Sans)
-
-Day 22 — Performance
-  🤖 Dùng: Antigravity Sonnet
-[ ] Lighthouse audit → fix issues
-[ ] Image optimization (next/image)
-[ ] API response caching (SWR hoặc React Query)
-[ ] Bundle size check
-[ ] SEO: meta tags, OG images
-
-Day 23 — Code Quality
-  🤖 Dùng: Antigravity Gemini Pro
-[ ] ESLint fix all warnings
-[ ] Remove unused imports/variables
-[ ] Add JSDoc comments cho public functions
-[ ] Tạo README.md cho developer onboarding
-
-Day 24–25 — Documentation + Review
-[ ] Cập nhật ARCHITECTURE.md nếu structure thay đổi
-[ ] Ghi LEARNINGS.md: tổng kết tuần 5
-[ ] EXPERIMENTS.md: compile kết quả tất cả experiments
-[ ] Code review toàn bộ (Antigravity Opus)
-[ ] git tag v0.6.0-phase1-week5
+[RESEARCH] Tra cứu docs, tìm best practice, compare options
+  → Gemini Pro (tốt hơn Claude cho search/lookup)
+  → Ví dụ: Qwen API docs, Groq pricing, Supabase RLS patterns
 ```
 
 ---
 
-### TUẦN 6 (Ngày 26–30): Phase Gate Preparation
+## 📅 STAGE 1: BOOTSTRAPPING (Day 1–3)
 
-**Mục tiêu tuần:** Đạt tất cả Phase Gate 1 criteria
+### Day 1 — Architecture Lock + Skeleton ✅ (mostly done)
+
+**🤖 Opus:** Thiết kế + Review
+**🤖 Gemini Pro:** Execute scaffold
 
 ```
-Day 26 — Phase Gate Checklist
-  🤖 Dùng: Manual review
-[ ] App chạy end-to-end trên Vercel?
-[ ] CV form → AI rewrite → Preview hoạt động?
-[ ] ≥ 2 models hoạt động?
-[ ] Supabase RLS tested?
-[ ] 0 critical security vulnerabilities?
+[x] Scaffold src/ folder structure (Session #9 — Gemini Pro)
+[x] pages/_app.jsx, _document.jsx (Gemini Pro)
+[x] tailwind.config.js, postcss.config.js (Gemini Pro)
+[x] globals.css + shadcn design tokens (Gemini Pro)
+[x] lib/utils.js, lib/supabase.js, lib/gemma.js, lib/payos.js (Gemini Pro)
+[x] components/layout/Header.jsx (Gemini Pro)
+[x] components/features/CVForm.jsx skeleton (Gemini Pro)
+[x] pages/index.jsx Landing page (Gemini Pro)
+[x] package.json updated with deps (Gemini Pro)
+[ ] npm install trên server → verify build
+[ ] npm run dev → confirm app runs
+```
 
-Day 27 — Fix Blockers
-[ ] Fix bất kỳ Phase Gate item nào chưa pass
-[ ] Rerun all tests
-[ ] Deployment verification
+### Day 2 — Standards + Knowledge Base + Supabase
 
-Day 28 — CV Quality Evaluation
-  🤖 Dùng: Server Ollama + Cloud APIs
-[ ] Tạo 10 CV mẫu (tay) cho 3 ngôn ngữ
-[ ] Chạy AI rewrite cho tất cả 30 samples
-[ ] Evaluate score → tính trung bình
-[ ] Target: ≥ 6/10 (Phase 1 quality bar)
-[ ] Nếu < 6 → improve prompts → re-evaluate
+**🤖 Opus:** Tạo CODING_STANDARDS.md (quyết định pattern)
+**🤖 Gemini Pro:** Build Supabase schema + compile wiki
 
-Day 29 — Governance Update
-[ ] DECISIONS.md: verify ≥ 15 entries
-    (D001–D007 đã có, cần thêm D008–D015)
-[ ] EXPERIMENTS.md: verify ≥ 3 completed
-[ ] LEARNINGS.md: compile weekly entries
-[ ] CURRENT_STATE.md: update to Phase 1 complete
-[ ] RISK_LOG.md: review + update status
+```
+MỤC TIÊU: Mọi AI (kể cả free API) đều có thể đọc standards và code đúng
 
-Day 30 — Phase Gate Review & Close
-[ ] Self-review: tất cả Gate criteria ✅?
+[ ] [Opus] Tạo CODING_STANDARDS.md:
+    - Component naming conventions (PascalCase, file structure)
+    - API route patterns (input validation, error format, response shape)
+    - State management patterns (React hooks, no Redux)
+    - Supabase query patterns (helper functions, error handling)
+    - CSS patterns (cn() helper, design tokens, when to use what)
+    - Import order rules
+    - Code examples cho TỪNG pattern (AI copy theo)
+    
+[ ] [Gemini Pro] Update wiki/compiled/knowledge.md:
+    - Architecture summary
+    - File tree hiện tại
+    - Coding standards summary
+    - API endpoints planned
+    → Đây là "bộ não chung" feed vào prompt khi gọi free AI APIs
+
+[ ] [Gemini Pro] Supabase setup:
+    - Tạo project trên Supabase dashboard
+    - Schema: users, cvs (data_json, language), payments
+    - RLS policies: user isolation
+    - Update lib/supabase.js với real credentials
+    - Test connection
+
+[ ] [Gemini Pro] Auth implementation:
+    - pages/auth/login.jsx + register.jsx
+    - Supabase Auth (email/password)
+    - Protected route middleware
+    - Test: register → login → access protected page
+
+[ ] Ghi DECISIONS.md: D009 — Supabase Schema, D010 — Coding Standards rationale
+```
+
+### Day 3 — Component Library + Deploy
+
+**🤖 Gemini Pro:** Toàn bộ (theo CODING_STANDARDS pattern)
+
+```
+[ ] UI Components (theo shadcn pattern trong standards):
+    - Button, Input, Textarea, Select
+    - Card, Badge, Tabs
+    - Dialog/Modal, Toast/Alert
+    - Spinner/Loading skeleton
+    
+[ ] Vercel deploy:
+    - Connect GitHub repo → Vercel
+    - Env vars (Supabase keys)  
+    - Verify deployment
+    - Password protect nếu cần
+
+[ ] git tag v0.2.0-phase1-stage1
+```
+
+**✅ STAGE 1 CHECKPOINT:**
+- [ ] App chạy trên localhost + Vercel
+- [ ] Auth works (register/login)
+- [ ] Supabase connected + RLS tested
+- [ ] CODING_STANDARDS.md exists (mọi AI đọc được)
+- [ ] compiled wiki updated (knowledge base cho free AIs)
+- [ ] ≥ 10 UI components ready
+
+---
+
+## 📅 STAGE 2: PARALLEL BUILD (Day 4–7)
+
+### Day 4 — CV Form Full + Templates
+
+**🤖 Gemini Pro:** CV Form + 2 templates
+**🤖 Sonnet:** 1 template phức tạp (nếu cần)
+
+```
+[ ] [Gemini Pro] Nâng cấp CVForm.jsx → full form:
+    - Dynamic entries (thêm/xóa kinh nghiệm, học vấn)
+    - Tab Vi/En/Zh switching
+    - Form validation
+    - Auto-save to Supabase
+    
+[ ] [Gemini Pro] Template 1: "Professional" (clean, ATS-friendly)
+[ ] [Gemini Pro] Template 2: "Modern" (sidebar, accent colors)
+[ ] [Sonnet nếu cần] Template 3: "Executive" (complex layout)
+
+[ ] [Gemini Pro] Template Picker component
+[ ] [Gemini Pro] Preview page với watermark overlay
+```
+
+### Day 5 — Multi-Model AI Integration
+
+**🤖 Sonnet:** Router logic (complex)
+**🤖 Gemini Pro:** API clients (follow pattern)
+
+```
+[ ] [Gemini Pro] Research: Qwen 3 API docs, Groq API docs
+    → Gemini Pro TỐT cho tra cứu docs — tận dụng
+
+[ ] [Gemini Pro] lib/ai/gemma-client.js — Google AI Studio
+[ ] [Gemini Pro] lib/ai/qwen-client.js — Alibaba Dashscope
+[ ] [Gemini Pro] lib/ai/groq-client.js — Groq API
+[ ] [Gemini Pro] lib/ai/prompts.js — CV rewrite prompt templates
+
+[ ] [Sonnet] lib/ai/router.js — Intelligent Model Router:
+    - language routing (zh→Qwen, vi/en→Gemma, fast→Groq)
+    - quota checking
+    - fallback chain
+    - unified interface: rewriteCV(section, lang, context)
+    
+[ ] [Sonnet] lib/ai/evaluator.js — CV Quality Scorer:
+    - Dùng 1 model chấm điểm output của model khác
+    - Rubric 10 điểm
+    - Return: { score, breakdown, suggestions }
+
+[ ] EXPERIMENTS.md: EXP-001 to EXP-003 (model comparison)
+```
+
+### Day 6 — End-to-End Integration
+
+**🤖 Gemini Pro:** Wiring everything together
+
+```
+[ ] [Gemini Pro] Connect AI to CV Form:
+    - "AI Rewrite" button per section
+    - Loading state, error handling
+    - Accept/Reject/Edit flow
+    - Rate limit display
+
+[ ] [Gemini Pro] User Dashboard:
+    - pages/dashboard.jsx
+    - List CVs, status, quick actions
+    
+[ ] [Gemini Pro] Payment stub (PayOS sandbox):
+    - Create payment link API
+    - Webhook handler
+    - Unlock watermark on pay
+    - ⚠️ SANDBOX ONLY
+
+[ ] Full flow test: Register → Create CV → AI Rewrite → Template → Preview → Stub Pay
+```
+
+### Day 7 — EXPERIMENT: Free AI Code Generation
+
+**🤖 Gemini Pro:** Setup experiment
+**🤖 Free AIs:** Write test code
+**🤖 Opus:** Evaluate results
+
+```
+MỤC TIÊU: Test xem Gemma/Qwen API có thể viết code đủ tốt
+          theo CODING_STANDARDS.md không?
+
+[ ] [Gemini Pro] Tạo script: tools/ai-coder.js
+    - Đọc CODING_STANDARDS.md + compiled wiki
+    - Nhận task description
+    - Gọi Gemma API → generate code
+    - Save output to file
+
+[ ] [Test] Giao 3 tasks cho Gemma API:
+    - Task A: Tạo 1 UI component mới (VD: Footer)
+    - Task B: Tạo 1 API route mới (VD: /api/cv/list)
+    - Task C: Tạo 1 utility function (VD: date formatter)
+
+[ ] [Test] Giao cùng 3 tasks cho Qwen API
+
+[ ] [Opus] Review 6 outputs:
+    - Đúng coding standards?
+    - Code chạy được?
+    - Quality so với Gemini Pro viết?
+    - Kết luận: Free AI có thể giao tasks gì?
+
+[ ] EXPERIMENTS.md: EXP-005 — Free AI Code Generation Quality
+[ ] DECISIONS.md: D011 — Free AI Delegation Policy
+
+[ ] git tag v0.3.0-phase1-stage2
+```
+
+**✅ STAGE 2 CHECKPOINT:**
+- [ ] App functional end-to-end
+- [ ] ≥ 2 AI models hoạt động (Gemma + Qwen hoặc Groq)
+- [ ] Router chọn model đúng
+- [ ] Evaluator cho ra score hợp lý
+- [ ] EXP-005 completed: biết free AI code quality level
+- [ ] Payment sandbox flow works
+
+---
+
+## 📅 STAGE 3: PIPELINE BUILD (Day 8–12)
+
+### Day 8–9 — Build AI Development Pipeline
+
+**🤖 Sonnet:** Pipeline architecture
+**🤖 Gemini Pro:** n8n workflows + scripts
+
+```
+DỰA TRÊN KẾT QUẢ EXP-005 để phân công pipeline
+
+[ ] [Sonnet] Design pipeline architecture:
+    Task Queue → AI Worker → AI Reviewer → Auto-test → Human Approve
+    
+[ ] [Gemini Pro] Tạo tools/task-queue.json:
+    - Danh sách tasks còn lại Phase 1
+    - Mỗi task: description, complexity, assigned_ai, status
+    
+[ ] [Gemini Pro] n8n workflow: "AI Code Worker"
+    1. Read next task from queue
+    2. Read CODING_STANDARDS.md + wiki
+    3. Call Gemma/Qwen API → generate code
+    4. Save to scratch file
+    5. Call another model → review code
+    6. If review OK → create git branch + commit
+    7. If review FAIL → retry with feedback
+    8. Notify Telegram: "Task X done, needs human review"
+
+[ ] [Gemini Pro] n8n workflow: "AI Code Reporter"
+    - Daily scan: new files, changes, quality metrics
+    - Generate report → Telegram
+    - Flag issues for human review
+
+[ ] [Sonnet] Human-in-the-loop interface:
+    - pages/admin/review.jsx (hoặc Telegram-based)
+    - Xem code diff từ AI
+    - Approve / Request changes / Reject
+    - Approved → merge to main
+```
+
+### Day 10 — Pipeline Test Run
+
+**🤖 Pipeline tự chạy**
+**🤖 Gemini Pro:** Monitor + fix
+
+```
+[ ] Giao pipeline 5 tasks thực tế:
+    - Tạo Footer component
+    - Tạo /api/cv/delete route  
+    - Tạo CV export to HTML function
+    - Tạo error boundary component
+    - Tạo SEO meta component
+
+[ ] Monitor: pipeline có tự hoàn thành?
+[ ] Review output quality
+[ ] Fix pipeline bugs
+[ ] Tune prompts nếu output kém
+
+[ ] EXPERIMENTS.md: EXP-006 — AI Pipeline Productivity
+```
+
+### Day 11 — Polish + Quality
+
+**🤖 Opus:** Tuần tra tổng (code review toàn bộ codebase)
+**🤖 Gemini Pro:** Fix theo feedback Opus
+
+```
+[ ] [Opus] Full codebase review:
+    - Architecture alignment
+    - Security issues
+    - Code consistency
+    - Performance concerns
+    - Danh sách fixes cần làm
+
+[ ] [Gemini Pro] Execute fixes from Opus review
+
+[ ] [Gemini Pro] UX polish:
+    - Responsive check
+    - Loading states
+    - Error messages
+    - Micro-animations (nếu kịp)
+
+[ ] Lighthouse audit → fix critical issues
+```
+
+### Day 12 — Phase Gate + Close
+
+**🤖 Opus:** Phase Gate review & approval
+
+```
+[ ] CV Quality Evaluation:
+    - Tạo 10 CV mẫu, 3 ngôn ngữ
+    - Chạy AI rewrite → evaluate
+    - Target: ≥ 6/10 trung bình
+
+[ ] Phase Gate Checklist:
+    - [ ] App end-to-end on Vercel?
+    - [ ] ≥ 2 AI models working?
+    - [ ] Supabase RLS tested?
+    - [ ] DECISIONS.md ≥ 15?
+    - [ ] EXPERIMENTS.md ≥ 3?
+    - [ ] CV score ≥ 6/10?
+    - [ ] AI pipeline prototype working?
+    - [ ] 0 critical security issues?
+
+[ ] Governance update:
+    - CURRENT_STATE.md
+    - LEARNINGS.md compile
+    - ROADMAP_PHASE2.md (draft)
+
 [ ] git tag v1.0.0-phase1-complete
-[ ] Push + notify (Telegram)
-[ ] Ghi DECISIONS.md: D016 — Phase 1 Gate Review Results
-[ ] Update ROADMAP.md cho Phase 2 chi tiết
-[ ] 🎉 Phase 1 Complete → bắt đầu Phase 2
+[ ] 🎉 Phase 1 Complete
 ```
 
 ---
 
-## 📊 PHASE 1 KPIs
-
-> Không đo revenue — đo learning + technical depth
+## 📊 PHASE 1 KPIs (Adjusted)
 
 | KPI | Target | Đo bằng |
 |---|---|---|
-| DECISIONS.md entries mới | ≥ 8 (D008–D015+) | Document count |
-| EXPERIMENTS.md completed | ≥ 3 | Completed experiments |
-| LEARNINGS.md entries | ≥ 30 (6 tuần × 5) | Entry count |
-| Models integrated | ≥ 3 (Gemma, Qwen, Groq) | Working API calls |
-| CV quality score avg | ≥ 6/10 | evaluator.js output |
-| Bug count at Gate | 0 critical, < 5 minor | Manual test |
-| Components created | ≥ 15 (ui + features) | File count |
-| API routes | ≥ 5 | pages/api/ count |
+| Duration | ≤ 14 ngày (thay vì 6 tuần) | Calendar |
+| DECISIONS.md entries mới | ≥ 8 | Document count |
+| EXPERIMENTS.md completed | ≥ 5 | Experiment count |
+| Models integrated | ≥ 3 | Working API calls |
+| CV quality score avg | ≥ 6/10 | evaluator.js |
+| AI pipeline tasks completed | ≥ 5 | Pipeline output count |
+| Antigravity Opus usage | ≤ 15% total work | Estimate |
+| Gemini Pro usage | ≥ 60% total work | Estimate |
+| Free AI contribution | ≥ 5 merged tasks | Git log |
 
 ---
 
-## ⚠️ QUAN TRỌNG — CÁCH LÀM VIỆC PHASE 1
-
-### Quy trình Session hằng ngày
+## 🧠 NGUYÊN TẮC PHÂN TASK
 
 ```
-1. Mở ENVIRONMENT.md → xác định máy
-2. Đọc CURRENT_STATE.md → biết hôm nay làm gì
-3. Chọn AI tool phù hợp:
-   - Việc khó (architecture, debug phức tạp) → Antigravity Opus
-   - Việc code chính → Antigravity Sonnet
-   - Việc đơn giản (scaffold, boilerplate) → Antigravity Gemini Pro
-   - Quick script / test prompt → Gemini CLI hoặc Ollama
-4. Code → Test → Commit
-5. Cuối session:
-   - Ghi LEARNINGS.md 1 entry
-   - Update CURRENT_STATE.md
-   - git commit + push (qua server SSH)
-```
+TRƯỚC KHI DÙNG OPUS, HỎI:
+  "Gemini Pro có thể làm việc này với hướng dẫn rõ ràng không?"
+  Nếu CÓ → dùng Gemini Pro + viết hướng dẫn chi tiết
+  Nếu KHÔNG → dùng Sonnet
+  Chỉ dùng Opus khi: architecture, review tổng, Phase Gate decision
 
-### Quy trình tự động hóa dần
-
-```
-Phase 1 Early:  Manual everything (code, test, review)
-Phase 1 Mid:    AI evaluator tự chấm điểm CV output
-Phase 1 Late:   Model router tự chọn model, evaluator tự log
-→ Phase 2:      n8n tự chạy quality check daily
-→ Phase 3:      Multi-agent tự cải thiện quality
+TRƯỚC KHI DÙNG ANTIGRAVITY, HỎI:
+  "Free AI API có thể làm việc này với CODING_STANDARDS.md không?"
+  Nếu CÓ → giao pipeline (Stage 3)
+  Nếu KHÔNG → dùng Antigravity
+  
+GEMINI PRO VÀ CLAUDE KHÁC NHAU Ở ĐÂU:
+  Gemini Pro tốt hơn: tra cứu docs, web search, generate code dài, 
+                       follow patterns, broad knowledge
+  Claude tốt hơn: reasoning phức tạp, architecture design, 
+                   nuanced review, catch subtle bugs
+  → Dùng đúng sở trường = tiết kiệm token + chất lượng cao
 ```
 
 ---
 
-*Phase 1 Roadmap — Version 1.0 | 2026-04-12*
-*Part of CV_SAAS_MASTER_PLAN_v4.md*
-*Mọi thay đổi phải qua Change Control Process*
+*Phase 1 Roadmap v2.0 — Adjusted for real pace + AI workforce model*
+*Timing calibrated: Phase 0 done in 2 days, not 2 weeks*
+*Previous version: see git history*
