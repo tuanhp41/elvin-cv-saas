@@ -33,7 +33,7 @@
 | CPU-only | i7-10700 (16 threads) | ~30 giây | baseline |
 | GPU | RTX3060 12GB (100%) | ~11 giây | **2.7x nhanh hơn** |
 
-**Lý do CPU-only:** NVIDIA driver/library version mismatch (535.x vs 580.x) — xem TRB-003
+**Lý do CPU-only:** NVIDIA driver/library version mismatch (535.x vs 580.x) — xem [[TROUBLESHOOTING]] TRB-003
 
 **Kết luận:** Hypothesis **ĐÚNG** — GPU nhanh hơn 2.7x. 11 giây pass Phase Gate G.3 (<10 giây với buffer nhỏ). Đây là first-token latency + generation time gộp chung.
 

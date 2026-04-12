@@ -2,7 +2,8 @@
 # 🌐 Dev Environment Reference — CV SaaS Project
 # ⚠️ AI đọc file này ĐẦU TIÊN mỗi session — TRƯỚC KHI tìm kiếm bất cứ thứ gì
 # ⚠️ Cuối session: cập nhật file này trước khi commit
-# Last Updated: 2026-04-12 08:08 +07:00 | Session #9
+# Last Updated: 2026-04-12 22:35 +07:00 | Session #15
+# Links: [[CURRENT_STATE]] | [[DECISIONS]] | [[TROUBLESHOOTING]] | [[SESSION_HANDOFF]] | [[RISK_LOG]]
 
 ---
 
@@ -134,7 +135,7 @@ Nếu không có L:\ → workflow thay thế:
   - KHÔNG dùng Antigravity file tools (không có L:\)
 ```
 
-### Risk liên quan: R-NEW-001
+### Risk liên quan: [[RISK_LOG]] R-NEW-001
 - FortiVPN có thể block Tailscale → mất SSH
 - Workaround: Tailscale port 443, Tailscale web console
 - Xem chi tiết: RISK_LOG.md → R-NEW-001

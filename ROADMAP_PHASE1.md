@@ -1,5 +1,6 @@
 # PHASE 1 — Core App + AI Foundation
 # CV SaaS Project | Bắt đầu: 2026-04-12 | Dự kiến: 10–14 ngày
+# Links: [[SPEC]] | [[DECISIONS]] | [[CODING_STANDARDS]] | [[CURRENT_STATE]] | [[EXPERIMENTS]] | [[ENVIRONMENT]]
 
 > **Trạng thái:** ACTIVE
 > **Tốc độ thực tế:** Phase 0 dự kiến 2 tuần → xong trong 2 ngày. Timing đã điều chỉnh.

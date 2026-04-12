@@ -1,5 +1,6 @@
 # DECISIONS.md
 # Mọi quyết định kỹ thuật quan trọng — KHÔNG xóa entries cũ
+# Links: [[SPEC]] | [[ROADMAP_PHASE1]] | [[ARCHITECTURE]] | [[ENVIRONMENT]] | [[EXPERIMENTS]] | [[TROUBLESHOOTING]]
 
 ## Format
 ```

@@ -22,7 +22,7 @@ Học AI Engineering toàn diện. Revenue là thứ yếu.
 
 ## Master Plan: v4.0 (quality-first, 5 phases)
 ## Phase hiện tại: Phase 1 — Core App + AI Foundation
-## Chi tiết Phase 1: xem ROADMAP_PHASE1.md
+## Chi tiết Phase 1: xem [[ROADMAP_PHASE1]]
 
 ## Tính năng Phase 1 (KHÔNG launch công khai)
 - Landing page

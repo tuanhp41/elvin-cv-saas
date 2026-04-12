@@ -92,15 +92,15 @@ key_file = C:\Users\tuanh\.ssh\id_ed25519
 
 | File | Mục đích | Được phép sửa? |
 |---|---|---|
-| `CURRENT_STATE.md` | Snapshot session | ✅ Cuối mỗi session |
-| `RISK_LOG.md` | 13 risks tracked | ✅ Khi có risk mới |
-| `ROADMAP.md` | Phase Gate checklist | ❌ Frozen |
-| `SPEC.md` | Source of truth | ❌ Frozen |
-| `DECISIONS.md` | D001-D007 logged | ✅ Append only |
-| `LEARNINGS.md` | 2 sessions logged | ✅ Append only |
-| `EXPERIMENTS.md` | EXP-001 done, EXP-002 pending | ✅ Append only |
-| `.antigravity-rules` | AI rules + PMP prompts | ✅ Khi cần cập nhật |
-| `ARCHITECTURE.md` | Folder structure frozen | ❌ Frozen |
+| [[CURRENT_STATE]] | Snapshot session | ✅ Cuối mỗi session |
+| [[RISK_LOG]] | 13 risks tracked | ✅ Khi có risk mới |
+| [[ROADMAP]] | Phase Gate checklist | ❌ Frozen |
+| [[SPEC]] | Source of truth | ❌ Frozen |
+| [[DECISIONS]] | D001-D007 logged | ✅ Append only |
+| [[LEARNINGS]] | 2 sessions logged | ✅ Append only |
+| [[EXPERIMENTS]] | EXP-001 done, EXP-002 pending | ✅ Append only |
+| .antigravity-rules | AI rules + PMP prompts | ✅ Khi cần cập nhật |
+| [[ARCHITECTURE]] | Folder structure frozen | ❌ Frozen |
 
 ---
 

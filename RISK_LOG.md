@@ -58,18 +58,18 @@
 ### R05 — Scope Creep ⚠️ TRIGGERED
 - **Status:** Đã xảy ra ngày 10/04 — nhiều ý tưởng phát sinh trong 1 ngày
 - **Response đã thực hiện:** Ghi vào backlog, áp dụng Change Control Process
-- **Monitoring:** Nếu DECISIONS.md có >3 "unapproved changes" trong 1 tuần → review
+- **Monitoring:** Nếu [[DECISIONS]] có >3 "unapproved changes" trong 1 tuần → review
 - **Last updated:** 2026-04-10
 
 ### R06 — Burnout
 - **Prevention:** Revenue metric làm gamification, celebrate small wins
-- **Early warning:** Không có LEARNINGS.md entry 3 ngày liên tiếp
+- **Early warning:** Không có [[LEARNINGS]] entry 3 ngày liên tiếp
 - **Response:** Đơn giản hóa task, giảm scope tạm thời
 - **Last updated:** 2026-04-10
 
 ### R07 — Học Công Nghệ Lỗi Thời
 - **Monitoring:** Follow Karpathy posts + GitHub Trending hàng tuần
-- **Tech radar:** Tier 4 trong ARCHITECTURE.md — update hàng tuần
+- **Tech radar:** Tier 4 trong [[ARCHITECTURE]] — update hàng tuần
 - **Last updated:** 2026-04-10
 
 ### R08 — RTX3060 Hỏng
@@ -103,7 +103,7 @@
   2. Tailscale trên port 443 (HTTPS — thường không bị block)
   3. SSH qua Tailscale Web (browser-based)
   4. Nhờ người nhà reset Tailscale khi cần
-- **Nếu pass:** Ghi DECISIONS.md "FortiVPN + Tailscale compatible — tested [date]"
+- **Nếu pass:** Ghi [[DECISIONS]] "FortiVPN + Tailscale compatible — tested [date]"
 - **Last updated:** 2026-04-10
 
 ### R-NEW-002 — Antigravity Server Outage
@@ -134,4 +134,4 @@
 
 *RISK_LOG.md — Living Document*
 *Cập nhật khi: Risk mới phát sinh | Risk status thay đổi | Response thực hiện*
-*Reference: CV_SAAS_MASTER_PLAN_v3.md Phần F*
+*Reference: [[CV_SAAS_MASTER_PLAN_v3]] Phần F*

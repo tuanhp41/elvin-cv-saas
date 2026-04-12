@@ -1,6 +1,7 @@
 # CODING_STANDARDS.md — CV SaaS Project
 # Tài liệu này là LUẬT — mọi AI coder và con người PHẢI tuân thủ
-# Ref: DECISIONS.md D010 | Created by: Opus | Phase: 1
+# Ref: [[DECISIONS]] D010 | Created by: Opus | Phase: 1
+# Links: [[ARCHITECTURE]] | [[SPEC]] | [[ROADMAP_PHASE1]]
 # Last updated: 2026-04-12
 
 ---

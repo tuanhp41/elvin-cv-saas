@@ -40,7 +40,7 @@ User Input → pages/ → lib/gemma.js → CV Output
 - lib/gemma.js
 - lib/supabase.js
 - lib/payos.js
-- SPEC.md
-- CLAUDE.md
-- DECISIONS.md
+- [[SPEC]]
+- [[CLAUDE]]
+- [[DECISIONS]]
 - .antigravity-rules

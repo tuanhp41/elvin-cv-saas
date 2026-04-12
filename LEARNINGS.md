@@ -32,11 +32,11 @@
 **Học:** LLM Wiki pattern, SMB/Samba mount, n8n workflow JSON, NVIDIA DKMS/userspace split
 **Thực hành:**
 - Setup Samba → mount ~/projects/ là L:\ trên Windows
-- Tạo GEMINI.md, TROUBLESHOOTING.md, RISK_LOG.md (13 risks)
+- [[GEMINI]], [[TROUBLESHOOTING]], [[RISK_LOG]] (13 risks)
 - Build LLM Wiki: 5 raw files → compile_wiki.py → knowledge.md (22KB)
 - Tạo 2 n8n workflow JSONs: dashchat-bot + daily-kickoff
 - Phát hiện và fix NVIDIA driver/library version mismatch
-- DECISIONS.md: D004-D007 (4 entries mới)
+- [[DECISIONS]] D004-D007 (4 entries mới)
 **Kết quả:**
 - L:\ mount thành công + persistent
 - wiki/compiled/knowledge.md: 22,955 bytes ✅
@@ -50,9 +50,9 @@
 - LLM Wiki: compile_wiki.py --watch để auto-recompile khi edit raw files
 - n8n workflows: lưu JSON trong automation/n8n/ → import khi cần
 **Câu hỏi mở:**
-- FortiVPN có block Tailscale không? (R-NEW-001 — chưa test)
-- gemma4:latest benchmark với GPU sẽ nhanh hơn gemma3:12b bao nhiêu?
-- n8n ExecuteCommand node có cần config permission gì không?
+- FortiVPN có block Tailscale không? ([[RISK_LOG]] R-NEW-001 — chưa test)
+- gemma4:latest benchmark với GPU sẽ nhanh hơn gemma3:12b bao nhiêu? — xem [[EXPERIMENTS]] EXP-002
+- n8n ExecuteCommand node có cần config permission gì không? — xem [[ENVIRONMENT]]
 
 ## [2026-04-12] — Session #9: DashChat Live Test + Phase 0 Complete
 **Học:** n8n Telegram bot integration, Phase Gate verification
@@ -61,5 +61,5 @@
 - Test /done → n8n chạy git log → format đẹp ✅
 - Test /risk → n8n đọc RISK_LOG.md → highlight HIGH/CRITICAL ✅
 **Kết quả:** DashChat hoạt động hoàn hảo. Response time <5 giây. Phase Gate CLEARED.
-**Áp dụng được:** n8n Execute Command node cần NODE_FUNCTION_ALLOW_BUILTIN=fs,child_process trong docker-compose
-**Câu hỏi mở:** /status đang trả CURRENT_STATE cũ (session #3) — cần update CURRENT_STATE cuối mỗi session đúng hơn
+**Áp dụng được:** n8n Execute Command node cần NODE_FUNCTION_ALLOW_BUILTIN=fs,child_process trong docker-compose — xem [[ENVIRONMENT]]
+**Câu hỏi mở:** /status đang trả [[CURRENT_STATE]] cũ (session #3) — cần update [[CURRENT_STATE]] cuối mỗi session đúng hơn

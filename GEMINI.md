@@ -1,7 +1,7 @@
 # GEMINI.md
 # Rules cho Antigravity / Gemini CLI sessions — đọc TRƯỚC KHI làm bất cứ điều gì
 
-## Stack đã chốt (KHÔNG thay đổi — xem SPEC.md)
+## Stack đã chốt (KHÔNG thay đổi — xem [[SPEC]])
 - Frontend: Next.js 14
 - Database + Auth: Supabase
 - AI Local: gemma4:latest (Ollama, RTX3060 12GB)
@@ -29,7 +29,7 @@
 6. KHÔNG đổi stack mà không có DECISIONS.md entry
 7. KHÔNG đề xuất thay thế stack Tier 1
 
-## Folder rules (FROZEN — từ ARCHITECTURE.md)
+## Folder rules (FROZEN — từ [[ARCHITECTURE]])
 ```
 src/components/ui/        ← shadcn + base components
 src/components/features/  ← CV form, preview, payment modal
@@ -48,17 +48,17 @@ wiki/compiled/            ← knowledge.md (1 file, tự động compile)
 - `wiki/compiled/knowledge.md`
 
 ## Session Handoff Protocol
-1. **Đầu session:** Đọc CURRENT_STATE.md → lấy context, check blockers
-2. **Trong session:** Check DECISIONS.md trước khi propose thứ đã quyết định
-3. **Cuối session:** Overwrite CURRENT_STATE.md với timestamp mới
+1. **Đầu session:** Đọc [[CURRENT_STATE]] → lấy context, check blockers
+2. **Trong session:** Check [[DECISIONS]] trước khi propose thứ đã quyết định
+3. **Cuối session:** Overwrite [[CURRENT_STATE]] với timestamp mới
 
 ## Antigravity-specific notes
 - i7-10900K KHÔNG có AVX-512 → Language Server bị SIGILL crash nếu chạy trên server
 - **Fix đã áp dụng:** Chạy Antigravity trên Windows → edit files qua L:\ (Samba mount)
-- Xem chi tiết: TROUBLESHOOTING.md → [TRB-001]
+- Xem chi tiết: [[TROUBLESHOOTING]] → [TRB-001]
 
 ## Khi không chắc
 → Hỏi trước, không tự quyết định
-→ Kiểm tra DECISIONS.md xem đã có entry chưa
-→ Ghi DECISIONS.md nếu có quyết định kỹ thuật mới
+→ Kiểm tra [[DECISIONS]] xem đã có entry chưa
+→ Ghi [[DECISIONS]] nếu có quyết định kỹ thuật mới
 → Solo project, 1-2 tiếng/ngày — đừng đề xuất giải pháp cần full-time

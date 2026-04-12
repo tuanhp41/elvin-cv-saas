@@ -80,7 +80,7 @@ qua L:\ trên Windows. Server Ubuntu chỉ chạy services (Docker, Ollama, n8n)
 - Đây là design của GNOME, không phải bug của xrdp
 
 ### Tham chiếu
-- DECISIONS.md → D003: Chọn xrdp + TigerVNC
+- [[DECISIONS]] → D003: Chọn xrdp + TigerVNC
 
 ---
 
@@ -126,7 +126,8 @@ Sau mỗi kernel upgrade (`uname -r` thay đổi): chạy `nvidia-smi` để xá
 Nếu fail → `sudo apt install nvidia-utils-$(nvidia-driver version)`.
 
 ### Tham chiếu
-- DECISIONS.md → D007: Fix NVIDIA driver mismatch
+- [[DECISIONS]] → D007: Fix NVIDIA driver mismatch
+- [[EXPERIMENTS]] → EXP-001: GPU vs CPU benchmark
 
 ---
 *Thêm entries mới bên dưới với format [TRB-XXX]*
