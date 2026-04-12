@@ -1,65 +1,35 @@
-# CURRENT_STATE.md
+﻿# CURRENT_STATE.md
 # ⚠️ OVERWRITE ONLY — không append — chỉ có 1 snapshot mới nhất
 
 ## Snapshot
-- **Timestamp:** 2026-04-12 07:48 +07:00
-- **Phase:** 0 | **Session:** #7
+- **Timestamp:** 2026-04-12 08:08 +07:00
+- **Phase:** 0 | **Session:** #9
 - **Branch:** main
 - **Phase 0 Progress:** ~95%
 
 ## Đang làm dở
-- Task: Test Windows restart → verify L:\ auto-mount
-- Trạng thái: Startup shortcut đã tạo tại `%APPDATA%\...\Startup\Mount-L-Drive.lnk`
-- Chờ: User restart Windows, xác nhận L:\ mount tự động
+- File: N/A — session này chủ yếu governance & tooling
+- Việc: Session close protocol
+- Trạng thái: 100% — đang commit
 
 ## Lỗi chưa xử lý
-- [ ] Husky lint-staged cần `chmod +x node_modules/.bin/*` sau mỗi `npm install` mới trên server — cân nhắc thêm vào post-install script
+- [ ] DashChat /status /done /risk chưa test live trên Telegram
+- [ ] git tag v0.1.0-phase0-complete chưa tạo (chờ Phase Gate 100%)
+- [ ] LAPTOP-COMPANY SSH method chưa confirm
 
 ## Quyết định pending
-- [ ] Tag `v0.1.0-phase0-complete` sau khi L:\ auto-mount test PASS
+- [ ] Migrate L:\ từ rclone/SFTP sang Samba/SMB (performance tốt hơn qua Tailscale)
+- [ ] Đồng bộ 1 user duy nhất trên server (tuan vs elvin — 2 user khác nhau)
 
 ## Task đầu tiên session tới
-→ Sau restart: confirm L:\ mount OK → chạy `git tag v0.1.0-phase0-complete && git push origin --tags` → Phase 1 bắt đầu
+→ Test DashChat live: gửi /status trên Telegram → n8n phải response trong <5 giây
 
 ## Context cho AI
-Phase 0 gần xong (95%). Session #7 đã hoàn thành: DashChat bot 4 commands hoạt động, Husky+ESLint setup, LLM Wiki 3 entries, Windows startup mount script. Tailscale đã Automatic. Còn 1 item: verify L:\ auto-mount sau reboot. n8n docker-compose đúng với NODE_FUNCTION_ALLOW_BUILTIN=fs,child_process.
+Phase 0 tại 95%. Governance 10/10 files. GPU RTX3060 OK. Node.js v24.14.1 trên Windows. L:\ mount qua rclone (ubuntu-server alias / user elvin). Antigravity dùng user "elvin" / alias "ubuntu-server" — khác với "tuan"/"tuanpc" của Claude sessions (cùng server 100.67.85.6). Stack FROZEN. Chưa bắt đầu Phase 1 code.
 
-## Phase Gate Checklist — Current Status
-```
-INFRASTRUCTURE:
-[x] SSH từ Tailscale: OK
-[x] nvidia-smi: RTX3060 detected
-[x] Ollama inference Gemma: OK
-[x] n8n accessible: OK
-[x] Docker auto-start: OK (restart: always)
-
-GOVERNANCE:
-[x] .antigravity-rules: OK
-[x] ARCHITECTURE.md: OK
-[x] CURRENT_STATE.md: OK
-[x] ESLint import/no-cycle: configured
-[x] Husky pre-commit hook: active (Linux commits)
-[x] git commit + pushed: OK
-
-DASHCHAT:
-[x] /help /status /done /risk: OK (tested 2026-04-12)
-[ ] 19:00 kick-off: SKIPPED (user decision — không cần)
-[x] /done command: OK
-
-LEARNING:
-[x] LEARNINGS.md: exists
-[x] DECISIONS.md: D001-D007
-
-WINDOWS CLIENT:
-[x] Tailscale: Automatic startup
-[ ] L:\ auto-mount: PENDING restart test
-```
-
-## Windows Client Status
-- Git: ✅ v2.48.1
-- SSH: ✅ configured
-- Node.js: ✅ v24.14.1
-- Tailscale: ✅ Automatic (StartType)
-- L:\ mount script: ✅ `automation/scripts/mount-l-drive.ps1`
-- Startup shortcut: ✅ `%APPDATA%\...\Startup\Mount-L-Drive.lnk`
-- rclone remote: ✅ `ubuntu:`
+## Windows Client Status (LAPTOP-PERSONAL)
+- Git: v2.48.1
+- Node.js: v24.14.1 / npm: v11.11.0
+- Tailscale: Running (C:\Program Files\Tailscale\tailscale-ipn.exe)
+- L:\ mount: /home/elvin/projects/ via rclone ubuntu:projects
+- Auto-mount: Startup shortcut created

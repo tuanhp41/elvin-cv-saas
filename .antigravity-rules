@@ -7,6 +7,12 @@
         and data flow.</rule>
   <!-- SESSION STARTUP — đọc theo thứ tự này, không bỏ qua -->
   <session_startup>
+    <step order="0" file="ENVIRONMENT.md" required="true">
+      Đọc ENVIRONMENT.md TRƯỚC TIÊN — TRƯỚC KHI ĐỌC BẤT CỨ FILE NÀO KHÁC.
+      File này chứa: paths thực của mọi file, tool versions, known issues, gotchas.
+      KHÔNG dùng Get-ChildItem -Recurse hay tìm kiếm file nếu ENVIRONMENT.md đã có câu trả lời.
+      Nếu phát hiện thông tin bị lỗi thời → ghi chú để update cuối session.
+    </step>
     <step order="1" file="CURRENT_STATE.md" required="true">
       Đọc CURRENT_STATE.md TRƯỚC TIÊN.
       Xác nhận: Phase, Session#, Timestamp, Blocker, Task đầu tiên.
@@ -46,16 +52,38 @@
 
   <!-- SESSION CLOSE — bắt buộc cuối mỗi session -->
   <session_close>
-    <step order="1">Overwrite CURRENT_STATE.md với snapshot mới nhất.
+    <step order="1">Update ENVIRONMENT.md nếu session này phát hiện:
+      - Path mới hoặc path thay đổi
+      - Lỗi môi trường đã fix (thêm vào Known Issues)
+      - Tool/service mới trong stack hoặc PowerShell gotcha mới
+      - Bất kỳ thứ gì session sau sẽ cần tìm lại
+      Cập nhật timestamp "Last Updated" ở đầu file.
+      ĐÂY LÀ BƯỚC QUAN TRỌNG NHẤT để tiết kiệm token session sau.</step>
+    <step order="2">Overwrite CURRENT_STATE.md với snapshot mới nhất.
       Giữ đúng format: Timestamp, Phase, Session#, Branch,
       Đang làm dở, Lỗi chưa xử lý, Quyết định pending,
       Task đầu tiên session tới, Context cho AI.</step>
-    <step order="2">Báo cáo end-of-session theo PMP format:
+    <step order="3">Báo cáo end-of-session theo PMP format:
       ✅ COMPLETED | 🔄 IN PROGRESS | ❌ BLOCKED
       📊 PHASE PROGRESS | ⚠️ NEW RISKS | 📝 DECISIONS | 🎯 NEXT SESSION</step>
-    <step order="3">git add -A && git commit -m "chore: update state session #N"
-      git push origin main</step>
+    <step order="4">git add -A; git commit -m "chore: update state session #N"
+      git push origin main
+      (PowerShell Windows: dùng ; thay vì &amp;&amp;)</step>
   </session_close>
+
+  <!-- SESSION CLOSE TRIGGER — nhận diện khi user muốn đóng session -->
+  <session_close_trigger>
+    <rule>Khi user gõ BẤT KỲ cụm từ nào dưới đây → tự động thực thi TOÀN BỘ session_close steps theo thứ tự, KHÔNG hỏi lại:
+      - "đóng session"
+      - "kết thúc session"
+      - "close session"
+      - "/close"
+      - "xong hôm nay"
+      - "hết rồi"
+      Thực hiện đủ 4 bước: ENVIRONMENT.md → CURRENT_STATE.md → báo cáo PMP → git commit+push
+      Không được bỏ bước nào. Không được hỏi "bạn có muốn đóng không?"
+    </rule>
+  </session_close_trigger>
   <rule>Never create new UI components outside of
         src/components/ui,
         src/components/features,
