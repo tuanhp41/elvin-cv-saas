@@ -178,3 +178,41 @@ LUỒNG B — Nâng cấp CV có sẵn (Secondary)
 
 **Impact:** SPEC.md, ROADMAP_PHASE1.md (core UX change), CV form components, API routes `/api/ai/interview`, `/api/ai/rewrite`, `/api/ai/score`
 **Revisit khi:** User testing Phase 4 cho thấy chat flow conversion thấp hơn form → cần A/B test
+
+---
+
+### D012 — Git Remote: Chuyển từ SSH sang HTTPS trên Windows
+**Ngày:** 2026-04-12 | **Phase:** 1 | **By:** Sonnet
+
+**Context:** Windows dev environment (Antigravity qua L:\ drive mount) không có SSH key cấu hình
+cho GitHub. Remote URL dạng `git@github.com:...` (SSH) → `git push` báo lỗi:
+`git@github.com: Permission denied (publickey). fatal: Could not read from remote repository.`
+
+**Triệu chứng:** Code đã commit local thành công (`Your branch is ahead of 'origin/main' by 1 commit`)
+nhưng push thất bại → Vercel không nhận được code mới → trang /create báo 404.
+
+**Quyết định:** Chuyển remote URL sang HTTPS protocol.
+
+**Lệnh fix (chạy 1 lần):**
+```bash
+git remote set-url origin https://github.com/tuanhp41/elvin-cv-saas.git
+git push origin main
+```
+
+**Cần lưu ý:** Git sẽ hỏi GitHub username + Personal Access Token (PAT) nếu chưa cache.
+Để cache credential trên Windows, chạy trước:
+```bash
+git config --global credential.helper manager
+```
+Windows Credential Manager sẽ tự lưu token sau lần đầu, không phải nhập lại.
+
+**Verify:** Output `main -> main` sau `git push` = thành công.
+Vào Vercel Dashboard → xem "Deployments" → build tự chạy trong ~1 phút.
+
+**Rationale:** HTTPS + Windows Credential Manager là cách đơn giản nhất cho Windows workflow.
+SSH key cần tạo riêng trên Windows và add vào GitHub → thêm bước setup không cần thiết cho solo dev.
+
+**Trade-off chấp nhận:** HTTPS token có expiry (GitHub PAT mặc định 30-90 ngày).
+Cần tạo lại PAT khi hết hạn tại: GitHub → Settings → Developer settings → Personal access tokens.
+
+**Revisit khi:** Setup SSH key riêng trên Windows nếu muốn (Phase 2+, khi cần CI/CD phức tạp hơn).
