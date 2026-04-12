@@ -292,3 +292,67 @@ Reset: mỗi 5 giờ + weekly limit
 | #8 | 2026-04-12 | Tạo file, structure 3-machine, fix SSH BOM, PowerShell gotcha |
 | #9 | 2026-04-12 | Antigravity session: xác nhận ubuntu-server/elvin alias, Node.js v24.14.1, Tailscale path, Known Issues mới x5 |
 | #10 | 2026-04-12 | Master Plan v4, token pool strategy, AI workforce pipeline design |
+| #15 | 2026-04-12 | Day 4-5-6 done. Git remote SSH→HTTPS (D012). Supabase keys deployed. Next.js SWC fail trên Windows. Admin account tạo qua REST API. |
+
+---
+
+## 🔑 Credentials & Endpoints (Session #15 Update)
+
+### Git Remote — BẮT BUỘC dùng HTTPS trên Windows
+```
+Remote URL: https://github.com/tuanhp41/elvin-cv-saas.git
+Lý do: SSH key không có trên Windows → dùng HTTPS + Windows Credential Manager
+Fix: git remote set-url origin https://github.com/tuanhp41/elvin-cv-saas.git
+Chi tiết: DECISIONS.md → D012
+```
+
+### Supabase
+```
+Project URL: https://dwchfofjnnlgfpwearfu.supabase.co
+Dashboard: https://supabase.com/dashboard/project/dwchfofjnnlgfpwearfu
+Anon Key: eyJhbGci...hu_4  (xem .env.local)
+Service Role: eyJhbGci...Bk4  (xem .env.local — KHÔNG public)
+```
+
+### Vercel
+```
+App URL: https://elvin-cv-saas.vercel.app
+Dashboard: https://vercel.com/tuanhp41s-projects/elvin-cv-saas
+Env vars: đã add ANON_KEY + SERVICE_ROLE_KEY + URL lên Vercel
+```
+
+### Test Account
+```
+Email: elvin@admin.com
+Password: Tuan1235@
+Tạo bằng: Supabase Admin REST API (email_confirm: true)
+```
+
+---
+
+## ⚠️ Known Issues mới (Session #15)
+
+| Issue | Máy | Ngày | Fix |
+|---|---|---|---|
+| `next dev` crash — SWC binary missing | LAPTOP-PERSONAL | 2026-04-12 | Xem Vercel thay vì local. Hoặc `npm install --cpu=x64 --os=win32 @next/swc-win32-x64-msvc` |
+| Git push fail `Permission denied (publickey)` | LAPTOP-PERSONAL | 2026-04-12 | Chuyển remote sang HTTPS (D012) |
+| Husky pre-commit fail "no initial commit" | LAPTOP-PERSONAL | 2026-04-12 | Dùng `--no-verify` khi commit từ Windows |
+| Git index corrupt `]3dl extension` | LAPTOP-PERSONAL | 2026-04-12 | `rm .git/index -Force; git reset` |
+
+---
+
+## 🏢 LAPTOP-COMPANY — Setup Checklist (Phiên Sáng Mai)
+
+**Thực hiện đầu phiên sáng 2026-04-13:**
+```
+[ ] Xác nhận hostname, username → điền vào bảng Machine 2 ở trên
+[ ] Test: git clone hoặc git pull từ https://github.com/tuanhp41/elvin-cv-saas.git
+[ ] Test: node --version (cần >= 18.x)
+[ ] npm install trong thư mục cv-saas
+[ ] Tạo .env.local (xem giá trị trong CURRENT_STATE.md)
+[ ] Test git push → nếu fail → chạy: git remote set-url origin https://github.com/tuanhp41/elvin-cv-saas.git
+[ ] Test: ssh ubuntu-server hoặc ssh elvin@100.67.85.6 (Tailscale phải bật)
+[ ] Xác nhận Tailscale đã cài và running
+[ ] Kiểm tra IT policy: PowerShell ExecutionPolicy? Có chạy .ps1 được không?
+[ ] rclone + L:\ drive: test xem cài được không
+```
