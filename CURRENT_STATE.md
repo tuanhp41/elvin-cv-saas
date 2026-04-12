@@ -2,26 +2,29 @@
 # ⚠️ OVERWRITE ONLY — không append — chỉ có 1 snapshot mới nhất
 
 ## Snapshot
-- **Timestamp:** 2026-04-12 13:20 +07:00
-- **Phase:** 1 — Core App + AI Foundation | **Session:** #10
+- **Timestamp:** 2026-04-12 14:06 +07:00
+- **Phase:** 1 — Core App + AI Foundation | **Session:** #11 (Gemini Pro)
 - **Branch:** main
-- **Master Plan:** v4.0 (restructured from v3 — see D008)
+- **Master Plan:** v4.0
 
 ## Đang làm dở
-- Việc: Phase 1 Week 1 — npm install + verify build
-- Trạng thái: Day 1 scaffold đã xong, cần install dependencies
+- Việc: Phase 1 Stage 1 Bootstrapping
+- Trạng thái: 
+  - [x] npm install & build verified
+  - [x] wiki compile updated with architecture view
+  - [x] Supabase connection & Auth (Login, Register, Dashboard)
+  - [ ] Day 2: CODING_STANDARDS.md (CHỜ OPUS thực hiện)
 
 ## Lỗi chưa xử lý
 - [ ] LAPTOP-COMPANY SSH method chưa confirm (non-blocking)
-- [ ] npm install chưa chạy trên server (cần chạy)
 
 ## Quyết định pending
 - [ ] Chọn Qwen API endpoint (Dashscope vs Hugging Face) — quyết định tuần 3
 - [ ] Đồng bộ 1 user duy nhất trên server (tuan vs elvin)
 
 ## Task đầu tiên session tới
-→ SSH vào server → npm install → npm run dev → verify app chạy
-→ Sau đó: Supabase setup (Day 2 tuần 1)
+→ [Opus] Thực hiện viết `CODING_STANDARDS.md` để hoàn tất Stage 1
+→ [Gemini Pro] Sau đó bắt đầu Stage 2: UI Component library + CV Form Full
 
 ## Context cho AI
 Phase 0 COMPLETE. Master Plan v4 approved: quality-first approach, 5 phases, multi-model (Gemma+Qwen+Groq). ROADMAP cũ archived tại docs/history/. Phase 1 roadmap chi tiết tại ROADMAP_PHASE1.md. Stack FROZEN: Next.js 14, Supabase, Gemma 4 + Qwen + Groq, PayOS (sandbox), Vercel, Tailwind, shadcn/ui. Scaffold đã có (pages, components, lib stubs). Cần npm install + verify build.
