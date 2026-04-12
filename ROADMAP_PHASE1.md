@@ -38,13 +38,90 @@ STAGE 3 (Day 8–12): PIPELINE BUILD
 
 ## 🤖 PHÂN CÔNG NGUỒN LỰC CHI TIẾT
 
-### Trong Antigravity (3 models — tận dụng hết)
+### Trong Antigravity (3 models — 2 TOKEN POOLS)
 
-| Model | Strengths | Phân công Phase 1 | % Workload |
-|---|---|---|---|
-| **Opus** | Kiến trúc, quyết định phức tạp, review sâu, debug khó | Architecture design, code review tổng, Phase Gate review, approval | ~15% |
-| **Sonnet** | Code logic phức tạp, refactor, debug | AI Router, Evaluator, complex integrations | ~25% |
-| **Gemini Pro** | Code nhanh, scaffold tốt, tra cứu/hướng dẫn giỏi, context lớn | Phần lớn feature code, component build, API integration, documentation, tra cứu docs | **~60%** |
+```
+⚠️ CƠ CHẾ TOKEN ANTIGRAVITY — PHẢI NHỚ:
+
+┌─────────────────────────────────┐  ┌──────────────────────────┐
+│   POOL A: Claude                │  │  POOL B: Gemini          │
+│   Opus + Sonnet DÙNG CHUNG      │  │  Gemini Pro RIÊNG        │
+│                                 │  │                          │
+│   Dùng Opus nhiều → Sonnet hết  │  │  Quota độc lập           │
+│   Dùng Sonnet nhiều → Opus hết  │  │  Không ảnh hưởng Pool A  │
+└────────────┬────────────────────┘  └────────────┬─────────────┘
+             │                                    │
+             └──────── Reset mỗi 5 GIỜ ──────────┘
+                      + Weekly limit cả 2 pool
+```
+
+**Hệ quả cho phân công:**
+- Dùng Opus = ăn token của Sonnet → phải THẬT tiết kiệm Opus
+- Nếu Claude hết quota → CHUYỂN NGAY sang Gemini Pro (vẫn làm được)
+- Nếu Gemini hết quota → CHUYỂN NGAY sang Claude (vẫn làm được)
+- **Lý tưởng nhất: xen kẽ Claude ↔ Gemini trong 1 session** để 2 pools cùng giảm đều
+
+| Model | Pool | Strengths | Phân công Phase 1 | % Workload |
+|---|---|---|---|---|
+| **Opus** | Claude (shared) | Kiến trúc, review sâu, debug khó | Architecture, Phase Gate, approval ONLY | **~10%** |
+| **Sonnet** | Claude (shared) | Code logic phức tạp, refactor | AI Router, Evaluator, complex logic | **~20%** |
+| **Gemini Pro** | Gemini (riêng) | Code nhanh, tra cứu, context lớn | Primary workhorse — features, APIs, docs | **~60%** |
+| **Free AIs** | Không tốn token | Code theo pattern | Pipeline tasks (Stage 3) | **~10%** |
+
+### 🔄 Chiến lược xen kẽ Token trong 1 Session
+
+```
+MỖI SESSION LÀM VIỆC (1–2h), XEN KẼ NHƯ SAU:
+
+Session bắt đầu:
+  ├── [Gemini Pro] 🟢 Đọc context, plan tasks (15 phút)
+  ├── [Claude/Sonnet] 🔵 Code logic phức tạp nếu có (20 phút)
+  ├── [Gemini Pro] 🟢 Code features, components (30 phút)
+  ├── [Claude/Sonnet] 🔵 Review + fix nếu cần (15 phút)
+  └── [Gemini Pro] 🟢 Commit, update docs (10 phút)
+
+KHI 1 POOL HẾT TOKEN:
+  Pool A (Claude) hết → Gemini Pro làm tất cả, kể cả review
+  Pool B (Gemini) hết → Sonnet làm tất cả, Opus chỉ khi cần
+  CẢ 2 hết → Dùng Free AI APIs qua script/n8n, hoặc nghỉ đợi 5h reset
+
+LẬP LỊCH SESSION TỐI ƯU (reset 5h):
+  Session 1: 08:00–10:00 → Dùng cả 2 pools
+  ── Reset 13:00 ──
+  Session 2: 13:00–15:00 → Dùng cả 2 pools (đã reset)
+  ── Reset 18:00 ──  
+  Session 3: 19:00–21:00 → Dùng cả 2 pools (đã reset)
+  → 3 sessions/ngày × 2h = 6h coding (nếu rảnh)
+  → Thực tế: 1–2 sessions/ngày = đủ
+```
+
+### 📋 Quy tắc phân Pool cho từng loại task
+
+```
+POOL A (Claude) — chỉ dùng khi THẬT SỰ cần:
+  ✅ Architecture decisions (Opus)
+  ✅ Complex algorithm: router, evaluator (Sonnet)
+  ✅ Debug lỗi lạ mà Gemini không giải quyết được (Sonnet)
+  ✅ Full codebase review (Opus, cuối stage)
+  ✅ Phase Gate approval (Opus)
+  ❌ KHÔNG dùng cho: scaffold, boilerplate, UI components, API clients
+
+POOL B (Gemini Pro) — workhorse hàng ngày:
+  ✅ Tất cả UI components
+  ✅ API routes (follow pattern)
+  ✅ Supabase integration
+  ✅ Tra cứu docs (Qwen API, Groq docs...)
+  ✅ Fix bugs đơn giản → trung bình
+  ✅ Code review nhẹ (per commit)
+  ✅ Documentation, wiki update
+  ✅ Generate test data
+
+FREE AIs (Stage 3 — không tốn pool nào):
+  ✅ Code components theo CODING_STANDARDS.md
+  ✅ Cross-review code
+  ✅ Generate prompt variants
+  ✅ Bulk tasks (5+ components cùng lúc)
+```
 
 > ⚠️ **Gemini Pro là workhorse chính** — không chỉ làm boilerplate.
 > Với hướng dẫn rõ ràng (standards + examples), Gemini Pro code complex features rất tốt.

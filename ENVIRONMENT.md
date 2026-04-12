@@ -259,13 +259,29 @@ Get-Process tailscale* | Select-Object Name, Id
 
 ---
 
-## 🤖 AI Resource Strategy
+## 🤖 AI Resource Strategy (TOKEN POOLS)
 
-| Task | Model | Endpoint |
-|---|---|---|
-| SIMPLE (CRUD, boilerplate) | `gemma3:12b` local | `http://100.67.85.6:11434` |
-| MEDIUM (logic, review) | Gemini Flash / Groq | Google AI Studio / Groq API |
-| COMPLEX (architecture, PMP) | Antigravity | — |
+```
+⚠️ Antigravity có 2 TOKEN POOLS RIÊNG BIỆT:
+
+POOL A: Claude (Opus + Sonnet DÙNG CHUNG)
+POOL B: Gemini Pro (RIÊNG)
+Reset: mỗi 5 giờ + weekly limit
+
+→ Dùng Opus nhiều = Sonnet cũng hết
+→ Xen kẽ Pool A ↔ Pool B trong mỗi session
+→ Khi 1 pool hết → chuyển sang pool còn lại
+→ Cả 2 hết → dùng Free AI APIs hoặc đợi reset
+```
+
+| Task | Model | Pool | Ghi chú |
+|---|---|---|---|
+| Architecture, Phase Gate | Opus | A (Claude) | ~10% — TIẾT KIỆM |
+| Complex logic, debug khó | Sonnet | A (Claude) | ~20% — chỉ khi Gemini không đủ |
+| Features, APIs, docs, review nhẹ | **Gemini Pro** | **B (Gemini)** | **~60% — WORKHORSE CHÍNH** |
+| Bulk code, pattern tasks | Free AIs (Gemma/Qwen API) | Không tốn | ~10% — Stage 3+ |
+
+**Chi tiết phân công:** xem ROADMAP_PHASE1.md → "PHÂN CÔNG NGUỒN LỰC CHI TIẾT"
 
 ---
 
@@ -275,3 +291,4 @@ Get-Process tailscale* | Select-Object Name, Id
 |---|---|---|
 | #8 | 2026-04-12 | Tạo file, structure 3-machine, fix SSH BOM, PowerShell gotcha |
 | #9 | 2026-04-12 | Antigravity session: xác nhận ubuntu-server/elvin alias, Node.js v24.14.1, Tailscale path, Known Issues mới x5 |
+| #10 | 2026-04-12 | Master Plan v4, token pool strategy, AI workforce pipeline design |
