@@ -2,7 +2,7 @@
 # 🌐 Dev Environment Reference — CV SaaS Project
 # ⚠️ AI đọc file này ĐẦU TIÊN mỗi session — TRƯỚC KHI tìm kiếm bất cứ thứ gì
 # ⚠️ Cuối session: cập nhật file này trước khi commit
-# Last Updated: 2026-04-13 08:25 +07:00 | Session #16
+# Last Updated: 2026-04-13 08:45 +07:00 | Session #16
 # Links: [[CURRENT_STATE]] | [[DECISIONS]] | [[TROUBLESHOOTING]] | [[SESSION_HANDOFF]] | [[RISK_LOG]]
 
 ---
@@ -20,8 +20,8 @@
   Username: levin_nguyen
   Hostname: HPLT0000999-1
   L:\ AVAILABLE (rclone đã mount sẵn)
-  SSH method: OpenSSH built-in (WINDOWS\System32\OpenSSH\ssh.exe)
-  ⚠️ Không có SSH config + SSH key → cần tạo
+  SSH method: OpenSSH + key-based (✅ verified 2026-04-13)
+  ssh ubuntu-server → không cần password
 ```
 
 ---
@@ -94,7 +94,7 @@ ssh tuanpc "cd /home/tuan/projects/cv-saas; git add -A; git commit -m 'msg'"
 
 **Nhận diện máy này:** Username `levin_nguyen`, Hostname `HPLT0000999-1`, L:\ drive có sẵn
 
-> ✅ **Verified 2026-04-13** — Đã kiểm tra thực tế
+> ✅ **Fully Verified 2026-04-13** — SSH key setup hoàn thành, không cần password
 
 | Thông tin | Giá trị |
 |---|---|
@@ -115,19 +115,18 @@ ssh tuanpc "cd /home/tuan/projects/cv-saas; git add -A; git commit -m 'msg'"
 [✅] Git v2.48.1: Available
 [✅] OpenSSH: Available tại C:\WINDOWS\System32\OpenSSH\ssh.exe
 [✅] winget: Available
+[✅] SSH key: ~/.ssh/id_ed25519 (ed25519, laptop-company-levin)
+[✅] SSH config: ~/.ssh/config → alias ubuntu-server
+[✅] ssh ubuntu-server → KEY AUTH, không cần password
 ```
 
-### ❌ Còn thiếu — Cần cài/setup
+### ❌ Còn thiếu — Cần cài
 ```
 [❌] Node.js: NOT FOUND → cài bằng winget (xem lệnh bên dưới)
 [❌] npm: NOT FOUND → tự có sau khi cài Node.js
-[❌] rclone: NOT FOUND trong PATH (dù L:\ đang mount)
-        → rclone đang chạy ở đâu đó nhưng không trong PATH
-        → Cần tìm và add vào PATH, hoặc cài lại qua winget
-[❌] SSH config (~/.ssh/config): NOT FOUND → cần tạo
-[❌] SSH key (~/.ssh/id_ed25519): NOT FOUND → cần tạo
 [❌] python: NOT FOUND (optional — chỉ cần khi chạy compile_wiki.py)
-[⚠️] ExecutionPolicy = Restricted → không chạy được .ps1 scripts
+[⚠️] ExecutionPolicy = Restricted → không chạy .ps1 file (dùng -Command hoặc -EncodedCommand)
+[ℹ️] rclone không trong PATH nhưng L:\ đang mount — không cần fix
 ```
 
 ### 🔧 Setup commands cho LAPTOP-COMPANY
@@ -267,7 +266,7 @@ chmod +x node_modules/.bin/*
 | Từ \ Đến | SERVER-PC SSH | n8n Web UI | L:\ Drive | Git Push |
 |---|---|---|---|---|
 | **LAPTOP-PERSONAL** | ✅ `ssh ubuntu-server` | ✅ direct | ✅ rclone mount | ✅ HTTPS (D012) |
-| **LAPTOP-COMPANY** | ⚠️ SSH key chưa setup | ✅ direct (Tailscale) | ✅ Mounted | ✅ HTTPS (D012) |
+| **LAPTOP-COMPANY** | ✅ `ssh ubuntu-server` (key auth) | ✅ direct (Tailscale) | ✅ Mounted | ✅ HTTPS (D012) |
 
 ---
 
@@ -360,7 +359,7 @@ Reset: mỗi 5 giờ + weekly limit
 | #9 | 2026-04-12 | Antigravity session: xác nhận ubuntu-server/elvin alias, Node.js v24.14.1, Tailscale path, Known Issues mới x5 |
 | #10 | 2026-04-12 | Master Plan v4, token pool strategy, AI workforce pipeline design |
 | #15 | 2026-04-12 | Day 4-5-6 done. Git remote SSH→HTTPS (D012). Supabase keys deployed. Next.js SWC fail trên Windows. Admin account tạo qua REST API. |
-| #16 | 2026-04-13 | **LAPTOP-COMPANY verified**: hostname HPLT0000999-1, user levin_nguyen, L:\ available, Tailscale running, Node.js MISSING, SSH key MISSING, ExecutionPolicy=Restricted. |
+| #16 | 2026-04-13 | **LAPTOP-COMPANY fully setup**: SSH key tạo + upload (KEY_ADDED_OK), ssh ubuntu-server không cần password. Node.js vẫn cần cài. git safe.directory fix. ExecutionPolicy=Restricted — dùng -EncodedCommand workaround. |
 
 ---
 
@@ -409,9 +408,9 @@ Tạo bằng: Supabase Admin REST API (email_confirm: true)
 
 ---
 
-## 🏢 LAPTOP-COMPANY — Setup Checklist (Updated 2026-04-13)
+## 🏢 LAPTOP-COMPANY — Setup Status (Updated 2026-04-13 ✅)
 
-**Verified 2026-04-13 sáng — Trạng thái thực tế:**
+**Verified 2026-04-13 — Trạng thái sau setup:**
 ```
 [✅] Hostname: HPLT0000999-1 | Username: levin_nguyen
 [✅] L:\ drive mounted và hoạt động
@@ -420,19 +419,21 @@ Tạo bằng: Supabase Admin REST API (email_confirm: true)
 [✅] Git v2.48.1 available
 [✅] OpenSSH available (Windows built-in)
 [✅] winget available
+[✅] SSH key: ~/.ssh/id_ed25519 (ed25519)
+[✅] SSH config: ~/.ssh/config với alias ubuntu-server
+[✅] ssh ubuntu-server → không cần password (key auth)
+[✅] git safe.directory: đã cấu hình cho //100.67.85.6/projects/cv-saas
 
 [❌] Node.js: CẦN CÀI → winget install --id OpenJS.NodeJS.LTS -e
 [❌] npm install chưa chạy → sau khi cài Node.js
-[❌] SSH key chưa tạo → ssh-keygen -t ed25519 -C "laptop-company-levin"
-[❌] SSH config chưa tạo → xem lệnh trong section Machine 2
-[⚠️] ExecutionPolicy = Restricted → không chạy .ps1
-[⚠️] python chưa có → cần nếu muốn chạy compile_wiki.py
+[⚠️] ExecutionPolicy = Restricted → không chạy .ps1 file
+       Workaround: dùng -EncodedCommand hoặc inline -Command
+[⚠️] python chưa có → optional, chỉ cần cho compile_wiki.py
 ```
 
-**Việc cần làm NGAY session này:**
+**Việc còn lại duy nhất:**
 ```
-→ Bước 1: Cài Node.js (winget install --id OpenJS.NodeJS.LTS -e)
-→ Bước 2: Restart terminal → npm install tại L:\cv-saas
-→ Bước 3: Setup SSH key → ssh ubuntu-server
-→ Bước 4: Bắt đầu Day 7 — AI API Integration
+→ winget install --id OpenJS.NodeJS.LTS -e
+→ Restart terminal → cd L:\cv-saas → npm install
+→ Bắt đầu Day 7 — AI API Integration
 ```
