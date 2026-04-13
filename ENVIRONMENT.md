@@ -2,7 +2,7 @@
 # 🌐 Dev Environment Reference — CV SaaS Project
 # ⚠️ AI đọc file này ĐẦU TIÊN mỗi session — TRƯỚC KHI tìm kiếm bất cứ thứ gì
 # ⚠️ Cuối session: cập nhật file này trước khi commit
-# Last Updated: 2026-04-12 22:35 +07:00 | Session #15
+# Last Updated: 2026-04-13 08:25 +07:00 | Session #16
 # Links: [[CURRENT_STATE]] | [[DECISIONS]] | [[TROUBLESHOOTING]] | [[SESSION_HANDOFF]] | [[RISK_LOG]]
 
 ---
@@ -12,12 +12,16 @@
 ```
 [LAPTOP-PERSONAL]  ──── Tailscale ────┐
   Windows 11, full admin               ├──→ [SERVER-PC]
-  L:\ = rclone mount                   │     Ubuntu 22.04
-                                       │     Tailscale: 100.67.85.6
-[LAPTOP-COMPANY]   ──── [TODO] ────────┘     Server User: elvin
-  Windows 11, hạn chế                         n8n :5678
-  FortiVPN thường xuyên                       Ollama :11434
-  SSH method: plink/ssh
+  L:\ = rclone mount (rclone)          │     Ubuntu 22.04
+  Username: tuanh                      │     Tailscale: 100.67.85.6
+                                       │     Server User: elvin
+[LAPTOP-COMPANY]   ──── Tailscale ────┘     n8n :5678
+  Windows 11, Restricted ExecutionPolicy     Ollama :11434
+  Username: levin_nguyen
+  Hostname: HPLT0000999-1
+  L:\ AVAILABLE (rclone đã mount sẵn)
+  SSH method: OpenSSH built-in (WINDOWS\System32\OpenSSH\ssh.exe)
+  ⚠️ Không có SSH config + SSH key → cần tạo
 ```
 
 ---
@@ -88,51 +92,113 @@ ssh tuanpc "cd /home/tuan/projects/cv-saas; git add -A; git commit -m 'msg'"
 
 ## 💼 MACHINE 2 — LAPTOP-COMPANY (Laptop Công Ty)
 
-**Nhận diện máy này:** [TODO — điền dấu hiệu nhận biết: hostname? username? không có L:\?]
+**Nhận diện máy này:** Username `levin_nguyen`, Hostname `HPLT0000999-1`, L:\ drive có sẵn
+
+> ✅ **Verified 2026-04-13** — Đã kiểm tra thực tế
 
 | Thông tin | Giá trị |
 |---|---|
-| OS | Windows 11 |
-| Permissions | Hạn chế — không full admin |
-| Hostname | [TODO — điền khi lần đầu dùng] |
-| Username | [TODO — điền khi lần đầu dùng] |
-| FortiVPN | Chỉ bật khi cần (không thường xuyên) |
-| Tailscale | ✅ Cài được |
+| OS | Windows 11 Build 26100 |
+| Permissions | Restricted (ExecutionPolicy = Restricted) |
+| Hostname | `HPLT0000999-1` |
+| Username | `levin_nguyen` |
+| FortiVPN | Chỉ bật khi cần — hiện chưa bật |
+| Tailscale | ✅ Running (tailscaled + tailscale-ipn) |
+| L:\ Drive | ✅ Available — rclone đã mount, L:\cv-saas hoạt động |
+| .env.local | ✅ Có sẵn tại L:\cv-saas\.env.local |
 
-### ⚠️ Limitations (Laptop Công Ty)
+### ✅ Confirmed Working
 ```
-[x] Tailscale: CÀI ĐƯỢC
-[ ] rclone / L:\ drive: [TODO — chưa test]
-[ ] PowerShell script .ps1: [TODO — chưa test ExecutionPolicy]
-[ ] Port 22 SSH: [TODO — chưa test khi có/không FortiVPN]
-[ ] Cài phần mềm tự do: [TODO — chưa biết IT policy]
+[✅] Tailscale: Đang chạy (tailscaled + tailscale-ipn)
+[✅] L:\ drive: Mounted — L:\cv-saas accessible
+[✅] L:\cv-saas\.env.local: EXISTS — không cần tạo lại
+[✅] Git v2.48.1: Available
+[✅] OpenSSH: Available tại C:\WINDOWS\System32\OpenSSH\ssh.exe
+[✅] winget: Available
+```
+
+### ❌ Còn thiếu — Cần cài/setup
+```
+[❌] Node.js: NOT FOUND → cài bằng winget (xem lệnh bên dưới)
+[❌] npm: NOT FOUND → tự có sau khi cài Node.js
+[❌] rclone: NOT FOUND trong PATH (dù L:\ đang mount)
+        → rclone đang chạy ở đâu đó nhưng không trong PATH
+        → Cần tìm và add vào PATH, hoặc cài lại qua winget
+[❌] SSH config (~/.ssh/config): NOT FOUND → cần tạo
+[❌] SSH key (~/.ssh/id_ed25519): NOT FOUND → cần tạo
+[❌] python: NOT FOUND (optional — chỉ cần khi chạy compile_wiki.py)
+[⚠️] ExecutionPolicy = Restricted → không chạy được .ps1 scripts
+```
+
+### 🔧 Setup commands cho LAPTOP-COMPANY
+```powershell
+# 1. Cài Node.js LTS qua winget
+winget install --id OpenJS.NodeJS.LTS -e
+# Sau đó RESTART terminal để PATH reload
+
+# 2. Verify Node.js
+node --version   # cần >= 18.x
+npm --version
+
+# 3. Tìm rclone đang chạy ở đâu
+Get-Process rclone -ErrorAction SilentlyContinue | Select-Object Path
+# Nếu không có → cài lại:
+winget install --id Rclone.Rclone -e
+
+# 4. Tạo SSH key (để SSH vào server)
+ssh-keygen -t ed25519 -C "laptop-company-levin"
+# Nhấn Enter 3 lần (dùng default path, no passphrase)
+
+# 5. Upload SSH key lên server (nhập password 1 lần)
+$pubKey = Get-Content "$env:USERPROFILE\.ssh\id_ed25519.pub"
+ssh elvin@100.67.85.6 "echo $pubKey >> ~/.ssh/authorized_keys"
+
+# 6. Tạo SSH config
+New-Item -Force -Path "$env:USERPROFILE\.ssh\config" -ItemType File
+@"
+Host ubuntu-server
+    HostName 100.67.85.6
+    User elvin
+    IdentityFile $env:USERPROFILE\.ssh\id_ed25519
+    StrictHostKeyChecking no
+"@ | Set-Content "$env:USERPROFILE\.ssh\config" -Encoding UTF8
+
+# 7. Test SSH
+ssh ubuntu-server "echo 'SSH OK'"
+
+# 8. npm install (trong L:\cv-saas)
+cd L:\cv-saas
+npm install
+```
+
+### ⚠️ ExecutionPolicy = Restricted
+```powershell
+# Không chạy được file .ps1 → dùng lệnh inline thay thế
+# Nếu cần chạy .ps1:
+Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+# (Cần approve từ user — IT company có thể block)
 ```
 
 ### SSH vào Server từ LAPTOP-COMPANY
-```
-⚠️ CHƯA CONFIRM — cập nhật lần đầu ngồi laptop công ty
+```powershell
+# Sau khi setup SSH key (xem bên trên)
+ssh ubuntu-server        # dùng alias
+# hoặc
+ssh elvin@100.67.85.6   # direct Tailscale IP
 
-Đang test: plink (PuTTY CLI) — chưa verify
-  plink tuan@100.67.85.6
-
-Nếu Tailscale OK → có thể dùng:
-  ssh tuan@100.67.85.6  (nếu OpenSSH available)
-
-Fallback nếu SSH fail:
-  - n8n web UI: http://100.67.85.6:5678
-  - Tailscale SSH web console (browser-based)
-  - FortiVPN tắt trước khi thử (FortiVPN có thể block Tailscale)
+# ⚠️ Tailscale phải đang running trước
+# Fallback nếu SSH fail:
+#   - n8n web UI: http://100.67.85.6:5678
+#   - Tailscale SSH web console (browser-based)
 ```
 
-### Cách tiếp cận Project từ LAPTOP-COMPANY
+### Workflow từ LAPTOP-COMPANY
 ```
-⚠️ CHƯA CONFIRM — cập nhật lần đầu ngồi laptop công ty
-
-Nếu không có L:\ → workflow thay thế:
-  - VS Code Remote SSH extension → edit file trực tiếp trên server
-  - Commit trực tiếp trên server qua SSH/plink terminal
-  - Dùng n8n web UI cho automation tasks
-  - KHÔNG dùng Antigravity file tools (không có L:\)
+✅ Antigravity IDE → mở L:\cv-saas\ (L: drive có sẵn)
+✅ Đọc/write file qua L: drive hoạt động bình thường
+✅ Git commit: dùng L:\cv-saas thẳng (sau khi cài Node.js + npm install)
+✅ Git push: dùng HTTPS (D012) — không cần SSH key GitHub
+✅ SSH lên server: sau khi setup SSH key (bước 4-7 bên trên)
 ```
 
 ### Risk liên quan: [[RISK_LOG]] R-NEW-001
@@ -198,10 +264,10 @@ chmod +x node_modules/.bin/*
 
 ## 🔀 ACCESS MATRIX
 
-| Từ \ Đến | SERVER-PC SSH | n8n Web UI | L:\ Drive |
-|---|---|---|---|
-| **LAPTOP-PERSONAL** | ✅ `ssh tuanpc` | ✅ direct | ✅ rclone mount |
-| **LAPTOP-COMPANY** | [TODO] | [TODO] | ❌ không có |
+| Từ \ Đến | SERVER-PC SSH | n8n Web UI | L:\ Drive | Git Push |
+|---|---|---|---|---|
+| **LAPTOP-PERSONAL** | ✅ `ssh ubuntu-server` | ✅ direct | ✅ rclone mount | ✅ HTTPS (D012) |
+| **LAPTOP-COMPANY** | ⚠️ SSH key chưa setup | ✅ direct (Tailscale) | ✅ Mounted | ✅ HTTPS (D012) |
 
 ---
 
@@ -294,6 +360,7 @@ Reset: mỗi 5 giờ + weekly limit
 | #9 | 2026-04-12 | Antigravity session: xác nhận ubuntu-server/elvin alias, Node.js v24.14.1, Tailscale path, Known Issues mới x5 |
 | #10 | 2026-04-12 | Master Plan v4, token pool strategy, AI workforce pipeline design |
 | #15 | 2026-04-12 | Day 4-5-6 done. Git remote SSH→HTTPS (D012). Supabase keys deployed. Next.js SWC fail trên Windows. Admin account tạo qua REST API. |
+| #16 | 2026-04-13 | **LAPTOP-COMPANY verified**: hostname HPLT0000999-1, user levin_nguyen, L:\ available, Tailscale running, Node.js MISSING, SSH key MISSING, ExecutionPolicy=Restricted. |
 
 ---
 
@@ -342,18 +409,30 @@ Tạo bằng: Supabase Admin REST API (email_confirm: true)
 
 ---
 
-## 🏢 LAPTOP-COMPANY — Setup Checklist (Phiên Sáng Mai)
+## 🏢 LAPTOP-COMPANY — Setup Checklist (Updated 2026-04-13)
 
-**Thực hiện đầu phiên sáng 2026-04-13:**
+**Verified 2026-04-13 sáng — Trạng thái thực tế:**
 ```
-[ ] Xác nhận hostname, username → điền vào bảng Machine 2 ở trên
-[ ] Test: git clone hoặc git pull từ https://github.com/tuanhp41/elvin-cv-saas.git
-[ ] Test: node --version (cần >= 18.x)
-[ ] npm install trong thư mục cv-saas
-[ ] Tạo .env.local (xem giá trị trong CURRENT_STATE.md)
-[ ] Test git push → nếu fail → chạy: git remote set-url origin https://github.com/tuanhp41/elvin-cv-saas.git
-[ ] Test: ssh ubuntu-server hoặc ssh elvin@100.67.85.6 (Tailscale phải bật)
-[ ] Xác nhận Tailscale đã cài và running
-[ ] Kiểm tra IT policy: PowerShell ExecutionPolicy? Có chạy .ps1 được không?
-[ ] rclone + L:\ drive: test xem cài được không
+[✅] Hostname: HPLT0000999-1 | Username: levin_nguyen
+[✅] L:\ drive mounted và hoạt động
+[✅] .env.local EXISTS tại L:\cv-saas\
+[✅] Tailscale running
+[✅] Git v2.48.1 available
+[✅] OpenSSH available (Windows built-in)
+[✅] winget available
+
+[❌] Node.js: CẦN CÀI → winget install --id OpenJS.NodeJS.LTS -e
+[❌] npm install chưa chạy → sau khi cài Node.js
+[❌] SSH key chưa tạo → ssh-keygen -t ed25519 -C "laptop-company-levin"
+[❌] SSH config chưa tạo → xem lệnh trong section Machine 2
+[⚠️] ExecutionPolicy = Restricted → không chạy .ps1
+[⚠️] python chưa có → cần nếu muốn chạy compile_wiki.py
+```
+
+**Việc cần làm NGAY session này:**
+```
+→ Bước 1: Cài Node.js (winget install --id OpenJS.NodeJS.LTS -e)
+→ Bước 2: Restart terminal → npm install tại L:\cv-saas
+→ Bước 3: Setup SSH key → ssh ubuntu-server
+→ Bước 4: Bắt đầu Day 7 — AI API Integration
 ```
