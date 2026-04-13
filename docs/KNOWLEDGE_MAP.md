@@ -87,3 +87,37 @@ EXPERIMENTS.md
 | docs/history/CV_SAAS_MASTER_PLAN_v3_ARCHIVED_2026-04-12.md | Bản lưu trước khi v4 |
 | docs/history/linux-mount-setup.md | Hướng dẫn cũ, nội dung đã vào ENVIRONMENT |
 
+---
+
+## 🤖 AI Link Protocol — BẮT BUỘC
+
+> **Mọi AI (Antigravity, Claude, Gemini CLI, Codex) khi update file .md PHẢI:**
+
+### 1. Dùng `[[wikilink]]` — KHÔNG dùng path tuyệt đối
+```
+✅ Đúng:  Xem [[DECISIONS]] entry D012
+❌ Sai:   Xem [DECISIONS](./DECISIONS.md)
+```
+
+### 2. Khi tạo file .md MỚI — phải làm 3 việc:
+```
+a) Tạo file theo đúng folder trong [[ARCHITECTURE]]
+b) Thêm entry vào bảng "Node Legend" trong file này (KNOWLEDGE_MAP)
+c) Thêm link vào [[CURRENT_STATE]] hoặc [[SESSION_HANDOFF]] nếu relevant
+```
+
+### 3. Khi update wiki/raw/*.md:
+```
+→ Edit wiki/raw/TEN_FILE.md
+→ Chạy: ssh ubuntu-server "cd /home/elvin/projects/cv-saas && python3 automation/scripts/compile_wiki.py"
+→ Commit CẢ HAI: wiki/raw/* VÀ wiki/compiled/knowledge.md
+→ KHÔNG edit wiki/compiled/knowledge.md trực tiếp
+```
+
+### 4. File KHÔNG được rename/xóa (Sacred):
+```
+docs/KNOWLEDGE_MAP.md  ← file này — node trung tâm graph
+wiki/compiled/knowledge.md ← AI context dump
+SPEC.md, DECISIONS.md, ARCHITECTURE.md ← frozen baselines
+```
+
