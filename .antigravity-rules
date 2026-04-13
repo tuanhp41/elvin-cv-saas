@@ -22,8 +22,8 @@
       Đọc RISK_LOG.md — lọc các risk có status OPEN và severity HIGH/CRITICAL.
       Nếu có risk Critical chưa có mitigation → đề xuất xử lý trước khi code.
     </step>
-    <step order="3" file="ROADMAP.md" required="true">
-      Đọc ROADMAP.md — kiểm tra Phase Gate checklist còn bao nhiêu item chưa tick.
+    <step order="3" file="ROADMAP_PHASE1.md" required="true">
+      Đọc ROADMAP_PHASE1.md — kiểm tra Phase Gate checklist còn bao nhiêu item chưa tick.
       Báo: "Phase X: Y/Z items done — cần Z-Y items nữa để clear phase gate."
     </step>
     <step order="4" file="SPEC.md" condition="khi không chắc scope">

@@ -29,6 +29,11 @@
 - Job board integration
 - Multilingual UI phức tạp (chỉ Việt trước)
 
+## 🔗 Wiki Link Protocol
+Khi update bất kỳ file .md nào → **PHẢI dùng `[[wikilink]]`** thay vì path tuyệt đối.
+Đọc [[GEMINI]] section "LLM Wiki Link Protocol" để xem bảng đầy đủ.
+Tạo file .md mới → phải add vào [[KNOWLEDGE_MAP]] và [[CURRENT_STATE]].
+
 ## Khi không chắc
 → Hỏi trước, không tự quyết định
 → Ghi vào [[DECISIONS]] nếu có quyết định quan trọng

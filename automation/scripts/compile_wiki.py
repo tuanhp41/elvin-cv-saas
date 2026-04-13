@@ -30,6 +30,8 @@ OUTPUT_FILE = COMPILED_DIR / "knowledge.md"
 
 # Thứ tự file (ưu tiên file quan trọng đọc trước)
 FILE_ORDER = [
+    "project_architecture.md",
+    "split-screen-architecture.md",
     "nextjs.md",
     "supabase.md",
     "gemma-api.md",

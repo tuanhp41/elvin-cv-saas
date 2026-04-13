@@ -1,7 +1,7 @@
 # CV SaaS — LLM Knowledge Base (compiled)
 # Tự động compile từ wiki/raw/ — KHÔNG edit file này trực tiếp
 # Sửa ở: wiki/raw/[filename].md → chạy lại compile_wiki.py
-# Last compiled: 2026-04-12 22:38:44
+# Last compiled: 2026-04-13 09:10:56
 # Source files: 7 files
 
 ---
@@ -16,6 +16,193 @@ Server: Ubuntu 24.04 | Tailscale 100.67.85.6 | Ollama (gemma4:latest) | n8n Dock
 IDE: Antigravity trên Windows | Code qua L:\ (Samba mount)
 
 ---
+
+============================================================
+## SOURCE: wiki/raw/project_architecture.md
+============================================================
+
+# Architecture & Project Summary — LLM Wiki
+# Project: CV SaaS | Phase 1 (MVP)
+# Last updated: 2026-04-12
+
+## Cấu trúc thư mục hiện tại (Phase 1)
+\`\`\`
+src/
+├── pages/
+│   ├── index.jsx              ← Landing page
+│   ├── create.jsx             ← Main CV Builder page (Form + Templates)
+│   ├── _app.jsx               ← Global app wrapper
+│   ├── _document.jsx          ← Custom document
+│   ├── auth/
+│   │   ├── login.jsx          ← Login page
+│   │   └── register.jsx       ← Register page
+│   ├── preview/
+│   │   └── [id].jsx           ← CV Preview page
+│   └── api/
+│       ├── ai/
+│       │   ├── rewrite.js     ← Multi-model AI rewrite endpoint
+│       │   └── evaluate.js    ← AI output evaluation endpoint
+│       ├── cv/
+│       │   └── save.js        ← API to save CV to Supabase
+│       └── payment/
+│           ├── create.js      ← PayOS create payment link
+│           └── webhook.js     ← PayOS webhook listener
+├── components/
+│   ├── ui/                    ← Basic shadcn UI components (Button, Input, etc.)
+│   ├── features/
+│   │   ├── CVForm.jsx         ← Modular form for CV inputs
+│   │   ├── TemplatePicker.jsx ← Component to pick a template
+│   │   └── templates/         ← CV Templates (Professional, Modern, Executive)
+│   └── layout/
+│       └── Header.jsx         ← Main Navigation Header
+└── lib/
+    ├── utils.js               ← Tailwind cn() utility
+    ├── supabase.js            ← Supabase Client connection
+    ├── gemma.js               ← Gemma / Generic AI API Client
+    ├── payos.js               ← PayOS Client configuration
+    ├── cv-schema.js           ← JSON Schema definitions for CV data
+    └── ai/                    ← Multi-model AI configurations
+        ├── router.js          ← Model Router decision tree
+        ├── qwen-client.js     ← Qwen API integration
+        ├── groq-client.js     ← Groq API integration
+        ├── evaluator.js       ← Grading rubric logic
+        └── prompts.js         ← Core CV rewrite prompts
+\`\`\`
+
+## Cơ Sở Dữ Liệu - Supabase Schema
+- **users**: Quản lý bởi Supabase Auth (email/password).
+- **cvs**: id (UUID), user_id, title, language, template_id, content (JSONB), is_paid, created_at, updated_at.
+- **payments**: id, user_id, cv_id, amount, payos_order_id, status.
+
+## Pipeline các API Endpoints
+- \`/api/ai/rewrite\`: Chuyển đổi dữ liệu Form của người dùng thành CV theo chuẩn Vi/En/Zh. Route thông qua Gemma (mặc định), Qwen (nếu Zh), hoặc Groq.
+- \`/api/payment/create\`: Khởi tạo session thanh toán để xoá Watermark.
+- \`/api/payment/webhook\`: Listener nhận cập nhật trạng thái thanh toán từ PayOS, tự động cập nhật \`cvs.is_paid = true\`.
+
+
+============================================================
+## SOURCE: wiki/raw/split-screen-architecture.md
+============================================================
+
+# Wiki: Architecture + Data Flow (Day 4-6 Update)
+# Cập nhật: 2026-04-12 Session #15
+# Đây là raw wiki — sẽ được compile vào wiki/compiled/knowledge.md
+
+## Split-Screen Architecture (D011)
+
+### Tổng quan luồng dữ liệu
+```
+pages/create.jsx (state owner)
+    ├── <ChatPanel onExtractData={handleExtractData} />
+    │       └── user trả lời → gọi onExtractData(fieldTarget, value)
+    │
+    └── <CVPreview previewData={cvData} />
+            └── nhận cvData → render qua TemplateComponent
+```
+
+### cvData structure
+```javascript
+{
+  personalInfo: {
+    fullName: "",     // câu 0 → personalInfo.fullName
+    contact: ""       // câu 1 → personalInfo.contact
+  },
+  objective: "",      // câu 2 → objective
+  experience: "",     // câu 3 → experience
+  experience_more: "",// câu 4 → experience_more
+  education: "",      // câu 5 → education
+  skills: "",         // câu 6 → skills
+  others: ""          // câu 7 → others
+}
+```
+
+### updateExtractData pattern
+```javascript
+// Trong create.jsx
+const handleExtractData = (fieldTarget, value) => {
+  // fieldTarget = "personalInfo.fullName" → nested
+  // fieldTarget = "objective" → flat
+  setCvData(prev => {
+    const parts = fieldTarget.split('.');
+    if (parts.length === 2) {
+      return { ...prev, [parts[0]]: { ...prev[parts[0]], [parts[1]]: value } };
+    }
+    return { ...prev, [fieldTarget]: value };
+  });
+};
+```
+
+## Template System
+
+### Templates location
+```
+src/components/cv-templates/
+  ProfessionalTemplate.jsx  — 2 cột, navy sidebar, corporate
+  ModernTemplate.jsx        — 1 cột, gradient violet-blue, creative
+  MinimalTemplate.jsx       — 1 cột, đen trắng, ATS-optimized
+```
+
+### Template interface (tất cả templates đều nhận cùng props)
+```javascript
+// Props chuẩn cho mọi template
+export default function AnyTemplate({ data = {}, className }) {
+  const { personalInfo, objective, experience, education, skills, others } = data;
+  // render theo layout riêng của template
+}
+```
+
+### TemplatePicker
+- Component: `src/components/features/TemplatePicker.jsx`
+- Props: `{ selectedTemplate, onSelect }`
+- IDs: `'professional' | 'modern' | 'minimal'`
+- CVPreview dùng dictionary để map ID → component:
+```javascript
+const TemplateComponent = {
+  professional: ProfessionalTemplate,
+  modern: ModernTemplate,
+  minimal: MinimalTemplate,
+}[selectedTemplate];
+```
+
+## Database Schema (Supabase)
+
+### Migration file
+`docs/supabase/migrations/001_cv_chat_schema.sql`
+
+### Tables
+```sql
+cvs:
+  id UUID PK, user_id UUID FK auth.users,
+  title TEXT, template_id TEXT, language TEXT,
+  data_json JSONB, score INTEGER,
+  created_at TIMESTAMPTZ, updated_at TIMESTAMPTZ
+
+chat_sessions:
+  id UUID PK, user_id UUID FK auth.users,
+  cv_id UUID FK cvs (nullable),
+  messages_json JSONB, status TEXT ('active'|'completed'|'abandoned'),
+  created_at TIMESTAMPTZ, updated_at TIMESTAMPTZ
+```
+
+### CRUD Helpers
+- `src/lib/db/cv.js` → createCV, getCV, updateCV, listCVs, deleteCV
+- `src/lib/db/chat.js` → initSession, getSession, updateSessionMessages, updateSessionStatus
+- Tất cả trả về `{ success: boolean, data: any, error: string }`
+
+## Interview Script (AI mock)
+
+### File: `src/lib/ai/interview-script.js`
+- Export: `INTERVIEW_SCRIPT` (array 8 bước)
+- Export: `getNextQuestion(currentStep, userData)` → trả về step info tiếp theo
+- Mỗi step có: `step`, `field_target`, `ai_prompt`, `system_instruction`
+- `system_instruction` dùng khi kết nối AI thật (Day 7)
+
+## ChatPanel — Trạng thái hiện tại (Phiên #15)
+- **Mock mode**: setTimeout 1.5s, không có AI thật
+- Khi user gửi tin → copy nguyên text vào cvData field tương ứng
+- Day 7 sẽ thay setTimeout bằng `fetch('/api/ai/interview')`
+- API route `/api/ai/interview` sẽ dùng LLM để extract JSON từ câu trả lời tự nhiên
+
 
 ============================================================
 ## SOURCE: wiki/raw/nextjs.md
@@ -725,191 +912,4 @@ Khi generate CV cho dự án này:
 - Template ID: `'vi-standard'`, `'en-ats'`, `'zh-fdi'`
 - Watermark: overlay "CV SaaS — Mua để xóa watermark" trên preview
 - AI rewrite dùng template structure làm context cố định trong prompt
-
-
-============================================================
-## SOURCE: wiki/raw/project_architecture.md
-============================================================
-
-# Architecture & Project Summary — LLM Wiki
-# Project: CV SaaS | Phase 1 (MVP)
-# Last updated: 2026-04-12
-
-## Cấu trúc thư mục hiện tại (Phase 1)
-\`\`\`
-src/
-├── pages/
-│   ├── index.jsx              ← Landing page
-│   ├── create.jsx             ← Main CV Builder page (Form + Templates)
-│   ├── _app.jsx               ← Global app wrapper
-│   ├── _document.jsx          ← Custom document
-│   ├── auth/
-│   │   ├── login.jsx          ← Login page
-│   │   └── register.jsx       ← Register page
-│   ├── preview/
-│   │   └── [id].jsx           ← CV Preview page
-│   └── api/
-│       ├── ai/
-│       │   ├── rewrite.js     ← Multi-model AI rewrite endpoint
-│       │   └── evaluate.js    ← AI output evaluation endpoint
-│       ├── cv/
-│       │   └── save.js        ← API to save CV to Supabase
-│       └── payment/
-│           ├── create.js      ← PayOS create payment link
-│           └── webhook.js     ← PayOS webhook listener
-├── components/
-│   ├── ui/                    ← Basic shadcn UI components (Button, Input, etc.)
-│   ├── features/
-│   │   ├── CVForm.jsx         ← Modular form for CV inputs
-│   │   ├── TemplatePicker.jsx ← Component to pick a template
-│   │   └── templates/         ← CV Templates (Professional, Modern, Executive)
-│   └── layout/
-│       └── Header.jsx         ← Main Navigation Header
-└── lib/
-    ├── utils.js               ← Tailwind cn() utility
-    ├── supabase.js            ← Supabase Client connection
-    ├── gemma.js               ← Gemma / Generic AI API Client
-    ├── payos.js               ← PayOS Client configuration
-    ├── cv-schema.js           ← JSON Schema definitions for CV data
-    └── ai/                    ← Multi-model AI configurations
-        ├── router.js          ← Model Router decision tree
-        ├── qwen-client.js     ← Qwen API integration
-        ├── groq-client.js     ← Groq API integration
-        ├── evaluator.js       ← Grading rubric logic
-        └── prompts.js         ← Core CV rewrite prompts
-\`\`\`
-
-## Cơ Sở Dữ Liệu - Supabase Schema
-- **users**: Quản lý bởi Supabase Auth (email/password).
-- **cvs**: id (UUID), user_id, title, language, template_id, content (JSONB), is_paid, created_at, updated_at.
-- **payments**: id, user_id, cv_id, amount, payos_order_id, status.
-
-## Pipeline các API Endpoints
-- \`/api/ai/rewrite\`: Chuyển đổi dữ liệu Form của người dùng thành CV theo chuẩn Vi/En/Zh. Route thông qua Gemma (mặc định), Qwen (nếu Zh), hoặc Groq.
-- \`/api/payment/create\`: Khởi tạo session thanh toán để xoá Watermark.
-- \`/api/payment/webhook\`: Listener nhận cập nhật trạng thái thanh toán từ PayOS, tự động cập nhật \`cvs.is_paid = true\`.
-
-
-============================================================
-## SOURCE: wiki/raw/split-screen-architecture.md
-============================================================
-
-# Wiki: Architecture + Data Flow (Day 4-6 Update)
-# Cập nhật: 2026-04-12 Session #15
-# Đây là raw wiki — sẽ được compile vào wiki/compiled/knowledge.md
-
-## Split-Screen Architecture (D011)
-
-### Tổng quan luồng dữ liệu
-```
-pages/create.jsx (state owner)
-    ├── <ChatPanel onExtractData={handleExtractData} />
-    │       └── user trả lời → gọi onExtractData(fieldTarget, value)
-    │
-    └── <CVPreview previewData={cvData} />
-            └── nhận cvData → render qua TemplateComponent
-```
-
-### cvData structure
-```javascript
-{
-  personalInfo: {
-    fullName: "",     // câu 0 → personalInfo.fullName
-    contact: ""       // câu 1 → personalInfo.contact
-  },
-  objective: "",      // câu 2 → objective
-  experience: "",     // câu 3 → experience
-  experience_more: "",// câu 4 → experience_more
-  education: "",      // câu 5 → education
-  skills: "",         // câu 6 → skills
-  others: ""          // câu 7 → others
-}
-```
-
-### updateExtractData pattern
-```javascript
-// Trong create.jsx
-const handleExtractData = (fieldTarget, value) => {
-  // fieldTarget = "personalInfo.fullName" → nested
-  // fieldTarget = "objective" → flat
-  setCvData(prev => {
-    const parts = fieldTarget.split('.');
-    if (parts.length === 2) {
-      return { ...prev, [parts[0]]: { ...prev[parts[0]], [parts[1]]: value } };
-    }
-    return { ...prev, [fieldTarget]: value };
-  });
-};
-```
-
-## Template System
-
-### Templates location
-```
-src/components/cv-templates/
-  ProfessionalTemplate.jsx  — 2 cột, navy sidebar, corporate
-  ModernTemplate.jsx        — 1 cột, gradient violet-blue, creative
-  MinimalTemplate.jsx       — 1 cột, đen trắng, ATS-optimized
-```
-
-### Template interface (tất cả templates đều nhận cùng props)
-```javascript
-// Props chuẩn cho mọi template
-export default function AnyTemplate({ data = {}, className }) {
-  const { personalInfo, objective, experience, education, skills, others } = data;
-  // render theo layout riêng của template
-}
-```
-
-### TemplatePicker
-- Component: `src/components/features/TemplatePicker.jsx`
-- Props: `{ selectedTemplate, onSelect }`
-- IDs: `'professional' | 'modern' | 'minimal'`
-- CVPreview dùng dictionary để map ID → component:
-```javascript
-const TemplateComponent = {
-  professional: ProfessionalTemplate,
-  modern: ModernTemplate,
-  minimal: MinimalTemplate,
-}[selectedTemplate];
-```
-
-## Database Schema (Supabase)
-
-### Migration file
-`docs/supabase/migrations/001_cv_chat_schema.sql`
-
-### Tables
-```sql
-cvs:
-  id UUID PK, user_id UUID FK auth.users,
-  title TEXT, template_id TEXT, language TEXT,
-  data_json JSONB, score INTEGER,
-  created_at TIMESTAMPTZ, updated_at TIMESTAMPTZ
-
-chat_sessions:
-  id UUID PK, user_id UUID FK auth.users,
-  cv_id UUID FK cvs (nullable),
-  messages_json JSONB, status TEXT ('active'|'completed'|'abandoned'),
-  created_at TIMESTAMPTZ, updated_at TIMESTAMPTZ
-```
-
-### CRUD Helpers
-- `src/lib/db/cv.js` → createCV, getCV, updateCV, listCVs, deleteCV
-- `src/lib/db/chat.js` → initSession, getSession, updateSessionMessages, updateSessionStatus
-- Tất cả trả về `{ success: boolean, data: any, error: string }`
-
-## Interview Script (AI mock)
-
-### File: `src/lib/ai/interview-script.js`
-- Export: `INTERVIEW_SCRIPT` (array 8 bước)
-- Export: `getNextQuestion(currentStep, userData)` → trả về step info tiếp theo
-- Mỗi step có: `step`, `field_target`, `ai_prompt`, `system_instruction`
-- `system_instruction` dùng khi kết nối AI thật (Day 7)
-
-## ChatPanel — Trạng thái hiện tại (Phiên #15)
-- **Mock mode**: setTimeout 1.5s, không có AI thật
-- Khi user gửi tin → copy nguyên text vào cvData field tương ứng
-- Day 7 sẽ thay setTimeout bằng `fetch('/api/ai/interview')`
-- API route `/api/ai/interview` sẽ dùng LLM để extract JSON từ câu trả lời tự nhiên
 

@@ -85,7 +85,7 @@ git add . && git commit -m "msg"
 git add .; git commit -m "msg"
 
 # ✅ Commit qua SSH vào server (tránh Husky Windows issue)
-ssh tuanpc "cd /home/tuan/projects/cv-saas; git add -A; git commit -m 'msg'"
+ssh ubuntu-server "cd /home/elvin/projects/cv-saas; git add -A; git commit -m 'msg'"
 ```
 
 ---
