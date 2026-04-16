@@ -32,7 +32,7 @@
 ## 🔗 Wiki Link Protocol
 Khi update bất kỳ file .md nào → **PHẢI dùng `[[wikilink]]`** thay vì path tuyệt đối.
 Đọc [[GEMINI]] section "LLM Wiki Link Protocol" để xem bảng đầy đủ.
-Tạo file .md mới → phải add vào [[KNOWLEDGE_MAP]] và [[CURRENT_STATE]].
+Tạo file .md mới → phải add vào [[KNOWLEDGE_MAP_CV_SaaS]] và [[CURRENT_STATE]].
 
 ## Khi không chắc
 → Hỏi trước, không tự quyết định

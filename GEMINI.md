@@ -47,7 +47,7 @@ wiki/compiled/            ← knowledge.md (1 file, tự động compile)
 - `src/lib/gemma.js`, `src/lib/supabase.js`, `src/lib/payos.js`
 - `SPEC.md`, `CLAUDE.md`, `GEMINI.md`, `DECISIONS.md`, `.antigravity-rules`
 - `wiki/compiled/knowledge.md`
-- `docs/KNOWLEDGE_MAP.md` ← Node trung tâm của Obsidian graph — KHÔNG xóa, KHÔNG rename
+- `docs/KNOWLEDGE_MAP_CV_SaaS.md` ← CV SaaS domain index — KHÔNG xóa, KHÔNG rename
 
 ## 🔗 LLM Wiki Link Protocol (BẮt buộc cho mọi AI)
 
@@ -69,7 +69,7 @@ wiki/compiled/            ← knowledge.md (1 file, tự động compile)
 | `LEARNINGS.md` | `[[LEARNINGS]]` | Reference bài học |
 | `SPEC.md` | `[[SPEC]]` | Reference scope |
 | `SESSION_HANDOFF.md` | `[[SESSION_HANDOFF]]` | Reference handoff |
-| `docs/KNOWLEDGE_MAP.md` | `[[KNOWLEDGE_MAP]]` | Reference bản đồ tổng |
+| `docs/KNOWLEDGE_MAP.md` | `[[KNOWLEDGE_MAP_CV_SaaS]]` | Reference bản đồ tổng |
 | `wiki/compiled/knowledge.md` | `[[wiki/compiled/knowledge]]` | Reference AI context |
 | Wiki raw files | `[[wiki/raw/nextjs]]` etc. | Reference wiki source |
 
@@ -85,7 +85,7 @@ wiki/compiled/            ← knowledge.md (1 file, tự động compile)
 ```
 ❌ Edit wiki/compiled/knowledge.md trực tiếp (bị ghi đè khi compile lại)
 ❌ Dùng path tuyệt đối [text](./DECISIONS.md) — dùng [[DECISIONS]] thay
-❌ Tạo file .md mới mà không add vào [[KNOWLEDGE_MAP]] và [[CURRENT_STATE]]
+❌ Tạo file .md mới mà không add vào [[KNOWLEDGE_MAP_CV_SaaS]] và [[CURRENT_STATE]]
 ```
 
 ## Session Handoff Protocol

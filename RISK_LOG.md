@@ -20,7 +20,7 @@
 | R08 | RTX3060 hỏng | Rất thấp | Cao | 🟡 | Tuấn | Accept | 🟡 Active |
 | R09 | Google AI ToS thay đổi | Thấp | Cao | 🟡 | Tuấn | Monitor | 🟡 Active |
 | R10 | Tailscale outage | Rất thấp | Cao | 🟢 | Tuấn | Accept | 🟡 Active |
-| R-NEW-001 | FortiVPN block Tailscale ở Shanghai | Cao | Rất cao | 🔴 | Tuấn | Mitigate | ⏸ Pending Test |
+| R-NEW-001 | FortiVPN block Tailscale ở Shanghai | Cao | Rất cao | 🔴 | Tuấn | Mitigate | ✅ CLOSED — Tested OK |
 | R-NEW-002 | Antigravity server outage | Cao | Trung bình | 🟡 | Tuấn | Accept | 🟡 Active |
 | R-NEW-003 | Antigravity quota hết giữa session | Trung bình | Trung bình | 🟡 | Tuấn | Mitigate | 🟡 Active |
 
@@ -87,24 +87,17 @@
 - **Fallback:** WireGuard raw config backup đã lưu
 - **Last updated:** 2026-04-10
 
-### R-NEW-001 — FortiVPN Block Tailscale khi ở Shanghai ⚠️ CRITICAL
-- **Status:** ⏸ Chưa test — PHẢI test trước khi sang Shanghai
-- **Xác suất:** Cao — FortiVPN thường block non-standard VPN traffic
-- **Tác động:** Rất cao — mất hoàn toàn remote access từ Shanghai
-- **Test procedure:**
-  ```
-  1. Bật FortiVPN công ty
-  2. ping 100.67.85.6
-  3. Test-NetConnection -ComputerName 100.67.85.6 -Port 22
-  4. Test-NetConnection -ComputerName 100.67.85.6 -Port 445
-  ```
-- **Nếu fail — workarounds:**
-  1. Tailscale userspace mode (bypass kernel routing)
-  2. Tailscale trên port 443 (HTTPS — thường không bị block)
-  3. SSH qua Tailscale Web (browser-based)
-  4. Nhờ người nhà reset Tailscale khi cần
-- **Nếu pass:** Ghi [[DECISIONS]] "FortiVPN + Tailscale compatible — tested [date]"
-- **Last updated:** 2026-04-10
+### R-NEW-001 — FortiVPN Block Tailscale khi ở Shanghai ✅ CLOSED
+- **Status:** ✅ TESTED & RESOLVED — 2026-04-14 (laptop công ty USI Global)
+- **Kết quả test:** FortiClient VPN (tgwssi-hph, IP 10.52.240.11) + Tailscale (100.121.238.104) chạy song song KHÔNG conflict
+- **Điều kiện:** FortiVPN công ty (tgwssi-hph) — compatible với Tailscale
+- **⚠️ Lưu ý:** Test này trên mạng công ty HCM — chưa test FortiVPN ở Shanghai (môi trường khác có thể khác)
+- **Kết luận:** Risk giảm đáng kể — nếu Shanghai dùng cùng FortiVPN profile thì OK
+- **Fallback vẫn giữ sẵn:**
+  1. Tailscale userspace mode
+  2. Tailscale port 443
+  3. SSH qua Tailscale Web
+- **Last updated:** 2026-04-14
 
 ### R-NEW-002 — Antigravity Server Outage
 - **Context:** Có báo cáo 4094 outages/24h (giai đoạn 10/04)

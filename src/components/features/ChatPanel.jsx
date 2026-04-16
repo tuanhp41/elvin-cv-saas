@@ -26,34 +26,54 @@ export default function ChatPanel({ className, onExtractData }) {
 
     const userMessage = inputValue.trim();
     setInputValue('');
-    
+
     // 1. Thêm message của User vào UI
     setMessages(prev => [...prev, { id: Date.now(), role: 'user', content: userMessage }]);
     setIsTyping(true);
 
     try {
-      // 2. Giả lập delay xử lý của AI (Sẽ thay bằng call API extract/rewrite sau)
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // 2. Gọi real AI API — /api/ai/interview
+      const response = await fetch('/api/ai/interview', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: userMessage,
+          currentStep,
+          cvData: {}, // truyền thêm nếu cần context
+          language: 'vi',
+        }),
+      });
 
-      // Mock extract data để báo cho CVPreview cập nhật (Phần này API sẽ trả về JSON)
-      const fieldTarget = INTERVIEW_SCRIPT[currentStep]?.field_target;
-      if (onExtractData && fieldTarget) {
-         onExtractData(fieldTarget, userMessage);
+      const json = await response.json();
+      if (!json.success) throw new Error(json.error);
+
+      const { extracted, nextQuestion, nextStep, isComplete } = json.data;
+
+      // 3. Báo CVPreview cập nhật nếu extract được data
+      if (extracted && onExtractData) {
+        const fieldTarget = INTERVIEW_SCRIPT[currentStep]?.field_target;
+        if (fieldTarget) onExtractData(fieldTarget, extracted);
       }
 
-      // 3. Tiến tới câu hỏi tiếp theo
-      const nextQInfo = getNextQuestion(currentStep, { personalInfo: { fullName: userMessage } });
-      
-      if (nextQInfo) {
-        setMessages(prev => [...prev, { id: Date.now() + 1, role: 'ai', content: nextQInfo.prompt }]);
-        setCurrentStep(nextQInfo.step);
+      // 4. Hiển thị câu hỏi tiếp theo hoặc kết thúc
+      if (isComplete || !nextQuestion) {
+        setMessages(prev => [...prev, {
+          id: Date.now() + 1,
+          role: 'ai',
+          content: 'Tuyệt vời! Mình đã ghi nhận đủ thông tin. CV của bạn đang hiện ra bên phải rồi đó 🎉',
+        }]);
       } else {
-        setMessages(prev => [...prev, { id: Date.now() + 1, role: 'ai', content: "Tuyệt vời, thông tin của bạn đã được ghi nhận đầy đủ! Mình đang lên khung CV cho bạn bên phải nhé." }]);
+        setMessages(prev => [...prev, { id: Date.now() + 1, role: 'ai', content: nextQuestion }]);
+        if (nextStep !== null && nextStep !== undefined) setCurrentStep(nextStep);
       }
 
     } catch (error) {
-      console.error('[Chat] Gửi tin nhắn lỗi:', error);
-      setMessages(prev => [...prev, { id: Date.now() + 1, role: 'ai', content: "Xin lỗi, mình đang gặp chút trục trặc. Bạn có thể gửi lại được không?" }]);
+      console.error('[Chat] API error:', error);
+      setMessages(prev => [...prev, {
+        id: Date.now() + 1,
+        role: 'ai',
+        content: 'Xin lỗi, mình đang gặp chút trục trặc. Bạn có thể gửi lại được không?',
+      }]);
     } finally {
       setIsTyping(false);
     }

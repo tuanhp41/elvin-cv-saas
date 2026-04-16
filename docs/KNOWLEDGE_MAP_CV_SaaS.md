@@ -4,6 +4,9 @@
 ---
 
 # 🗺️ CV SaaS Knowledge Map
+# Domain-specific — chỉ chứa entries của CV SaaS
+# MS Office entries: xem [[KNOWLEDGE_MAP_MS_Office]]
+# Master router: [[AGENTS]] | Shared env: [[ENVIRONMENT]] | Learning: [[LEARNING_RULES]]
 
 ## Cách đọc bản đồ này
 Mỗi node là 1 file. Arrow (→) là "cần đọc trước". 
@@ -57,26 +60,26 @@ EXPERIMENTS.md
 | [[SESSION_HANDOFF]] | Bàn giao session | 🟡 |
 | [[TROUBLESHOOTING]] | Lỗi đã fix | 🟡 |
 | [[LEARNINGS]] | Bài học hàng ngày | 🟡 |
-| [[wiki/compiled/knowledge]] | AI context dump | 🟢 |
+| [[knowledge]] | AI context dump | 🟢 |
 
 ## Wiki Raw Sources (compile → knowledge.md)
 | File | Chủ đề |
 |---|---|
-| [[wiki/raw/nextjs]] | Next.js 14 patterns |
-| [[wiki/raw/supabase]] | Supabase Auth + RLS |
-| [[wiki/raw/gemma-api]] | Gemma 4 API usage |
-| [[wiki/raw/payos]] | PayOS payment |
-| [[wiki/raw/cv-patterns-vn]] | CV patterns VN |
-| [[wiki/raw/project_architecture]] | System architecture |
-| [[wiki/raw/split-screen-architecture]] | Split-screen data flow |
+| [[nextjs]] | Next.js 14 patterns |
+| [[supabase]] | Supabase Auth + RLS |
+| [[gemma-api]] | Gemma 4 API usage |
+| [[payos]] | PayOS payment |
+| [[cv-patterns-vn]] | CV patterns VN |
+| [[project_architecture]] | System architecture |
+| [[split-screen-architecture]] | Split-screen data flow |
 
 ## Docs Phụ Trợ (Active)
 | File | Chủ đề |
 |---|---|
-| [[docs/llm-wiki/husky-windows]] | Husky setup on Windows |
-| [[docs/llm-wiki/n8n-v2-docker]] | n8n Docker setup |
-| [[docs/llm-wiki/tailscale-funnel]] | Tailscale funnel config |
-| [[docs/backlog/UI_IDEAS_BACKLOG]] | Ý tưởng UI chưa triển khai |
+| [[husky-windows]] | Husky setup on Windows |
+| [[n8n-v2-docker]] | n8n Docker setup |
+| [[tailscale-funnel]] | Tailscale funnel config |
+| [[UI_IDEAS_BACKLOG]] | Ý tưởng UI chưa triển khai |
 
 ## ⚫ Archived (chỉ đọc khi cần lịch sử — KHÔNG dùng cho công việc hiện tại)
 | File | Lý do archive |
@@ -102,7 +105,7 @@ EXPERIMENTS.md
 ### 2. Khi tạo file .md MỚI — phải làm 3 việc:
 ```
 a) Tạo file theo đúng folder trong [[ARCHITECTURE]]
-b) Thêm entry vào bảng "Node Legend" trong file này (KNOWLEDGE_MAP)
+b) Thêm entry vào bảng trong file này ([[KNOWLEDGE_MAP_CV_SaaS]])
 c) Thêm link vào [[CURRENT_STATE]] hoặc [[SESSION_HANDOFF]] nếu relevant
 ```
 
@@ -116,7 +119,7 @@ c) Thêm link vào [[CURRENT_STATE]] hoặc [[SESSION_HANDOFF]] nếu relevant
 
 ### 4. File KHÔNG được rename/xóa (Sacred):
 ```
-docs/KNOWLEDGE_MAP.md  ← file này — node trung tâm graph
+docs/KNOWLEDGE_MAP_CV_SaaS.md  ← file này — CV SaaS domain index
 wiki/compiled/knowledge.md ← AI context dump
 SPEC.md, DECISIONS.md, ARCHITECTURE.md ← frozen baselines
 ```

@@ -308,7 +308,23 @@ Task nhận vào → Phân loại:
 [ ] n8n workflow "AI Code Worker"
 [ ] Test: 5 real tasks through pipeline
 [ ] EXP-006: AI Pipeline Productivity
+[ ] [BACKLOG-001] Evaluate Hermes Agent → xem ghi chú bên dưới
 ```
+
+> 📌 **BACKLOG-001 — Hermes Agent Integration (Stage 3 Candidate)**
+> - **Tool:** Hermes Agent (Nous Research) — open source, self-improving autonomous agent
+> - **Chạy ở đâu:** Server RTX3060 (đã có) — cài thêm, không tốn thêm cloud cost
+> - **Làm được gì cho CV SaaS:**
+>   - Tự tạo/update CV templates khi được nhắn qua Telegram/CLI
+>   - Tự cải thiện `prompts.js` dựa trên conversation logs
+>   - Tự thêm CV sections/fields (template + schema + interview-script) theo pattern đã học
+>   - Học từ CODING_STANDARDS.md → code đúng chuẩn, ít cần review
+> - **Prerequisite trước khi dùng:**
+>   - Stage 2 phải xong: CODING_STANDARDS, template structure, schema cố định
+>   - Hermes cần "giáo trình" (standards) để tự học → không dùng được trước khi có chuẩn
+> - **So với n8n:** Không thay thế — bổ sung. n8n routing/trigger, Hermes tự suy luận + code
+> - **Quyết định:** Evaluate vào Day 11 — nếu pipeline n8n đã đủ thì skip, nếu cần "AI tự code" thì add
+> - **Logged:** 2026-04-16 | Session #16
 
 ### Day 13 — Quality Tuần Tra
 
