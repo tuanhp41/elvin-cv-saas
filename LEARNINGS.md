@@ -63,3 +63,40 @@
 **Kết quả:** DashChat hoạt động hoàn hảo. Response time <5 giây. Phase Gate CLEARED.
 **Áp dụng được:** n8n Execute Command node cần NODE_FUNCTION_ALLOW_BUILTIN=fs,child_process trong docker-compose — xem [[ENVIRONMENT]]
 **Câu hỏi mở:** /status đang trả [[CURRENT_STATE]] cũ (session #3) — cần update [[CURRENT_STATE]] cuối mỗi session đúng hơn
+
+---
+
+## [2026-04-16] — Session #16-17: AI Layer + EXP-005 + Process Fix
+
+### L001 — Google AI Studio đổi API key format
+**Học:** Google đã chuyển key format từ `AIzaSy...` sang `AQ.xxx` (2026 Q2)
+**Thực hành:** Test 3 phương thức auth:
+  - `?key=AQ.xxx` → `INVALID` (API coi AQ. là OAuth token)
+  - `Authorization: Bearer AQ.xxx` → `API_KEY_SERVICE_BLOCKED`
+  - **`x-goog-api-key: AQ.xxx` → WORKS ✅**
+**Kết quả:** Fix `gemma-client.js` — chuyển từ query param sang header
+**Áp dụng được:** Mọi Google AI API call phải dùng `x-goog-api-key` header. Không bao giờ dùng `?key=` nữa.
+**Câu hỏi mở:** Quota `limit: 0` cho project mới — cần chờ bao lâu để free tier activate?
+
+### L002 — Model size ≠ Quality (EXP-005)
+**Học:** GPT-oss 20B (20 tỷ params) > Llama 70B (70 tỷ params) cho structured CV output
+**Thực hành:** Cùng 1 prompt CV tiếng Việt → test 3 models → so sánh chất lượng + tốc độ
+**Kết quả:**
+  - GPT-oss 20B: ⭐⭐⭐⭐ — bullet points rõ, tự thêm metrics (4s)
+  - Groq Llama 70B: ⭐⭐⭐ — đúng ý nhưng generic hơn (777ms)
+  - Nemotron 120B: ⭐⭐ — lộ chain-of-thought, không tuân prompt (23s)
+**Áp dụng được:** Chọn model theo **task type**, không theo param count. Reasoning models (Nemotron, DeepSeek R1) KHÔNG phù hợp cho structured output tasks.
+**Câu hỏi mở:** GPT-oss kiến trúc gì mà 20B > 70B? Có phải fine-tuned cho instruction following?
+
+### L003 — AI Resource Allocation phải có enforcement gate
+**Học:** Quy tắc phân bổ nguồn lực AI viết trong `.antigravity-rules` nhưng bị bỏ qua khi user nói "bắt đầu đi" — vì chỉ là "biển báo" không phải "cửa chặn"
+**Thực hành:** 11/14 tasks trong session bị chạy sai pool (Sonnet làm việc của Gemini)
+**Kết quả:** Tạo `<pre_coding_gate>` — bắt buộc output Task Allocation Table trước khi viết code
+**Áp dụng được:** Mọi enforcement cần **output format bắt buộc** + **user approval**, không chỉ là text rule. Tương tự PMP: checklist > policy statement.
+**Câu hỏi mở:** Có tool nào tự động enforce model switching trong Antigravity không?
+
+### L004 — PowerShell + Tiếng Việt = Encoding Hell
+**Học:** PowerShell mặc định dùng Windows-1252, không phải UTF-8. Tiếng Việt từ API trả về bị vỡ encoding khi display.
+**Thực hành:** `$OutputEncoding = [System.Text.Encoding]::UTF8` không đủ — cần cả `[Console]::OutputEncoding`
+**Kết quả:** Output vẫn vỡ trong terminal nhưng Node.js xử lý đúng → problem chỉ ở PowerShell test, không ảnh hưởng app
+**Áp dụng được:** Luôn test Vietnamese AI output qua Node.js hoặc browser, KHÔNG qua PowerShell. PowerShell chỉ dùng để test connection/latency.
