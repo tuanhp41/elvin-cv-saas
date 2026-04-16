@@ -59,7 +59,8 @@ EXPERIMENTS.md
 | [[GEMINI]] | Rules cho Antigravity | 🟡 |
 | [[SESSION_HANDOFF]] | Bàn giao session | 🟡 |
 | [[TROUBLESHOOTING]] | Lỗi đã fix | 🟡 |
-| [[LEARNINGS]] | Bài học hàng ngày | 🟡 |
+| [[LEARNINGS]] | Bài học hàng ngày (legacy) | ⚫ |
+| [[LESSONS_LOG]] | Bài học có tags — theo [[LEARNING_RULES]] | 🟢 |
 | [[knowledge]] | AI context dump | 🟢 |
 
 ## Wiki Raw Sources (compile → knowledge.md)
@@ -72,6 +73,7 @@ EXPERIMENTS.md
 | [[cv-patterns-vn]] | CV patterns VN |
 | [[project_architecture]] | System architecture |
 | [[split-screen-architecture]] | Split-screen data flow |
+| [[hermes-agent]] | Hermes Agent pattern + Closed Learning Loop |
 
 ## Docs Phụ Trợ (Active)
 | File | Chủ đề |

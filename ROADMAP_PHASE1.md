@@ -344,7 +344,7 @@ Task nhận vào → Phân loại:
     - [ ] ≥ 2 AI models working?
     - [ ] ≥ 3 CV templates?
     - [ ] Supabase CRUD + RLS tested?
-    - [ ] DECISIONS.md ≥ 15?
+    - [ ] DECISIONS.md ≥ 12? (lowered from 15 — quality > quantity, D013 rationale)
     - [ ] EXPERIMENTS.md ≥ 5?
     - [ ] CV score ≥ 6/10?
     - [ ] AI pipeline prototype working?

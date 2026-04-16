@@ -261,4 +261,38 @@
     <exception>Chỉ bỏ qua gate khi task là 1 file duy nhất, 
                ≤ 30 lines, và user đã chỉ rõ nội dung.</exception>
   </pre_coding_gate>
+
+  <!-- POST-TASK LEARNING GATE — Closed Learning Loop -->
+  <post_task_learning_gate>
+    <rule>SAU MỖI TASK CÓ SIDE EFFECT (tạo/sửa code, fix bug, cấu hình, research),
+          AI PHẢI tự hỏi và output:
+          
+          📖 Learning Check:
+          - Có gì mới đáng ghi vào LESSONS_LOG? [CÓ/KHÔNG]
+          - Nếu CÓ → ghi theo format [[LEARNING_RULES]]:
+            `- [YYYY-MM-DD] [env:tag] [topic] Nội dung → Giải pháp → Liên quan: [[wikilink]]`
+          - Nếu KHÔNG → ghi "No new learnings" (audit trail)
+          
+          File đích: LESSONS_LOG.md (của domain đang làm việc)
+          KHÔNG ghi vào LEARNINGS.md (file cũ, không tags)
+    </rule>
+    <trigger>Sau khi:
+      - Hoàn thành 1 feature/fix/refactor
+      - Debug mất > 10 phút
+      - Phát hiện API/tool behavior bất ngờ
+      - Research cho ra insight mới
+      - Gặp gotcha/workaround
+    </trigger>
+    <topic_tags>
+      Dùng topic tags từ [[LEARNING_RULES]]:
+      - [topic-có-sẵn]: nextjs, supabase, gemma-api, powershell, etc.
+      - [NEW:tên-mới]: đề xuất wiki entry mới
+      - [GENERAL]: chưa phân loại
+    </topic_tags>
+    <enforcement>
+      Trong session_close (step 1.5), SO SÁNH:
+      - Số tasks có side effect vs số LESSONS_LOG entries
+      - Nếu ratio < 30% → cảnh báo: "AI có thể đã miss learnings"
+    </enforcement>
+  </post_task_learning_gate>
 </system_constraints>
