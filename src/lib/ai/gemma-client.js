@@ -2,6 +2,10 @@
  * gemma-client.js — Google AI Studio (Gemma / Gemini Flash) Client
  * Dùng Google AI Studio free tier
  * Docs: https://ai.google.dev/api/generate-content
+ *
+ * NOTE (2026-04-16): Google AI Studio đã đổi key format từ AIzaSy... sang AQ.
+ * Key AQ. KHONG work với ?key= query param, phải dùng x-goog-api-key header.
+ * Confirmed via EXP-005.
  */
 
 const GOOGLE_AI_BASE_URL = 'https://generativelanguage.googleapis.com/v1beta';
@@ -43,11 +47,15 @@ export async function callGemma(messages, options = {}) {
     };
   }
 
+  // Dùng x-goog-api-key header (bắt buộc cho key format AQ.xxx mới)
   const response = await fetch(
-    `${GOOGLE_AI_BASE_URL}/models/${model}:generateContent?key=${process.env.GEMMA_API_KEY}`,
+    `${GOOGLE_AI_BASE_URL}/models/${model}:generateContent`,
     {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'x-goog-api-key': process.env.GEMMA_API_KEY,
+      },
       body: JSON.stringify(body),
     }
   );
@@ -73,7 +81,10 @@ export async function callGemma(messages, options = {}) {
 export async function checkGemmaHealth() {
   try {
     const response = await fetch(
-      `${GOOGLE_AI_BASE_URL}/models?key=${process.env.GEMMA_API_KEY}`
+      `${GOOGLE_AI_BASE_URL}/models`,
+      {
+        headers: { 'x-goog-api-key': process.env.GEMMA_API_KEY },
+      }
     );
     return response.ok;
   } catch {
