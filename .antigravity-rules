@@ -59,6 +59,9 @@
       - Bất kỳ thứ gì session sau sẽ cần tìm lại
       Cập nhật timestamp "Last Updated" ở đầu file.
       ĐÂY LÀ BƯỚC QUAN TRỌNG NHẤT để tiết kiệm token session sau.</step>
+    <step order="1.5">So sánh Task Allocation Table đầu session vs thực tế.
+      Nếu có task bị sai pool → ghi vào LEARNINGS.md để session sau rút kinh nghiệm.
+    </step>
     <step order="2">Overwrite CURRENT_STATE.md với snapshot mới nhất.
       Giữ đúng format: Timestamp, Phase, Session#, Branch,
       Đang làm dở, Lỗi chưa xử lý, Quyết định pending,
@@ -228,4 +231,34 @@
     </rule>
   </ai_resource_strategy>
 
+  <!-- PRE-CODING GATE -->
+  <pre_coding_gate>
+    <rule>TRƯỚC KHI VIẾT BẤT KỲ DÒNG CODE NÀO — kể cả khi user nói 
+          "bắt đầu đi", "code luôn", "làm đi" — AI PHẢI output bảng 
+          Task Allocation trước. Không có ngoại lệ.</rule>
+    <trigger>Bất kỳ khi nào AI sắp tạo/sửa file .js, .jsx, .css, 
+             hoặc chạy npm/git command có side effect</trigger>
+    <output_format>
+      ## 🤖 Task Allocation — [Tên Feature/Day]
+      | # | Task | Complexity | Pool | Model | Est. Tokens |
+      |---|------|-----------|------|-------|-------------|
+      | 1 | ...  | SIMPLE    | B    | Gemini| ~low        |
+      | 2 | ...  | COMPLEX   | A    | Sonnet| ~medium     |
+      
+      💰 Token Budget: Pool A ~X% | Pool B ~Y%
+      → Chờ user approve trước khi bắt đầu.
+    </output_format>
+    <classification_rules>
+      SIMPLE  → Gemini/Free AI: CRUD, boilerplate, UI clone pattern, 
+                1 file, có example sẵn
+      MEDIUM  → Gemini (có hướng dẫn) hoặc Sonnet (nếu Gemini hết):
+                Business logic, API integration, data flow
+      COMPLEX → Sonnet: Multi-system, architecture decision, 
+                security, algorithm design
+      REVIEW  → Opus: Phase Gate, full codebase review, 
+                PMP decisions
+    </classification_rules>
+    <exception>Chỉ bỏ qua gate khi task là 1 file duy nhất, 
+               ≤ 30 lines, và user đã chỉ rõ nội dung.</exception>
+  </pre_coding_gate>
 </system_constraints>

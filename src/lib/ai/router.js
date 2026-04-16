@@ -1,15 +1,17 @@
 /**
- * router.js — AI Model Router (v2 — Full Multi-Model)
+ * router.js — AI Model Router (v2.1 — EXP-005 Optimized)
  * Tự động chọn model theo task + language + fallback chain
  *
  * FALLBACK CHAIN (theo thứ tự ưu tiên):
- *   Groq → Gemma (Google) → OpenRouter (Qwen/Mistral) → Ollama (local RTX3060)
+ *   Groq → Gemma (Google) → OpenRouter (GPT-oss/Qwen) → Ollama (local RTX3060)
  *
- * ROUTING LOGIC:
- *   - extract (JSON): Groq trước (stable JSON output) → Gemma → Qwen → Ollama
- *   - rewrite (creative): Gemma trước → Groq → Qwen → Ollama
+ * ROUTING LOGIC (updated per EXP-005 2026-04-16):
+ *   - extract (JSON): Groq trước (777ms, stable JSON) → Gemma → GPT-oss-20B → Ollama
+ *   - rewrite (creative): Groq → GPT-oss-20B (tốt nhất cho structured output) → Gemma → Ollama
+ *   - score (reasoning): Groq → Gemma → GPT-oss-120B → Ollama
  *   - tiếng Trung: Qwen/Gemma ưu tiên hơn Groq
  *   - Ollama: LUÔN là last resort — free unlimited nhưng latency cao hơn
+ *   - Nemotron: LOẠI KHỎI chain (EXP-005: thinking mode, không tuân structured prompt)
  */
 
 import { callGroq, checkGroqHealth } from '@/lib/ai/groq-client';
@@ -22,26 +24,26 @@ import { callOllama, checkOllamaHealth } from '@/lib/ai/ollama-client';
 // ──────────────────────────────────────────────
 
 const ROUTING_TABLE = {
-  // extract: cần JSON output ổn định → Groq Llama tốt nhất
+  // extract: cần JSON output ổn định → Groq Llama tốt nhất (777ms, EXP-005)
   extract: {
-    vi: ['groq', 'gemma', 'qwen', 'ollama'],
-    en: ['groq', 'gemma', 'mistral', 'ollama'],
-    zh: ['qwen', 'gemma', 'groq', 'ollama'],   // Qwen giỏi tiếng Trung nhất
-    default: ['groq', 'gemma', 'qwen', 'ollama'],
+    vi: ['groq', 'gemma', 'gpt_small', 'ollama'],
+    en: ['groq', 'gemma', 'gpt_small', 'ollama'],
+    zh: ['qwen', 'gemma', 'groq', 'ollama'],      // Qwen giỏi tiếng Trung nhất
+    default: ['groq', 'gemma', 'gpt_small', 'ollama'],
   },
-  // rewrite: cần ngôn ngữ hay, sáng tạo → Gemma tốt nhất
+  // rewrite: structured output → GPT-oss-20B tốt nhất theo EXP-005 (bullet points, số liệu)
   rewrite: {
-    vi: ['gemma', 'groq', 'qwen', 'ollama'],
-    en: ['gemma', 'mistral', 'groq', 'ollama'],
-    zh: ['qwen', 'gemma', 'groq', 'ollama'],
-    default: ['gemma', 'groq', 'qwen', 'ollama'],
+    vi: ['groq', 'gpt_small', 'gemma', 'ollama'],
+    en: ['groq', 'gpt_small', 'gemma', 'ollama'],
+    zh: ['qwen', 'gemma', 'gpt_small', 'ollama'],
+    default: ['groq', 'gpt_small', 'gemma', 'ollama'],
   },
-  // score: cần reasoning + JSON → Groq
+  // score: cần reasoning + JSON → Groq → GPT-oss-120B (heavy reasoning)
   score: {
-    vi: ['groq', 'gemma', 'qwen', 'ollama'],
-    en: ['groq', 'gemma', 'mistral', 'ollama'],
-    zh: ['qwen', 'gemma', 'groq', 'ollama'],
-    default: ['groq', 'gemma', 'qwen', 'ollama'],
+    vi: ['groq', 'gpt_large', 'gemma', 'ollama'],
+    en: ['groq', 'gpt_large', 'gemma', 'ollama'],
+    zh: ['qwen', 'groq', 'gpt_large', 'ollama'],
+    default: ['groq', 'gpt_large', 'gemma', 'ollama'],
   },
 };
 
@@ -129,12 +131,14 @@ async function callModel(modelName, messages, options) {
 }
 
 // Helper: callOpenRouter với model cụ thể
+// MODEL_MAP updated per EXP-005: GPT-oss > Nemotron cho CV tasks
 async function callOpenRouterWithSystem(modelKey, messages, options) {
   const { callOpenRouter } = await import('@/lib/ai/openrouter-client');
   const MODEL_MAP = {
-    qwen_fast: 'qwen/qwen3-30b-a3b:free',
-    qwen_large: 'qwen/qwen3-235b-a22b:free',
-    mistral: 'mistralai/mistral-7b-instruct:free',
+    gpt_small: 'openai/gpt-oss-20b:free',          // EXP-005 ⭐⭐⭐⭐ tốt nhất cho structured output
+    gpt_large: 'openai/gpt-oss-120b:free',          // Heavy reasoning (score task)
+    qwen: 'qwen/qwen3-next-80b-a3b-instruct:free',  // Tiếng Trung
+    // nemotron: REMOVED — thinking mode không phù hợp structured CV tasks (EXP-005)
   };
   return callOpenRouter(messages, { ...options, model: MODEL_MAP[modelKey] });
 }

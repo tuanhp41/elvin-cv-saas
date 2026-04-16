@@ -217,3 +217,22 @@ SSH key cần tạo riêng trên Windows và add vào GitHub → thêm bước s
 Cần tạo lại PAT khi hết hạn tại: GitHub → Settings → Developer settings → Personal access tokens.
 
 **Revisit khi:** Setup SSH key riêng trên Windows nếu muốn (Phase 2+, khi cần CI/CD phức tạp hơn).
+
+---
+
+### D013 — Bỏ Mobile Responsive khỏi Phase 1
+**Ngày:** 2026-04-16 | **Phase:** 1 (Day 10) | **By:** Opus + User
+
+**Context:** Day 10 ban đầu có task "mobile responsive" cho /create và /upload.
+
+**Quyết định:** Defer toàn bộ mobile optimization sang Phase 2+.
+
+**Rationale:**
+- Phân khúc người dùng mục tiêu = desktop (cần edit, in CV, thao tác file)
+- CV builder split-screen yêu cầu màn hình ≥ 768px để dùng được
+- Mobile UX phức tạp hơn desktop 3–5x (virtual keyboard, touch events, PDF render)
+- Phase 1 goal = "working E2E", không phải "mobile-ready"
+
+**Trade-off chấp nhận:** User trên mobile sẽ thấy layout chưa tối ưu — acceptable vì không phải target user.
+
+**Revisit khi:** Phase 4 (Internal Beta) — nếu analytics cho thấy >20% traffic từ mobile thì mới làm.

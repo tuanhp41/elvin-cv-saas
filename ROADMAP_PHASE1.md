@@ -375,3 +375,26 @@ Task nhận vào → Phân loại:
 *Core UX: form-based → AI chat interview + live preview*
 *Previous version: see git history*
 
+---
+
+## 🗂️ BACKLOG — Phase 2+
+
+> Ý tưởng tốt nhưng KHÔNG làm trong Phase 1. Log để không mất.
+
+### BACKLOG-001 — Hermes Agent Integration
+- **Làm gì:** AI dev bot tự tạo template, tự cải thiện prompts, chạy trên RTX3060
+- **Khi nào xem xét:** Day 11 (Stage 3 evaluate)
+- **Logged:** 2026-04-16 | Session #16
+
+### BACKLOG-002 — RAG cho Score API (Job Market Intelligence)
+- **Vấn đề:** Score API hiện tại dùng kiến thức AI tĩnh — không biết xu thế tuyển dụng mới nhất
+- **Giải pháp:** Dùng `wiki/raw/` làm RAG database
+  - Tạo `job-trends-2026.md` — xu thế theo ngành (IT, Marketing, Finance...)
+  - Tạo `industry-keywords.md` — từ khoá hot theo lĩnh vực
+  - Tạo `ats-standards.md` — tiêu chuẩn ATS mới nhất
+  - Detect ngành từ CV → pull đúng wiki → nhét vào system prompt
+- **Kết quả:** AI chấm điểm theo chuẩn ngành + năm hiện tại, không bị lỗi thời
+- **Update cycle:** 1 lần/tháng (manual hoặc Hermes tự research)
+- **Effort:** Medium (1–2 ngày)
+- **Logged:** 2026-04-16 | Session #16
+

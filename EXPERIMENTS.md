@@ -45,6 +45,76 @@
 
 ---
 
+## [EXP-003] Groq vs Gemini for CV extract JSON accuracy
+**Date:** TBD
+**Status:** ⏳ BACKLOG
+
+---
+
+## [EXP-004] Ollama local vs Cloud API quality
+**Date:** TBD
+**Status:** ⏳ BACKLOG (Ollama server offline)
+
+---
+
+## [EXP-005] Model Benchmark — CV Rewrite Tiếng Việt
+**Date:** 2026-04-16
+**Status:** ✅ COMPLETED (partial — Gemini key invalid, 3/4 models tested)
+
+**Hypothesis:** Groq (Llama 70B) sẽ cho output tiếng Việt chất lượng tốt nhất vì model lớn + latency thấp. OpenRouter free models sẽ chậm hơn đáng kể.
+
+**Setup:**
+- Input: Đoạn mô tả kinh nghiệm thô (tiếng Việt, không dấu): *"Toi lam viec tai cong ty ABC tu 2021. Phu trach ban hang. Dat doanh so tot."*
+- Task: Rewrite → CV chuyên nghiệp, 2-3 câu, có số liệu
+- Temperature: 0.7 | Max tokens: 200
+- Chạy từ Windows PowerShell → cloud API
+
+**Models tested:**
+
+| Model | Provider | Params | Pool |
+|---|---|---|---|
+| Llama 3.3 70B | Groq | 70B | Free |
+| NVIDIA Nemotron 120B | OpenRouter | 120B | Free |
+| GPT-oss 20B | OpenRouter | 20B | Free |
+| Gemini 2.0 Flash | Google AI | N/A | ❌ Key invalid |
+
+**Kết quả thực tế:**
+
+| Model | Latency | Quality | Encoding OK? | Notes |
+|---|---|---|---|---|
+| **Groq Llama 70B** | **777ms** | ⭐⭐⭐ Tốt, có context | ❌ UTF-8 lỗi PowerShell | Output đúng ý nhưng encoding vỡ khi print |
+| **NVIDIA Nemotron 120B** | **23,452ms** | ⭐⭐ Suy nghĩ to (thinking mode) | Partial | Expose chain-of-thought, không tuân prompt "chi 2-3 cau" |
+| **GPT-oss 20B** | **4,026ms** | ⭐⭐⭐⭐ Tốt nhất | ❌ UTF-8 lỗi PowerShell | Bullet points rõ ràng, tự thêm số liệu (15%) sáng tạo |
+
+**Output trích dẫn (decoded):**
+
+*Groq Llama 70B:*
+> "Tôi đã tích lũy kinh nghiệm làm việc tại Công ty ABC kể từ năm 2021, với vai trò chính là bán hàng, tiếp xúc với khách hàng và lập báo cáo. Trong thời gian này, tôi đã đạt được doanh số ấn tượng và duy trì mối quan hệ tốt đẹp với khách hàng."
+
+*GPT-oss 20B:*
+> "- Tham gia vào công ty ABC (từ 2021) với vai trò bán hàng, chịu trách nhiệm giao tiếp khách hàng và lập báo cáo doanh thu.
+> - Đạt doanh số vượt mục tiêu hàng quý, góp phần nâng cao doanh thu tổng cộng 15% so với năm trước."
+
+**Kết luận:**
+- Hypothesis **SAI một phần** — Groq nhanh nhất (777ms) nhưng GPT-oss 20B chất lượng output *tốt hơn* dù chỉ 20B params
+- **Nemotron vô dụng** cho CV task — thinking mode làm lộ chain-of-thought, không tuân "chỉ 2-3 câu"
+- **UTF-8 encoding PowerShell** là kẻ thù số 1 khi chạy tiếng Việt — không phản ánh quality thật trong app (Node.js xử lý đúng)
+- **Gemini key invalid** — `AQ.Ab8R...` là OAuth token không phải API key → cần lấy lại từ AI Studio
+
+**Action:**
+- ✅ Integrate: Groq làm **primary** (speed), GPT-oss 20B làm **secondary** (quality fallback)
+- ❌ Remove: Nemotron khỏi router.js cho CV rewrite task
+- 🔧 Fix: Lấy Gemini API key đúng để test trong EXP-005b
+- 🔧 Fix: gemma-client.js đang dùng key sai → app bị fail silent
+
+**Học được:** Model size KHÔNG quyết định quality. GPT-oss 20B (20B) > Llama 70B (70B) cho structured output task. Chọn model theo task type, không theo param count.
+
+**Open questions:**
+- EXP-005b: Gemini 2.0 Flash vs Groq khi có key đúng
+- EXP-006: Extract JSON accuracy (không chỉ rewrite quality)
+
+---
+
 ## [EXP-002] gemma4:latest vs gemma3:12b inference speed
 **Date:** 2026-04-11
 **Status:** 🔄 IN PROGRESS

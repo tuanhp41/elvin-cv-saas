@@ -6,8 +6,9 @@
  * NOTE: Next.js cần disable bodyParser để nhận multipart/form-data
  */
 
-import formidable from 'formidable';
 import fs from 'fs';
+
+import formidable from 'formidable';
 import pdfParse from 'pdf-parse';
 
 // Tắt bodyParser mặc định của Next.js để dùng formidable

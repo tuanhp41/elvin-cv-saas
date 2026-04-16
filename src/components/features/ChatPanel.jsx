@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Send, Image as ImageIcon, Briefcase, GraduationCap } from 'lucide-react';
+import { Send, Image as ImageIcon, Briefcase, GraduationCap, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { INTERVIEW_SCRIPT, getNextQuestion } from '@/lib/ai/interview-script';
 
@@ -163,6 +163,14 @@ export default function ChatPanel({ className, onExtractData }) {
           <p className="text-[11px] text-gray-400">AI có thể tạo ra thông tin thiếu chính xác. Hãy kiểm tra lại CV ở cạnh phải.</p>
         </div>
       </div>
+
+      {/* Global Toast Notification inside ChatPanel context */}
+      {isTyping && (
+        <div className="fixed bottom-6 right-6 bg-gray-900 text-white px-5 py-3.5 rounded-xl shadow-2xl flex items-center gap-3 z-50 animate-in slide-in-from-bottom-5 fade-in duration-300">
+          <Loader2 size={18} className="animate-spin text-blue-400" />
+          <span className="text-sm font-medium">AI đang xử lý yêu cầu...</span>
+        </div>
+      )}
     </div>
   );
 }
